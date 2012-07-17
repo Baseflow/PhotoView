@@ -1,6 +1,28 @@
-*.class
+#Android generated
+bin
+gen
 
-# Package Files #
-*.jar
-*.war
-*.ear
+#Eclipse
+.project
+.classpath
+.settings
+
+#IntelliJ IDEA
+.idea
+*.iml
+*.ipr
+*.iws
+out
+
+#Maven
+target
+release.properties
+pom.xml.*
+
+#Ant
+build.xml
+local.properties
+proguard.cfg
+
+#OSX
+.DS_Store
