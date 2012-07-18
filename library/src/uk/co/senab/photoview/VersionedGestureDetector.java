@@ -1,4 +1,5 @@
 package uk.co.senab.photoview;
+
 /*
  * Copyright (C) 2010 The Android Open Source Project
  *
@@ -14,7 +15,6 @@ package uk.co.senab.photoview;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import android.content.Context;
 import android.os.Build;
@@ -63,10 +63,6 @@ public abstract class VersionedGestureDetector {
 			return ev.getY();
 		}
 
-		boolean shouldDrag() {
-			return true;
-		}
-
 		@Override
 		public boolean onTouchEvent(MotionEvent ev) {
 			switch (ev.getAction()) {
@@ -79,9 +75,7 @@ public abstract class VersionedGestureDetector {
 					final float x = getActiveX(ev);
 					final float y = getActiveY(ev);
 
-					if (shouldDrag()) {
-						mListener.onDrag(x - mLastTouchX, y - mLastTouchY);
-					}
+					mListener.onDrag(x - mLastTouchX, y - mLastTouchY);
 
 					mLastTouchX = x;
 					mLastTouchY = y;
@@ -156,11 +150,6 @@ public abstract class VersionedGestureDetector {
 					return true;
 				}
 			});
-		}
-
-		@Override
-		boolean shouldDrag() {
-			return !mDetector.isInProgress();
 		}
 
 		@Override
