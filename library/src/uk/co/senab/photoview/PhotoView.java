@@ -216,6 +216,11 @@ public class PhotoView extends ImageView implements
 		if (mZoomEnabled) {
 
 			getParent().requestDisallowInterceptTouchEvent(true);
+			
+			// Check to see if the user double tapped
+			if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
+				return true;
+			}
 
 			if (null != mScaleDetector && mScaleDetector.onTouchEvent(ev)) {
 
@@ -236,11 +241,6 @@ public class PhotoView extends ImageView implements
 					break;
 				}
 
-				return true;
-			}
-
-			// Check to see if the user double tapped
-			if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
 				return true;
 			}
 
