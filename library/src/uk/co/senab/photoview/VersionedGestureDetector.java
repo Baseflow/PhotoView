@@ -44,7 +44,7 @@ public abstract class VersionedGestureDetector {
 
 	public abstract boolean onTouchEvent(MotionEvent ev);
 
-	public interface OnGestureListener {
+	public static interface OnGestureListener {
 		public void onDrag(float dx, float dy);
 
 		public void onScale(float scaleFactor, float focusX, float focusY);

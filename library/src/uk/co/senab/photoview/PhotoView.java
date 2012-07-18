@@ -12,8 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-public class PhotoView extends ImageView implements
-		VersionedGestureDetector.OnGestureListener,
+public class PhotoView extends ImageView implements VersionedGestureDetector.OnGestureListener,
 		GestureDetector.OnDoubleTapListener {
 
 	static final String LOG_TAG = "PhotoView";
@@ -51,15 +50,14 @@ public class PhotoView extends ImageView implements
 
 	private class AnimatedZoomRunnable implements Runnable {
 
-		static final long ANIMATION_DURATION = 200;
+		static final long ANIMATION_DURATION = 120;
 
 		private final float mFocalX, mFocalY;
 		private final float mIncrementPerMs;
 		private final float mStartScale;
 		private final long mStartTime;
 
-		public AnimatedZoomRunnable(final float zoomLevel, final float focalX,
-				final float focalY) {
+		public AnimatedZoomRunnable(final float zoomLevel, final float focalX, final float focalY) {
 			mStartScale = getScale();
 			mStartTime = System.currentTimeMillis();
 			mIncrementPerMs = (zoomLevel - mStartScale) / ANIMATION_DURATION;
@@ -68,8 +66,7 @@ public class PhotoView extends ImageView implements
 		}
 
 		public void run() {
-			float currentMs = Math.min(ANIMATION_DURATION,
-					System.currentTimeMillis() - mStartTime);
+			float currentMs = Math.min(ANIMATION_DURATION, System.currentTimeMillis() - mStartTime);
 			float target = mStartScale + (mIncrementPerMs * currentMs);
 
 			mSuppMatrix.setScale(target, target, mFocalX, mFocalY);
@@ -183,8 +180,10 @@ public class PhotoView extends ImageView implements
 	}
 
 	public void onScale(float scaleFactor, float focusX, float focusY) {
-		mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-		centerAndDisplayMatrix();
+		if (getScale() < MAX_ZOOM || scaleFactor < 1f) {
+			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+			centerAndDisplayMatrix();
+		}
 	}
 
 	public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -197,10 +196,8 @@ public class PhotoView extends ImageView implements
 				// Check to see if the user tapped on the photo
 				if (displayRect.contains(x, y)) {
 
-					float xResult = (x - displayRect.left)
-							/ displayRect.width();
-					float yResult = (y - displayRect.top)
-							/ displayRect.height();
+					float xResult = (x - displayRect.left) / displayRect.width();
+					float yResult = (y - displayRect.top) / displayRect.height();
 
 					mPhotoTapListener.onPhotoTap(this, xResult, yResult);
 					return true;
@@ -216,7 +213,7 @@ public class PhotoView extends ImageView implements
 		if (mZoomEnabled) {
 
 			getParent().requestDisallowInterceptTouchEvent(true);
-			
+
 			// Check to see if the user double tapped
 			if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
 				return true;
@@ -231,14 +228,15 @@ public class PhotoView extends ImageView implements
 				}
 
 				switch (ev.getAction()) {
-				case MotionEvent.ACTION_CANCEL:
-				case MotionEvent.ACTION_UP:
-					// If the user has zoomed less than MIN_ZOOM, zoom back to
-					// 1.0f
-					if (getScale() < MIN_ZOOM) {
-						post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
-					}
-					break;
+					case MotionEvent.ACTION_CANCEL:
+					case MotionEvent.ACTION_UP:
+						// If the user has zoomed less than MIN_ZOOM, zoom back
+						// to
+						// 1.0f
+						if (getScale() < MIN_ZOOM) {
+							post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
+						}
+						break;
 				}
 
 				return true;
@@ -303,7 +301,7 @@ public class PhotoView extends ImageView implements
 	public void zoomTo(float scale, float focalX, float focalY) {
 		post(new AnimatedZoomRunnable(scale, focalX, focalY));
 	}
-	
+
 	protected Matrix getDisplayMatrix() {
 		mDrawMatrix.set(mBaseMatrix);
 		mDrawMatrix.postConcat(mSuppMatrix);
@@ -334,8 +332,7 @@ public class PhotoView extends ImageView implements
 			return;
 		}
 
-		RectF rect = new RectF(0, 0, d.getIntrinsicWidth(),
-				d.getIntrinsicHeight());
+		RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 		getDisplayMatrix().mapRect(rect);
 
 		final float height = rect.height(), width = rect.width();
@@ -377,8 +374,7 @@ public class PhotoView extends ImageView implements
 	private RectF getDisplayRect(Matrix matrix) {
 		Drawable d = getDrawable();
 		if (null != d) {
-			RectF rect = new RectF(0, 0, d.getIntrinsicWidth(),
-					d.getIntrinsicHeight());
+			RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
 			matrix.mapRect(rect);
 			return rect;
 		}
@@ -402,8 +398,7 @@ public class PhotoView extends ImageView implements
 	private void init(Context context) {
 		mScaleDetector = VersionedGestureDetector.newInstance(context, this);
 
-		mGestureDetector = new GestureDetector(context,
-				new GestureDetector.SimpleOnGestureListener());
+		mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener());
 		mGestureDetector.setOnDoubleTapListener(this);
 	}
 
@@ -439,8 +434,7 @@ public class PhotoView extends ImageView implements
 		float scale = Math.min(widthScale, heightScale);
 
 		mBaseMatrix.postScale(scale, scale);
-		mBaseMatrix.postTranslate((viewWidth - dWidth * scale) / 2F,
-				(viewHeight - dHeight * scale) / 2F);
+		mBaseMatrix.postTranslate((viewWidth - dWidth * scale) / 2F, (viewHeight - dHeight * scale) / 2F);
 
 		resetMatrix();
 	}
