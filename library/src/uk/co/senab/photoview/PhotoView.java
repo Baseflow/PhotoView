@@ -7,10 +7,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.ImageView;
+import android.widget.Scroller;
 
 public class PhotoView extends ImageView implements VersionedGestureDetector.OnGestureListener,
 		GestureDetector.OnDoubleTapListener {
@@ -46,6 +49,76 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 		 *            Drawable height.
 		 */
 		void onPhotoTap(View view, float x, float y);
+	}
+
+	private class FlingRunnable implements Runnable {
+
+		private final Scroller mScroller;
+		private int mCurrentX, mCurrentY;
+
+		public FlingRunnable() {
+			mScroller = new Scroller(getContext());
+		}
+
+		public void fling(int velocityX, int velocityY) {
+			final int viewHeight = getHeight();
+			final int viewWidth = getWidth();
+			final RectF rect = getDisplayRect();
+
+			final int minX, maxX, minY, maxY;
+
+			final int startX = Math.round(-rect.left);
+			if (viewWidth < rect.width()) {
+				minX = 0;
+				maxX = Math.round(rect.width() - viewWidth);
+			} else {
+				minX = maxX = startX;
+			}
+
+			final int startY = Math.round(-rect.top);
+			if (viewHeight < rect.height()) {
+				minY = 0;
+				maxY = Math.round(rect.height() - viewHeight);
+			} else {
+				minY = maxY = startY;
+			}
+
+			mCurrentX = startX;
+			mCurrentY = startY;
+
+			if (BuildConfig.DEBUG) {
+				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
+			}
+			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
+		}
+
+		@Override
+		public void run() {
+			if (mScroller.computeScrollOffset()) {
+
+				final int newX = mScroller.getCurrX();
+				final int newY = mScroller.getCurrY();
+
+				mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
+				setImageMatrix(getDisplayMatrix());
+
+				mCurrentX = newX;
+				mCurrentY = newY;
+
+				if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
+					SDK16.postOnAnimation(PhotoView.this, this);
+				} else {
+					postDelayed(this, 10);
+				}
+			}
+		}
+
+		public void cancelFling() {
+			if (BuildConfig.DEBUG) {
+				Log.d(LOG_TAG, "Cancel Fling");
+			}
+			mScroller.forceFinished(true);
+		}
 	}
 
 	private class AnimatedZoomRunnable implements Runnable {
@@ -108,6 +181,9 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 	private int mScrollEdge = EDGE_BOTH;
 	private boolean mZoomEnabled = false;
+
+	private float mMinimumVelocity;
+	private FlingRunnable mCurrentFlingRunnable;
 
 	public PhotoView(Context context) {
 		super(context);
@@ -179,6 +255,19 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 		centerAndDisplayMatrix();
 	}
 
+	@Override
+	public void onFling(float startX, float startY, float velocityX, float velocityY) {
+		if (Math.abs(velocityX) > mMinimumVelocity || Math.abs(velocityY) > mMinimumVelocity) {
+			if (BuildConfig.DEBUG) {
+				Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
+			}
+
+			mCurrentFlingRunnable = new FlingRunnable();
+			mCurrentFlingRunnable.fling((int) velocityX, (int) velocityY);
+			post(mCurrentFlingRunnable);
+		}
+	}
+
 	public void onScale(float scaleFactor, float focusX, float focusY) {
 		if (getScale() < MAX_ZOOM || scaleFactor < 1f) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
@@ -214,6 +303,12 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 			getParent().requestDisallowInterceptTouchEvent(true);
 
+			switch (ev.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					cancelFling();
+					break;
+			}
+
 			// Check to see if the user double tapped
 			if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
 				return true;
@@ -231,8 +326,7 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 					case MotionEvent.ACTION_CANCEL:
 					case MotionEvent.ACTION_UP:
 						// If the user has zoomed less than MIN_ZOOM, zoom back
-						// to
-						// 1.0f
+						// to 1.0f
 						if (getScale() < MIN_ZOOM) {
 							post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
 						}
@@ -400,6 +494,16 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 		mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener());
 		mGestureDetector.setOnDoubleTapListener(this);
+
+		final ViewConfiguration configuration = ViewConfiguration.get(context);
+		mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
+	}
+
+	private void cancelFling() {
+		if (null != mCurrentFlingRunnable) {
+			mCurrentFlingRunnable.cancelFling();
+			mCurrentFlingRunnable = null;
+		}
 	}
 
 	/**
@@ -438,4 +542,5 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 		resetMatrix();
 	}
+
 }

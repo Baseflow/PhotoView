@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.VelocityTracker;
 
 public abstract class VersionedGestureDetector {
 	private static final String TAG = "VersionedGestureDetector";
@@ -47,6 +48,8 @@ public abstract class VersionedGestureDetector {
 	public static interface OnGestureListener {
 		public void onDrag(float dx, float dy);
 
+		public void onFling(float startX, float startY, float velocityX, float velocityY);
+
 		public void onScale(float scaleFactor, float focusX, float focusY);
 	}
 
@@ -54,6 +57,8 @@ public abstract class VersionedGestureDetector {
 
 		float mLastTouchX;
 		float mLastTouchY;
+
+		private VelocityTracker mVelocityTracker;
 
 		float getActiveX(MotionEvent ev) {
 			return ev.getX();
@@ -65,6 +70,11 @@ public abstract class VersionedGestureDetector {
 
 		@Override
 		public boolean onTouchEvent(MotionEvent ev) {
+			if (null == mVelocityTracker) {
+				mVelocityTracker = VelocityTracker.obtain();
+			}
+			mVelocityTracker.addMovement(ev);
+
 			switch (ev.getAction()) {
 				case MotionEvent.ACTION_DOWN: {
 					mLastTouchX = getActiveX(ev);
@@ -79,6 +89,21 @@ public abstract class VersionedGestureDetector {
 
 					mLastTouchX = x;
 					mLastTouchY = y;
+					break;
+				}
+
+				case MotionEvent.ACTION_CANCEL:
+				case MotionEvent.ACTION_UP: {
+					// Compute velocity for with the unit as 1000ms
+					mVelocityTracker.computeCurrentVelocity(1000);
+
+					// Call listener
+					mListener.onFling(mLastTouchX, mLastTouchY, -mVelocityTracker.getXVelocity(),
+							-mVelocityTracker.getYVelocity());
+
+					// Recycle Velocity Tracker
+					mVelocityTracker.recycle();
+					mVelocityTracker = null;
 					break;
 				}
 			}
