@@ -15,6 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -28,8 +29,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
-import android.widget.Scroller;
 
+@TargetApi(9)
 public class PhotoView extends ImageView implements VersionedGestureDetector.OnGestureListener,
 		GestureDetector.OnDoubleTapListener {
 
@@ -68,11 +69,16 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 	private class FlingRunnable implements Runnable {
 
-		private final Scroller mScroller;
+		private final PhotupScroller mScroller;
 		private int mCurrentX, mCurrentY;
 
+		private final int mOverScrollPx;
+
 		public FlingRunnable() {
-			mScroller = new Scroller(getContext());
+			Context context = getContext();
+
+			mScroller = PhotupScroller.getScroller(context);
+			mOverScrollPx = context.getResources().getDimensionPixelSize(R.dimen.overscroll_amount);
 		}
 
 		public void fling(int velocityX, int velocityY) {
@@ -104,7 +110,7 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 			if (BuildConfig.DEBUG) {
 				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
 			}
-			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
+			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, mOverScrollPx, mOverScrollPx);
 		}
 
 		@Override
