@@ -32,18 +32,6 @@
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>com.google.android:android</exclude>
-						<exclude>commons-logging:commons-logging</exclude>
-						<exclude>xerces:xmlParserAPIs</exclude>
-						<exclude>xpp3:xpp3</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>
