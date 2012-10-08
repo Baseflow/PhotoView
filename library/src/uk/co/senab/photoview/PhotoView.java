@@ -34,6 +34,7 @@ import android.widget.ImageView;
 public class PhotoView extends ImageView implements VersionedGestureDetector.OnGestureListener,
 		GestureDetector.OnDoubleTapListener {
 
+	static final boolean DEBUG = false;
 	static final String LOG_TAG = "PhotoView";
 
 	/**
@@ -119,7 +120,7 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 			mCurrentX = startX;
 			mCurrentY = startY;
 
-			if (BuildConfig.DEBUG) {
+			if (DEBUG) {
 				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
 			}
 			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, mOverScrollPx, mOverScrollPx);
@@ -147,7 +148,7 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 		}
 
 		public void cancelFling() {
-			if (BuildConfig.DEBUG) {
+			if (DEBUG) {
 				Log.d(LOG_TAG, "Cancel Fling");
 			}
 			mScroller.forceFinished(true);
@@ -289,7 +290,7 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 	@Override
 	public void onFling(float startX, float startY, float velocityX, float velocityY) {
 		if (Math.abs(velocityX) > mMinimumVelocity || Math.abs(velocityY) > mMinimumVelocity) {
-			if (BuildConfig.DEBUG) {
+			if (DEBUG) {
 				Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
 			}
 
