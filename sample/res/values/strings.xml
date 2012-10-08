@@ -1,5 +1,8 @@
 <resources>
 
     <string name="app_name">PhotoViewSample</string>
+    
+    <string name="menu_zoom_enable">Enable Zoom</string>
+    <string name="menu_zoom_disable">Disable Zoom</string>
 
 </resources>
