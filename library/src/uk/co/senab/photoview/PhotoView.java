@@ -36,6 +36,12 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 	static final String LOG_TAG = "PhotoView";
 
+	/**
+	 * Interface definition for a callback to be invoked when the internal
+	 * Matrix has changed for this View.
+	 * 
+	 * @author Chris Banes
+	 */
 	public static interface OnMatrixChangedListener {
 		/**
 		 * Callback for when the Matrix displaying the Drawable has changed.
@@ -48,6 +54,12 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 		void onMatrixChanged(RectF rect);
 	}
 
+	/**
+	 * Interface definition for a callback to be invoked when the Photo is
+	 * tapped with a single tap.
+	 * 
+	 * @author Chris Banes
+	 */
 	public static interface OnPhotoTapListener {
 
 		/**
@@ -382,14 +394,35 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 		}
 	}
 
+	/**
+	 * Register a callback to be invoked when the Matrix has changed for this
+	 * View. An example would be the user panning or scaling the Photo.
+	 * 
+	 * @param listener
+	 *            - Listener to be registered.
+	 */
 	public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mMatrixChangeListener = listener;
 	}
 
+	/**
+	 * Register a callback to be invoked when the Photo displayed by this View
+	 * is tapped with a single tap.
+	 * 
+	 * @param listener
+	 *            - Listener to be registered.
+	 */
 	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
 	}
 
+	/**
+	 * Allows you to enable/disable the zoom functionality on the ImageView.
+	 * When disable the ImageView reverts to using the FIT_CENTER matrix.
+	 * 
+	 * @param zoomable
+	 *            - Whether the zoom functionality is enabled.
+	 */
 	public void setZoomable(boolean zoomable) {
 		mZoomEnabled = zoomable;
 
