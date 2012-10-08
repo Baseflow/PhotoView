@@ -208,12 +208,10 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 	public PhotoView(Context context) {
 		super(context);
-		init(context);
 	}
 
 	public PhotoView(Context context, AttributeSet attr) {
 		super(context, attr);
-		init(context);
 	}
 
 	/**
@@ -394,7 +392,17 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 	public void setZoomable(boolean zoomable) {
 		mZoomEnabled = zoomable;
+		
 		if (mZoomEnabled) {
+			// Create Gesture Detectors...
+			mScaleDetector = VersionedGestureDetector.newInstance(getContext(), this);
+			mGestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener());
+			mGestureDetector.setOnDoubleTapListener(this);
+
+			// Get device config...
+			final ViewConfiguration configuration = ViewConfiguration.get(getContext());
+			mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
+
 			// Make sure we using MATRIX Scale Type
 			setScaleType(ScaleType.MATRIX);
 
@@ -508,16 +516,6 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 	private float getValue(Matrix matrix, int whichValue) {
 		matrix.getValues(mMatrixValues);
 		return mMatrixValues[whichValue];
-	}
-
-	private void init(Context context) {
-		mScaleDetector = VersionedGestureDetector.newInstance(context, this);
-
-		mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener());
-		mGestureDetector.setOnDoubleTapListener(this);
-
-		final ViewConfiguration configuration = ViewConfiguration.get(context);
-		mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
 	}
 
 	private void cancelFling() {
