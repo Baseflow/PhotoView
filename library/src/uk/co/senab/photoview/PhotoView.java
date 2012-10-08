@@ -36,7 +36,7 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 	static final String LOG_TAG = "PhotoView";
 
-	static interface OnMatrixChangedListener {
+	public static interface OnMatrixChangedListener {
 		/**
 		 * Callback for when the Matrix displaying the Drawable has changed.
 		 * This could be because the View's bounds have changed, or the user has
@@ -48,7 +48,7 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 		void onMatrixChanged(RectF rect);
 	}
 
-	static interface OnPhotoTapListener {
+	public static interface OnPhotoTapListener {
 
 		/**
 		 * A callback to receive where the user taps on a photo. You will only
@@ -382,17 +382,17 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 		}
 	}
 
-	public void setMatrixChangeListener(OnMatrixChangedListener listener) {
+	public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mMatrixChangeListener = listener;
 	}
 
-	public void setPhotoTapListener(OnPhotoTapListener listener) {
+	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
 	}
 
 	public void setZoomable(boolean zoomable) {
 		mZoomEnabled = zoomable;
-		
+
 		if (mZoomEnabled) {
 			// Create Gesture Detectors...
 			mScaleDetector = VersionedGestureDetector.newInstance(getContext(), this);
@@ -408,6 +408,9 @@ public class PhotoView extends ImageView implements VersionedGestureDetector.OnG
 
 			// Update the base matrix using the current drawable
 			updateBaseMatrix(getDrawable());
+		} else {
+			// Reset the Matrix...
+			resetMatrix();
 		}
 	}
 
