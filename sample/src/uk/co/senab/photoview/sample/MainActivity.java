@@ -36,6 +36,8 @@ public class MainActivity extends Activity {
 	private ImageView mImageView;
 	private TextView mCurrMatrixTv;
 
+	private PhotoViewAttacher mAttacher;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,11 +50,11 @@ public class MainActivity extends Activity {
 		mImageView.setImageDrawable(bitmap);
 
 		// The MAGIC happens here!
-		PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+		mAttacher = new PhotoViewAttacher(mImageView);
 
 		// Lets attach some listeners, not required though!
-		attacher.setOnMatrixChangeListener(new MatrixChangeListener());
-		attacher.setOnPhotoTapListener(new PhotoTapListener());
+		mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
+		mAttacher.setOnPhotoTapListener(new PhotoTapListener());
 	}
 
 	@Override
@@ -63,9 +65,8 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
-		// zoomToggle.setTitle(mPhotoView.canZoom() ? R.string.menu_zoom_disable
-		// : R.string.menu_zoom_enable);
+		MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
+		zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -74,7 +75,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_zoom_toggle:
-				// mPhotoView.setZoomable(!mPhotoView.canZoom());
+				mAttacher.setZoomable(!mAttacher.canZoom());
 				return true;
 		}
 
