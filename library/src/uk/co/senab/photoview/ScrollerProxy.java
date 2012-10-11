@@ -7,9 +7,9 @@ import android.os.Build.VERSION_CODES;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
-public abstract class PhotupScroller {
+public abstract class ScrollerProxy {
 
-	public static PhotupScroller getScroller(Context context) {
+	public static ScrollerProxy getScroller(Context context) {
 		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
 			return new PreGingerScroller(context);
 		} else {
@@ -29,7 +29,7 @@ public abstract class PhotupScroller {
 	public abstract int getCurrY();
 
 	@TargetApi(9)
-	private static class GingerScroller extends PhotupScroller {
+	private static class GingerScroller extends ScrollerProxy {
 
 		private OverScroller mScroller;
 
@@ -64,7 +64,7 @@ public abstract class PhotupScroller {
 		}
 	}
 
-	private static class PreGingerScroller extends PhotupScroller {
+	private static class PreGingerScroller extends ScrollerProxy {
 
 		private Scroller mScroller;
 

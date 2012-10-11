@@ -23,7 +23,6 @@ import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
 
 public abstract class VersionedGestureDetector {
-	private static final String TAG = "VersionedGestureDetector";
 
 	OnGestureListener mListener;
 
