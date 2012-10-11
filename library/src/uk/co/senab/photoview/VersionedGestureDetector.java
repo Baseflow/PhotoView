@@ -21,18 +21,19 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
+import android.view.ViewConfiguration;
 
 public abstract class VersionedGestureDetector {
-
+	static final String LOG_TAG = "VersionedGestureDetector";
 	OnGestureListener mListener;
 
 	public static VersionedGestureDetector newInstance(Context context, OnGestureListener listener) {
 		final int sdkVersion = Build.VERSION.SDK_INT;
 		VersionedGestureDetector detector = null;
 		if (sdkVersion < Build.VERSION_CODES.ECLAIR) {
-			detector = new CupcakeDetector();
+			detector = new CupcakeDetector(context);
 		} else if (sdkVersion < Build.VERSION_CODES.FROYO) {
-			detector = new EclairDetector();
+			detector = new EclairDetector(context);
 		} else {
 			detector = new FroyoDetector(context);
 		}
@@ -43,6 +44,8 @@ public abstract class VersionedGestureDetector {
 	}
 
 	public abstract boolean onTouchEvent(MotionEvent ev);
+
+	public abstract boolean isScaling();
 
 	public static interface OnGestureListener {
 		public void onDrag(float dx, float dy);
@@ -56,6 +59,14 @@ public abstract class VersionedGestureDetector {
 
 		float mLastTouchX;
 		float mLastTouchY;
+		final float mTouchSlop;
+		final float mMinimumVelocity;
+
+		public CupcakeDetector(Context context) {
+			final ViewConfiguration configuration = ViewConfiguration.get(context);
+			mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
+			mTouchSlop = configuration.getScaledTouchSlop();
+		}
 
 		private VelocityTracker mVelocityTracker;
 
@@ -65,6 +76,10 @@ public abstract class VersionedGestureDetector {
 
 		float getActiveY(MotionEvent ev) {
 			return ev.getY();
+		}
+
+		public boolean isScaling() {
+			return false;
 		}
 
 		@Override
@@ -83,22 +98,31 @@ public abstract class VersionedGestureDetector {
 				case MotionEvent.ACTION_MOVE: {
 					final float x = getActiveX(ev);
 					final float y = getActiveY(ev);
+					final float dx = x - mLastTouchX, dy = y - mLastTouchY;
 
-					mListener.onDrag(x - mLastTouchX, y - mLastTouchY);
-
-					mLastTouchX = x;
-					mLastTouchY = y;
+					if (Math.max(Math.abs(dx), Math.abs(dy)) >= mTouchSlop) {
+						mListener.onDrag(dx, dy);
+						mLastTouchX = x;
+						mLastTouchY = y;
+					}
 					break;
 				}
 
 				case MotionEvent.ACTION_CANCEL:
 				case MotionEvent.ACTION_UP: {
-					// Compute velocity for with the unit as 1000ms
+					mLastTouchX = getActiveX(ev);
+					mLastTouchY = getActiveY(ev);
+
+					// Compute velocity within the last 1000ms
 					mVelocityTracker.computeCurrentVelocity(1000);
 
-					// Call listener
-					mListener.onFling(mLastTouchX, mLastTouchY, -mVelocityTracker.getXVelocity(),
-							-mVelocityTracker.getYVelocity());
+					final float vX = mVelocityTracker.getXVelocity(), vY = mVelocityTracker.getYVelocity();
+
+					// If the velocity is greater than minVelocity, call
+					// listener
+					if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
+						mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY);
+					}
 
 					// Recycle Velocity Tracker
 					mVelocityTracker.recycle();
@@ -114,6 +138,10 @@ public abstract class VersionedGestureDetector {
 		private static final int INVALID_POINTER_ID = -1;
 		private int mActivePointerId = INVALID_POINTER_ID;
 		private int mActivePointerIndex = 0;
+
+		public EclairDetector(Context context) {
+			super(context);
+		}
 
 		@Override
 		float getActiveX(MotionEvent ev) {
@@ -163,23 +191,39 @@ public abstract class VersionedGestureDetector {
 		}
 	}
 
-	private static class FroyoDetector extends EclairDetector {
+	private static class FroyoDetector extends EclairDetector implements ScaleGestureDetector.OnScaleGestureListener {
 		private ScaleGestureDetector mDetector;
 
 		public FroyoDetector(Context context) {
-			mDetector = new ScaleGestureDetector(context, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
-				@Override
-				public boolean onScale(ScaleGestureDetector detector) {
-					mListener.onScale(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY());
-					return true;
-				}
-			});
+			super(context);
+			mDetector = new ScaleGestureDetector(context, this);
+		}
+
+		@Override
+		public boolean isScaling() {
+			return mDetector.isInProgress();
+		}
+
+		@Override
+		public boolean onScale(ScaleGestureDetector detector) {
+			mListener.onScale(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY());
+			return true;
 		}
 
 		@Override
 		public boolean onTouchEvent(MotionEvent ev) {
 			mDetector.onTouchEvent(ev);
 			return super.onTouchEvent(ev);
+		}
+
+		@Override
+		public boolean onScaleBegin(ScaleGestureDetector detector) {
+			return true;
+		}
+
+		@Override
+		public void onScaleEnd(ScaleGestureDetector detector) {
+			// NO-OP
 		}
 	}
 }

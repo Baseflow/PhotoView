@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -199,7 +198,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 	// Gesture Detectors
 	private GestureDetector mGestureDetector;
-	private VersionedGestureDetector mScaleDetector;
+	private VersionedGestureDetector mScaleDragDetector;
 
 	private final Matrix mBaseMatrix = new Matrix();
 	private final Matrix mDrawMatrix = new Matrix();
@@ -215,7 +214,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private int mScrollEdge = EDGE_BOTH;
 	private boolean mZoomEnabled;
 
-	private float mMinimumVelocity;
 	private FlingRunnable mCurrentFlingRunnable;
 
 	private final ImageView mImageView;
@@ -226,13 +224,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		mImageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 		// Create Gesture Detectors...
-		mScaleDetector = VersionedGestureDetector.newInstance(mImageView.getContext(), this);
+		mScaleDragDetector = VersionedGestureDetector.newInstance(mImageView.getContext(), this);
 		mGestureDetector = new GestureDetector(mImageView.getContext(), new GestureDetector.SimpleOnGestureListener());
 		mGestureDetector.setOnDoubleTapListener(this);
-
-		// Get device config...
-		final ViewConfiguration configuration = ViewConfiguration.get(mImageView.getContext());
-		mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
 
 		// Make sure we using MATRIX Scale Type
 		mImageView.setScaleType(ScaleType.MATRIX);
@@ -297,21 +291,39 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	public final void onDrag(float dx, float dy) {
+		if (DEBUG) {
+			Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
+		}
+
 		mSuppMatrix.postTranslate(dx, dy);
 		centerAndDisplayMatrix();
+
+		/**
+		 * Here we decide whether to let the ImageView's parent to start taking
+		 * over the touch event.
+		 * 
+		 * We never want the parent to take over if we're scaling. We then check
+		 * the edge we're on, and the direction of the scroll (i.e. if we're
+		 * pulling against the edge, aka 'overscrolling', let the parent take
+		 * over).
+		 */
+		if (!mScaleDragDetector.isScaling()) {
+			if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
+					|| (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
+				mImageView.getParent().requestDisallowInterceptTouchEvent(false);
+			}
+		}
 	}
 
 	@Override
 	public final void onFling(float startX, float startY, float velocityX, float velocityY) {
-		if (Math.abs(velocityX) > mMinimumVelocity || Math.abs(velocityY) > mMinimumVelocity) {
-			if (DEBUG) {
-				Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
-			}
-
-			mCurrentFlingRunnable = new FlingRunnable();
-			mCurrentFlingRunnable.fling((int) velocityX, (int) velocityY);
-			mImageView.post(mCurrentFlingRunnable);
+		if (DEBUG) {
+			Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
 		}
+
+		mCurrentFlingRunnable = new FlingRunnable();
+		mCurrentFlingRunnable.fling((int) velocityX, (int) velocityY);
+		mImageView.post(mCurrentFlingRunnable);
 	}
 
 	@Override
@@ -322,6 +334,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	public final void onScale(float scaleFactor, float focusX, float focusY) {
+		if (DEBUG) {
+			Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
+		}
+
 		if (getScale() < MAX_ZOOM || scaleFactor < 1f) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
 			centerAndDisplayMatrix();
@@ -354,11 +370,24 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	public final boolean onTouch(View v, MotionEvent ev) {
 		if (mZoomEnabled) {
 
+			// First, disable the Parent from intercepting the touch event
 			v.getParent().requestDisallowInterceptTouchEvent(true);
 
 			switch (ev.getAction()) {
 				case MotionEvent.ACTION_DOWN:
+					// If we're flinging, and the user presses down, cancel
+					// fling
 					cancelFling();
+					break;
+
+				case MotionEvent.ACTION_CANCEL:
+				case MotionEvent.ACTION_UP:
+					// If the user has zoomed less than MIN_ZOOM, zoom back
+					// to 1.0f
+					if (getScale() < MIN_ZOOM) {
+						v.post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
+						return true;
+					}
 					break;
 			}
 
@@ -367,29 +396,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 				return true;
 			}
 
-			if (null != mScaleDetector && mScaleDetector.onTouchEvent(ev)) {
-
-				// If we're on an edge, then let the parent intercept. Useful
-				// for ViewPagers
-				if (mScrollEdge != EDGE_NONE) {
-					v.getParent().requestDisallowInterceptTouchEvent(false);
-				}
-
-				switch (ev.getAction()) {
-					case MotionEvent.ACTION_CANCEL:
-					case MotionEvent.ACTION_UP:
-						// If the user has zoomed less than MIN_ZOOM, zoom back
-						// to 1.0f
-						if (getScale() < MIN_ZOOM) {
-							v.post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
-						}
-						break;
-				}
-
+			// Finally, try the Scale/Drag detector
+			if (null != mScaleDragDetector && mScaleDragDetector.onTouchEvent(ev)) {
 				return true;
 			}
-
-			v.getParent().requestDisallowInterceptTouchEvent(false);
 		}
 
 		return false;
