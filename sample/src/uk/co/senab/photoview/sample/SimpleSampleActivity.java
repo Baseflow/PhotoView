@@ -29,7 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class SimpleSampleActivity extends Activity {
 
 	static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %%";
 
@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
 			float xPercentage = x * 100f;
 			float yPercentage = y * 100f;
 
-			Toast.makeText(MainActivity.this, String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage),
+			Toast.makeText(SimpleSampleActivity.this, String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage),
 					Toast.LENGTH_SHORT).show();
 		}
 	}
