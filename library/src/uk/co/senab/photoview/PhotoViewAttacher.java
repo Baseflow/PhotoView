@@ -370,11 +370,12 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	public final boolean onTouch(View v, MotionEvent ev) {
 		if (mZoomEnabled) {
 
-			// First, disable the Parent from intercepting the touch event
-			v.getParent().requestDisallowInterceptTouchEvent(true);
-
 			switch (ev.getAction()) {
 				case MotionEvent.ACTION_DOWN:
+					// First, disable the Parent from intercepting the touch
+					// event
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+
 					// If we're flinging, and the user presses down, cancel
 					// fling
 					cancelFling();
