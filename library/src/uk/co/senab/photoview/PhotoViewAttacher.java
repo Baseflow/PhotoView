@@ -218,6 +218,8 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 	private final ImageView mImageView;
 
+	private int mIvTop, mIvRight, mIvBottom, mIvLeft;
+
 	public PhotoViewAttacher(ImageView imageView) {
 		mImageView = imageView;
 		mImageView.setOnTouchListener(this);
@@ -329,7 +331,29 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	@Override
 	public final void onGlobalLayout() {
 		if (mZoomEnabled) {
-			updateBaseMatrix(mImageView.getDrawable());
+
+			final int top = mImageView.getTop();
+			final int right = mImageView.getRight();
+			final int bottom = mImageView.getBottom();
+			final int left = mImageView.getLeft();
+
+			/**
+			 * We need to check whether the ImageView's bounds have changed.
+			 * This would be easier if we targeted API 11+ as we could just use
+			 * View.OnLayoutChangeListener. Instead we have to replicate the
+			 * work, keeping track of the ImageView's bounds and then checking
+			 * if the values change.
+			 */
+			if (top != mIvTop || bottom != mIvBottom || left != mIvLeft || right != mIvRight) {
+				// Update our base matrix, as the bounds have changed
+				updateBaseMatrix(mImageView.getDrawable());
+
+				// Update values as something has changed
+				mIvTop = top;
+				mIvRight = right;
+				mIvBottom = bottom;
+				mIvLeft = left;
+			}
 		}
 	}
 
