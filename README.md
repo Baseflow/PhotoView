@@ -1,6 +1,6 @@
 # PhotoView
 
-![PhotoView](https://raw.github.com/chrisbanes/PhotoView/dev/header_graphic.png)
+![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/header_graphic.png)
 
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView. It is currently being used in [photup](https://play.google.com/store/apps/details?id=uk.co.senab.photup).
 
@@ -10,6 +10,12 @@ PhotoView aims to help produce an easily usable implementation of a zooming Andr
 - Works perfectly when using used in a scrolling parent (such as ViewPager).
 - Allows the application to be notified when the displayed Matrix has changed. Useful for when you need to update your UI based on the current zoom/scroll position.
 - Allows the application to be notified when the user taps on the Photo.
+
+## Sample Application
+The sample application (the source is in the repository) has been published onto Google Play for easy access:
+
+[![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_small.png)](http://play.google.com/store/apps/details?id=uk.co.senab.photoview.sample)
+
 
 ## Sample Usage
 There is a [sample](https://github.com/chrisbanes/PhotoView/tree/master/sample) provided which shows how to use the library in a more advanced way, but for completeness here is all that is required to get PhotoView working:
