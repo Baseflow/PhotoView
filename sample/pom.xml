@@ -24,6 +24,11 @@
 			<type>apklib</type>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>support-v4</artifactId>
+			<version>r7</version>
+		</dependency>
 	</dependencies>
 
 	<build>
