@@ -1,6 +1,6 @@
 # PhotoView
 
-![PhotoView](header_graphic.png)
+![PhotoView](https://github.com/chrisbanes/PhotoView/blob/master/header_graphic.png)
 
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView. It is currently being used in [photup](https://play.google.com/store/apps/details?id=uk.co.senab.photup).
 
