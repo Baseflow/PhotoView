@@ -83,13 +83,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		private final ScrollerProxy mScroller;
 		private int mCurrentX, mCurrentY;
 
-		private final int mOverScrollPx;
-
 		public FlingRunnable() {
 			Context context = mImageView.getContext();
-
 			mScroller = ScrollerProxy.getScroller(context);
-			mOverScrollPx = context.getResources().getDimensionPixelSize(R.dimen.overscroll_amount);
 		}
 
 		public void fling(int velocityX, int velocityY) {
@@ -121,7 +117,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			if (DEBUG) {
 				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
 			}
-			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, mOverScrollPx, mOverScrollPx);
+			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, 0, 0);
 		}
 
 		@Override
