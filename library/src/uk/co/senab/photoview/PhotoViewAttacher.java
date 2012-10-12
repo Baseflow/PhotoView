@@ -83,13 +83,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		private final ScrollerProxy mScroller;
 		private int mCurrentX, mCurrentY;
 
-		private final int mOverScrollPx;
-
 		public FlingRunnable() {
 			Context context = mImageView.getContext();
-
 			mScroller = ScrollerProxy.getScroller(context);
-			mOverScrollPx = context.getResources().getDimensionPixelSize(R.dimen.overscroll_amount);
 		}
 
 		public void fling(int velocityX, int velocityY) {
@@ -121,7 +117,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			if (DEBUG) {
 				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
 			}
-			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, mOverScrollPx, mOverScrollPx);
+			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, 0, 0);
 		}
 
 		@Override
@@ -155,34 +151,51 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 	private class AnimatedZoomRunnable implements Runnable {
 
-		static final long ANIMATION_DURATION = 120;
+		// These are 'postScale' values, means they're compounded each iteration
+		static final float ANIMATION_SCALE_PER_ITERATION_IN = 1.07f;
+		static final float ANIMATION_SCALE_PER_ITERATION_OUT = 0.93f;
 
 		private final float mFocalX, mFocalY;
-		private final float mIncrementPerMs;
-		private final float mStartScale;
-		private final long mStartTime;
+		private final float mTargetZoom;
+		private final float mDeltaScale;
 
-		public AnimatedZoomRunnable(final float zoomLevel, final float focalX, final float focalY) {
-			mStartScale = getScale();
-			mStartTime = System.currentTimeMillis();
-			mIncrementPerMs = (zoomLevel - mStartScale) / ANIMATION_DURATION;
+		public AnimatedZoomRunnable(final float currentZoom, final float targetZoom, final float focalX,
+				final float focalY) {
+			mTargetZoom = targetZoom;
 			mFocalX = focalX;
 			mFocalY = focalY;
+
+			if (currentZoom < targetZoom) {
+				mDeltaScale = ANIMATION_SCALE_PER_ITERATION_IN;
+			} else {
+				mDeltaScale = ANIMATION_SCALE_PER_ITERATION_OUT;
+			}
 		}
 
 		public void run() {
-			float currentMs = Math.min(ANIMATION_DURATION, System.currentTimeMillis() - mStartTime);
-			float target = mStartScale + (mIncrementPerMs * currentMs);
-
-			mSuppMatrix.setScale(target, target, mFocalX, mFocalY);
+			mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX, mFocalY);
 			centerAndDisplayMatrix();
 
-			if (currentMs < ANIMATION_DURATION) {
-				if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-					SDK16.postOnAnimation(mImageView, this);
-				} else {
-					mImageView.postDelayed(this, 10);
-				}
+			final float currentScale = getScale();
+
+			if ((mDeltaScale > 1f && currentScale < mTargetZoom) || (mDeltaScale < 1f && mTargetZoom < currentScale)) {
+				// We haven't hit our target scale yet, so post ourselves again
+				postSelf();
+
+			} else {
+				// We've scaled past our target zoom, so calculate the
+				// necessary scale so we're back at target zoom
+				final float delta = mTargetZoom / currentScale;
+				mSuppMatrix.postScale(delta, delta, mFocalX, mFocalY);
+				centerAndDisplayMatrix();
+			}
+		}
+
+		private void postSelf() {
+			if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
+				SDK16.postOnAnimation(mImageView, this);
+			} else {
+				mImageView.postDelayed(this, 10);
 			}
 		}
 	}
@@ -217,6 +230,8 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private FlingRunnable mCurrentFlingRunnable;
 
 	private final ImageView mImageView;
+
+	private int mIvTop, mIvRight, mIvBottom, mIvLeft;
 
 	public PhotoViewAttacher(ImageView imageView) {
 		mImageView = imageView;
@@ -329,7 +344,29 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	@Override
 	public final void onGlobalLayout() {
 		if (mZoomEnabled) {
-			updateBaseMatrix(mImageView.getDrawable());
+
+			final int top = mImageView.getTop();
+			final int right = mImageView.getRight();
+			final int bottom = mImageView.getBottom();
+			final int left = mImageView.getLeft();
+
+			/**
+			 * We need to check whether the ImageView's bounds have changed.
+			 * This would be easier if we targeted API 11+ as we could just use
+			 * View.OnLayoutChangeListener. Instead we have to replicate the
+			 * work, keeping track of the ImageView's bounds and then checking
+			 * if the values change.
+			 */
+			if (top != mIvTop || bottom != mIvBottom || left != mIvLeft || right != mIvRight) {
+				// Update our base matrix, as the bounds have changed
+				updateBaseMatrix(mImageView.getDrawable());
+
+				// Update values as something has changed
+				mIvTop = top;
+				mIvRight = right;
+				mIvBottom = bottom;
+				mIvLeft = left;
+			}
 		}
 	}
 
@@ -370,11 +407,12 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	public final boolean onTouch(View v, MotionEvent ev) {
 		if (mZoomEnabled) {
 
-			// First, disable the Parent from intercepting the touch event
-			v.getParent().requestDisallowInterceptTouchEvent(true);
-
 			switch (ev.getAction()) {
 				case MotionEvent.ACTION_DOWN:
+					// First, disable the Parent from intercepting the touch
+					// event
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+
 					// If we're flinging, and the user presses down, cancel
 					// fling
 					cancelFling();
@@ -385,7 +423,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 					// If the user has zoomed less than MIN_ZOOM, zoom back
 					// to 1.0f
 					if (getScale() < MIN_ZOOM) {
-						v.post(new AnimatedZoomRunnable(MIN_ZOOM, 0f, 0f));
+						v.post(new AnimatedZoomRunnable(getScale(), MIN_ZOOM, 0f, 0f));
 						return true;
 					}
 					break;
@@ -463,7 +501,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 *            - Y Focus Point
 	 */
 	public void zoomTo(float scale, float focalX, float focalY) {
-		mImageView.post(new AnimatedZoomRunnable(scale, focalX, focalY));
+		mImageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
 	}
 
 	protected Matrix getDisplayMatrix() {

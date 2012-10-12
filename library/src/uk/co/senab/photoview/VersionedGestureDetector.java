@@ -18,6 +18,7 @@ package uk.co.senab.photoview;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
@@ -69,6 +70,7 @@ public abstract class VersionedGestureDetector {
 		}
 
 		private VelocityTracker mVelocityTracker;
+		private boolean mIsDragging;
 
 		float getActiveX(MotionEvent ev) {
 			return ev.getX();
@@ -84,15 +86,14 @@ public abstract class VersionedGestureDetector {
 
 		@Override
 		public boolean onTouchEvent(MotionEvent ev) {
-			if (null == mVelocityTracker) {
-				mVelocityTracker = VelocityTracker.obtain();
-			}
-			mVelocityTracker.addMovement(ev);
-
 			switch (ev.getAction()) {
 				case MotionEvent.ACTION_DOWN: {
+					mVelocityTracker = VelocityTracker.obtain();
+					mVelocityTracker.addMovement(ev);
+
 					mLastTouchX = getActiveX(ev);
 					mLastTouchY = getActiveY(ev);
+					mIsDragging = false;
 					break;
 				}
 				case MotionEvent.ACTION_MOVE: {
@@ -100,33 +101,52 @@ public abstract class VersionedGestureDetector {
 					final float y = getActiveY(ev);
 					final float dx = x - mLastTouchX, dy = y - mLastTouchY;
 
-					if (Math.max(Math.abs(dx), Math.abs(dy)) >= mTouchSlop) {
+					if (!mIsDragging) {
+						// Use Pythagoras to see if drag length is larger than
+						// touch slop
+						mIsDragging = FloatMath.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
+					}
+
+					if (mIsDragging) {
 						mListener.onDrag(dx, dy);
 						mLastTouchX = x;
 						mLastTouchY = y;
+
+						if (null != mVelocityTracker) {
+							mVelocityTracker.addMovement(ev);
+						}
 					}
 					break;
 				}
 
 				case MotionEvent.ACTION_CANCEL:
 				case MotionEvent.ACTION_UP: {
-					mLastTouchX = getActiveX(ev);
-					mLastTouchY = getActiveY(ev);
+					if (mIsDragging) {
+						mIsDragging = false;
 
-					// Compute velocity within the last 1000ms
-					mVelocityTracker.computeCurrentVelocity(1000);
+						if (null != mVelocityTracker) {
+							mLastTouchX = getActiveX(ev);
+							mLastTouchY = getActiveY(ev);
 
-					final float vX = mVelocityTracker.getXVelocity(), vY = mVelocityTracker.getYVelocity();
+							// Compute velocity within the last 1000ms
+							mVelocityTracker.addMovement(ev);
+							mVelocityTracker.computeCurrentVelocity(1000);
 
-					// If the velocity is greater than minVelocity, call
-					// listener
-					if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
-						mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY);
+							final float vX = mVelocityTracker.getXVelocity(), vY = mVelocityTracker.getYVelocity();
+
+							// If the velocity is greater than minVelocity, call
+							// listener
+							if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
+								mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY);
+							}
+						}
 					}
 
 					// Recycle Velocity Tracker
-					mVelocityTracker.recycle();
-					mVelocityTracker = null;
+					if (null != mVelocityTracker) {
+						mVelocityTracker.recycle();
+						mVelocityTracker = null;
+					}
 					break;
 				}
 			}

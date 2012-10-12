@@ -4,13 +4,13 @@
 	
 	<groupId>com.github.chrisbanes.photoview</groupId>
 	<artifactId>library</artifactId>
-	<packaging>apklib</packaging>
+	<packaging>jar</packaging>
 	<name>PhotoView Library</name>
 	
 	<parent>
 		<groupId>com.github.chrisbanes.photoview</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0</version>
+		<version>1.1</version>
 	</parent>
 	
 	<dependencies>
@@ -19,12 +19,4 @@
 			<artifactId>android</artifactId>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>
