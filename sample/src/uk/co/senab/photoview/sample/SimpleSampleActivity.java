@@ -38,6 +38,8 @@ public class SimpleSampleActivity extends Activity {
 
 	private PhotoViewAttacher mAttacher;
 
+	private Toast mCurrentToast;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,8 +91,13 @@ public class SimpleSampleActivity extends Activity {
 			float xPercentage = x * 100f;
 			float yPercentage = y * 100f;
 
-			Toast.makeText(SimpleSampleActivity.this, String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage),
-					Toast.LENGTH_SHORT).show();
+			if (null != mCurrentToast) {
+				mCurrentToast.cancel();
+			}
+
+			mCurrentToast = Toast.makeText(SimpleSampleActivity.this,
+					String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage), Toast.LENGTH_SHORT);
+			mCurrentToast.show();
 		}
 	}
 
