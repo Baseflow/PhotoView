@@ -1,19 +1,43 @@
-PhotoView
-=========
+# PhotoView
 
-A simple ImageView that support zooming, both by Multi-touch gestures and double-tap. It is currently being used in [photup](https://play.google.com/store/apps/details?id=uk.co.senab.photup).
+![PhotoView](header_graphic.png)
+
+PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView. It is currently being used in [photup](https://play.google.com/store/apps/details?id=uk.co.senab.photup).
 
 ## Features
-- Out of the box Zooming.
-- Allows the application to be notified when the displayed Matrix has changed. Useful for when you need to update your UI based on the current zoom/translation position.
+- Out of the box zooming, using multi-touch and double-tap.
+- Scrolling, with smooth scrolling fling.
+- Works perfectly when using used in a scrolling parent (such as ViewPager).
+- Allows the application to be notified when the displayed Matrix has changed. Useful for when you need to update your UI based on the current zoom/scroll position.
 - Allows the application to be notified when the user taps on the Photo.
-- Scrolling via fling
+
+## Sample Usage
+There is a [sample](https://github.com/chrisbanes/PhotoView/tree/master/sample) provided which shows how to use the library in a more advanced way, but for completeness here is all that is required to get PhotoView working:
+
+``` java
+ImageView mImageView;
+PhotoViewAttacher mAttacher;
+
+@Override
+public void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.activity_main);
+	
+	// Any implementation of ImageView can be used!
+	mImageView = (ImageView) findViewById(R.id.iv_photo);
+	
+	// Set the Drawable displayed
+	Drawable bitmap = getResources().getDrawable(R.drawable.wallpaper);
+	mImageView.setImageDrawable(bitmap);
+
+	// Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
+	mAttacher = new PhotoViewAttacher(mImageView);
+}
 
 
-## Future
-There are some things I wish to add in the future:
-
-- Nicer 'centering' when checking bounds.
+// If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
+attacher.update();
+```
 
 ## License
 
