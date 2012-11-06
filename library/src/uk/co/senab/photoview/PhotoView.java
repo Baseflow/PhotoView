@@ -71,7 +71,9 @@ public class PhotoView extends ImageView {
 	@Override
 	public void setImageDrawable(Drawable drawable) {
 		super.setImageDrawable(drawable);
-		mAttacher.update();
+		if(mAttacher != null) {
+			mAttacher.update();
+		}
 	}
 
 	/**

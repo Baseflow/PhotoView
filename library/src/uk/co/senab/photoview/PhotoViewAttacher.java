@@ -249,8 +249,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		// Make sure we using MATRIX Scale Type
 		mImageView.setScaleType(ScaleType.MATRIX);
 
-		// Finally, update the UI so that we're zoomable
-		setZoomable(true);
+		if(!imageView.isInEditMode()) {
+			// Finally, update the UI so that we're zoomable
+			// If we're not in the Graphical Layout Editor
+			setZoomable(true);
+		}
 	}
 
 	/**
