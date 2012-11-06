@@ -238,10 +238,13 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		mImageView.setOnTouchListener(this);
 		mImageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
-		// Create Gesture Detectors...
-		mScaleDragDetector = VersionedGestureDetector.newInstance(mImageView.getContext(), this);
-		mGestureDetector = new GestureDetector(mImageView.getContext(), new GestureDetector.SimpleOnGestureListener());
-		mGestureDetector.setOnDoubleTapListener(this);
+		if(!imageView.isInEditMode()) {
+			// Create Gesture Detectors...
+			// When we're not in the Graphical Layout Editor
+			mScaleDragDetector = VersionedGestureDetector.newInstance(mImageView.getContext(), this);
+			mGestureDetector = new GestureDetector(mImageView.getContext(), new GestureDetector.SimpleOnGestureListener());
+			mGestureDetector.setOnDoubleTapListener(this);
+		}
 
 		// Make sure we using MATRIX Scale Type
 		mImageView.setScaleType(ScaleType.MATRIX);
