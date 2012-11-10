@@ -89,13 +89,16 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 
 		public void fling(int velocityX, int velocityY) {
+			final RectF rect = getDisplayRect();
+			if (null == rect) {
+				return;
+			}
+
 			final int viewHeight = mImageView.getHeight();
 			final int viewWidth = mImageView.getWidth();
-			final RectF rect = getDisplayRect();
-
+			final int startX = Math.round(-rect.left);
 			final int minX, maxX, minY, maxY;
 
-			final int startX = Math.round(-rect.left);
 			if (viewWidth < rect.width()) {
 				minX = 0;
 				maxX = Math.round(rect.width() - viewWidth);
@@ -238,18 +241,19 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		mImageView.setOnTouchListener(this);
 		mImageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
-		if(!imageView.isInEditMode()) {
+		if (!imageView.isInEditMode()) {
 			// Create Gesture Detectors...
 			// When we're not in the Graphical Layout Editor
 			mScaleDragDetector = VersionedGestureDetector.newInstance(mImageView.getContext(), this);
-			mGestureDetector = new GestureDetector(mImageView.getContext(), new GestureDetector.SimpleOnGestureListener());
+			mGestureDetector = new GestureDetector(mImageView.getContext(),
+					new GestureDetector.SimpleOnGestureListener());
 			mGestureDetector.setOnDoubleTapListener(this);
 		}
 
 		// Make sure we using MATRIX Scale Type
 		mImageView.setScaleType(ScaleType.MATRIX);
 
-		if(!imageView.isInEditMode()) {
+		if (!imageView.isInEditMode()) {
 			// Finally, update the UI so that we're zoomable
 			// If we're not in the Graphical Layout Editor
 			setZoomable(true);
@@ -316,22 +320,24 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
 		}
 
-		mSuppMatrix.postTranslate(dx, dy);
-		centerAndDisplayMatrix();
+		if (hasDrawable()) {
+			mSuppMatrix.postTranslate(dx, dy);
+			centerAndDisplayMatrix();
 
-		/**
-		 * Here we decide whether to let the ImageView's parent to start taking
-		 * over the touch event.
-		 * 
-		 * We never want the parent to take over if we're scaling. We then check
-		 * the edge we're on, and the direction of the scroll (i.e. if we're
-		 * pulling against the edge, aka 'overscrolling', let the parent take
-		 * over).
-		 */
-		if (!mScaleDragDetector.isScaling()) {
-			if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
-					|| (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
-				mImageView.getParent().requestDisallowInterceptTouchEvent(false);
+			/**
+			 * Here we decide whether to let the ImageView's parent to start
+			 * taking over the touch event.
+			 * 
+			 * We never want the parent to take over if we're scaling. We then
+			 * check the edge we're on, and the direction of the scroll (i.e. if
+			 * we're pulling against the edge, aka 'overscrolling', let the
+			 * parent take over).
+			 */
+			if (!mScaleDragDetector.isScaling()) {
+				if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
+						|| (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
+					mImageView.getParent().requestDisallowInterceptTouchEvent(false);
+				}
 			}
 		}
 	}
@@ -342,9 +348,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
 		}
 
-		mCurrentFlingRunnable = new FlingRunnable();
-		mCurrentFlingRunnable.fling((int) velocityX, (int) velocityY);
-		mImageView.post(mCurrentFlingRunnable);
+		if (hasDrawable()) {
+			mCurrentFlingRunnable = new FlingRunnable();
+			mCurrentFlingRunnable.fling((int) velocityX, (int) velocityY);
+			mImageView.post(mCurrentFlingRunnable);
+		}
 	}
 
 	@Override
@@ -381,7 +389,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
 		}
 
-		if (getScale() < MAX_ZOOM || scaleFactor < 1f) {
+		if (hasDrawable() && (getScale() < MAX_ZOOM || scaleFactor < 1f)) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
 			centerAndDisplayMatrix();
 		}
@@ -599,6 +607,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private float getValue(Matrix matrix, int whichValue) {
 		matrix.getValues(mMatrixValues);
 		return mMatrixValues[whichValue];
+	}
+
+	private boolean hasDrawable() {
+		return null != mImageView.getDrawable();
 	}
 
 	/**
