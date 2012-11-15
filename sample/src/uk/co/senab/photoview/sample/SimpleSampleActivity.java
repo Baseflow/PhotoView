@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,6 +79,34 @@ public class SimpleSampleActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.menu_zoom_toggle:
 				mAttacher.setZoomable(!mAttacher.canZoom());
+				return true;
+
+			case R.id.menu_scale_fit_center:
+				mAttacher.setScaleType(ScaleType.FIT_CENTER);
+				return true;
+
+			case R.id.menu_scale_fit_start:
+				mAttacher.setScaleType(ScaleType.FIT_START);
+				return true;
+
+			case R.id.menu_scale_fit_end:
+				mAttacher.setScaleType(ScaleType.FIT_END);
+				return true;
+
+			case R.id.menu_scale_fit_xy:
+				mAttacher.setScaleType(ScaleType.FIT_XY);
+				return true;
+
+			case R.id.menu_scale_scale_center:
+				mAttacher.setScaleType(ScaleType.CENTER);
+				return true;
+
+			case R.id.menu_scale_scale_center_crop:
+				mAttacher.setScaleType(ScaleType.CENTER_CROP);
+				return true;
+
+			case R.id.menu_scale_scale_center_inside:
+				mAttacher.setScaleType(ScaleType.CENTER_INSIDE);
 				return true;
 		}
 

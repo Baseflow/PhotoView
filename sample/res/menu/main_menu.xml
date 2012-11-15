@@ -2,5 +2,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item android:id="@+id/menu_zoom_toggle"/>
+    <item
+        android:id="@+id/menu_scale_fit_center"
+        android:showAsAction="never"
+        android:title="@string/menu_scale_fit_center"/>
+    <item
+        android:id="@+id/menu_scale_fit_start"
+        android:showAsAction="never"
+        android:title="@string/menu_scale_fit_start"/>
+    <item
+        android:id="@+id/menu_scale_fit_end"
+        android:showAsAction="never"
+        android:title="@string/menu_scale_fit_end"/>
+    <item
+        android:id="@+id/menu_scale_fit_xy"
+        android:showAsAction="never"
+        android:title="@string/menu_scale_fit_xy"/>
+    <item
+        android:id="@+id/menu_scale_scale_center"
+        android:showAsAction="never"
+        android:title="@string/menu_scale_center"/>
+    <item
+        android:id="@+id/menu_scale_scale_center_crop"
+        android:showAsAction="never"
+        android:title="@string/menu_scale_center_crop"/>
+    <item
+        android:id="@+id/menu_scale_scale_center_inside"
+        android:showAsAction="never"
+        android:title="@string/menu_scale_center_inside"/>
 
 </menu>
