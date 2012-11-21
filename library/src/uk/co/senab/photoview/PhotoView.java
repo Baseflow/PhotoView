@@ -31,11 +31,13 @@ public class PhotoView extends ImageView {
 
 	public PhotoView(Context context) {
 		super(context);
+		super.setScaleType(ScaleType.MATRIX);
 		mAttacher = new PhotoViewAttacher(this);
 	}
 
 	public PhotoView(Context context, AttributeSet attr) {
 		super(context, attr);
+		super.setScaleType(ScaleType.MATRIX);
 		mAttacher = new PhotoViewAttacher(this);
 	}
 
@@ -67,6 +69,11 @@ public class PhotoView extends ImageView {
 	public float getScale() {
 		return mAttacher.getScale();
 	}
+	
+	@Override
+	public ScaleType getScaleType() {
+		return mAttacher.getScaleType();
+	}
 
 	@Override
 	public void setImageDrawable(Drawable drawable) {
@@ -96,6 +103,11 @@ public class PhotoView extends ImageView {
 	 */
 	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mAttacher.setOnPhotoTapListener(listener);
+	}
+	
+	@Override
+	public void setScaleType(ScaleType scaleType) {
+		mAttacher.setScaleType(scaleType);
 	}
 
 	/**

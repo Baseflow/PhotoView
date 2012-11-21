@@ -265,7 +265,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 
 		// Make sure we using MATRIX Scale Type
-		mImageView.setScaleType(ScaleType.MATRIX);
+		setImageViewScaleTypeMatrix();
 
 		if (!imageView.isInEditMode()) {
 			// Finally, update the UI so that we're zoomable
@@ -535,7 +535,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	public final void update() {
 		if (mZoomEnabled) {
 			// Make sure we using MATRIX Scale Type
-			mImageView.setScaleType(ScaleType.MATRIX);
+			setImageViewScaleTypeMatrix();
 
 			// Update the base matrix using the current drawable
 			updateBaseMatrix(mImageView.getDrawable());
@@ -581,9 +581,15 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	private void checkImageViewScaleType() {
-		if (mImageView.getScaleType() != ScaleType.MATRIX) {
-			throw new IllegalStateException(
-					"The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
+		/**
+		 * PhotoView's getScaleType() will just divert to this.getScaleType() so
+		 * only call if we're not attached to a PhotoView.
+		 */
+		if (!(mImageView instanceof PhotoView)) {
+			if (mImageView.getScaleType() != ScaleType.MATRIX) {
+				throw new IllegalStateException(
+						"The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
+			}
 		}
 	}
 
@@ -685,6 +691,18 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		mSuppMatrix.reset();
 		setImageViewMatrix(getDisplayMatrix());
 		checkMatrixBounds();
+	}
+
+	private void setImageViewScaleTypeMatrix() {
+		if (mImageView instanceof PhotoView) {
+			/**
+			 * PhotoView sets it's own ScaleType to Matrix, then diverts all
+			 * calls setScaleType to this.setScaleType. Basically we don't need
+			 * to do anything here
+			 */
+		} else {
+			mImageView.setScaleType(ScaleType.MATRIX);
+		}
 	}
 
 	private void setImageViewMatrix(Matrix matrix) {
