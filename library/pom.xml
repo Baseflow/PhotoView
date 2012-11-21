@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>com.github.chrisbanes.photoview</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.2</version>
+		<version>1.3-SNAPSHOT</version>
 	</parent>
 	
 	<dependencies>
