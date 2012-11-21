@@ -458,7 +458,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 					// If the user has zoomed less than MIN_ZOOM, zoom back
 					// to 1.0f
 					if (getScale() < MIN_ZOOM) {
-						v.post(new AnimatedZoomRunnable(getScale(), MIN_ZOOM, 0f, 0f));
+						RectF rect = getDisplayRect();
+						if (null != rect) {
+							v.post(new AnimatedZoomRunnable(getScale(), MIN_ZOOM, rect.centerX(), rect.centerY()));
+						}
 						return true;
 					}
 					break;
