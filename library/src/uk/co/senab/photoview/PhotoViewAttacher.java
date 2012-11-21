@@ -20,8 +20,6 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -136,12 +134,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 				mCurrentX = newX;
 				mCurrentY = newY;
-
-				if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-					SDK16.postOnAnimation(mImageView, this);
-				} else {
-					mImageView.postDelayed(this, 10);
-				}
+				
+				// Post On animation
+				Compat.postOnAnimation(mImageView, this);
 			}
 		}
 
@@ -184,7 +179,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 			if ((mDeltaScale > 1f && currentScale < mTargetZoom) || (mDeltaScale < 1f && mTargetZoom < currentScale)) {
 				// We haven't hit our target scale yet, so post ourselves again
-				postSelf();
+				Compat.postOnAnimation(mImageView, this);
 
 			} else {
 				// We've scaled past our target zoom, so calculate the
@@ -192,14 +187,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 				final float delta = mTargetZoom / currentScale;
 				mSuppMatrix.postScale(delta, delta, mFocalX, mFocalY);
 				checkAndDisplayMatrix();
-			}
-		}
-
-		private void postSelf() {
-			if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-				SDK16.postOnAnimation(mImageView, this);
-			} else {
-				mImageView.postDelayed(this, 10);
 			}
 		}
 	}
