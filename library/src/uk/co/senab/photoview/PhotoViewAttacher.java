@@ -119,7 +119,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			if (DEBUG) {
 				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
 			}
-			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, 0, 0);
+
+			// If we actually can move, fling the scroller
+			if (startX != maxX || startY != maxY) {
+				mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, 0, 0);
+			}
 		}
 
 		@Override
@@ -129,12 +133,17 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 				final int newX = mScroller.getCurrX();
 				final int newY = mScroller.getCurrY();
 
+				if (DEBUG) {
+					Log.d(LOG_TAG, "fling run(). CurrentX:" + mCurrentX + " CurrentY:" + mCurrentY + " NewX:" + newX
+							+ " NewY:" + newY);
+				}
+
 				mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
 				setImageViewMatrix(getDisplayMatrix());
 
 				mCurrentX = newX;
 				mCurrentY = newY;
-				
+
 				// Post On animation
 				Compat.postOnAnimation(mImageView, this);
 			}
