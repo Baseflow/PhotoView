@@ -588,13 +588,13 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		if (height <= viewHeight) {
 			switch (mScaleType) {
 				case FIT_START:
-					deltaX = -rect.top;
+					deltaY = -rect.top;
 					break;
 				case FIT_END:
-					deltaX = viewHeight - height - rect.top;
+					deltaY = viewHeight - height - rect.top;
 					break;
 				default:
-					deltaX = (viewHeight - height) / 2 - rect.top;
+					deltaY = (viewHeight - height) / 2 - rect.top;
 					break;
 			}
 		} else if (rect.top > 0) {
