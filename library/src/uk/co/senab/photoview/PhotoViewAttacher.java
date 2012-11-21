@@ -200,7 +200,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 	}
 
-	private static boolean isSupportedScaleType(final ImageView.ScaleType scaleType) {
+	private static boolean isSupportedScaleType(final ScaleType scaleType) {
 		if (null == scaleType) {
 			return false;
 		}
@@ -242,7 +242,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 	private int mScrollEdge = EDGE_BOTH;
 	private boolean mZoomEnabled;
-	private ImageView.ScaleType mScaleType = ScaleType.FIT_CENTER;
+	private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
 	private FlingRunnable mCurrentFlingRunnable;
 
@@ -290,7 +290,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * 
 	 * @return - RectF of Displayed Drawable
 	 */
-	public RectF getDisplayRect() {
+	public final RectF getDisplayRect() {
 		checkMatrixBounds();
 		return getDisplayRect(getDisplayMatrix());
 	}
@@ -300,8 +300,15 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * 
 	 * @return float - current scale value
 	 */
-	public float getScale() {
+	public final float getScale() {
 		return getValue(mSuppMatrix, Matrix.MSCALE_X);
+	}
+
+	/**
+	 * Return the current scale type in use by the ImageView.
+	 */
+	public final ScaleType getScaleType() {
+		return mScaleType;
 	}
 
 	public final boolean onDoubleTap(MotionEvent ev) {
@@ -471,7 +478,15 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		return false;
 	}
 
-	public void setScaleType(ImageView.ScaleType scaleType) {
+	/**
+	 * Controls how the image should be resized or moved to match the size of
+	 * the ImageView. Any scaling or panning will happen within the confines of
+	 * this {@link ScaleType}.
+	 * 
+	 * @param scaleType
+	 *            - The desired scaling mode.
+	 */
+	public final void setScaleType(ScaleType scaleType) {
 		if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
 			mScaleType = scaleType;
 
@@ -487,7 +502,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * @param listener
 	 *            - Listener to be registered.
 	 */
-	public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
+	public final void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mMatrixChangeListener = listener;
 	}
 
@@ -498,7 +513,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * @param listener
 	 *            - Listener to be registered.
 	 */
-	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
+	public final void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
 	}
 
