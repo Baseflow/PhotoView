@@ -279,7 +279,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * 
 	 * @return true if the PhotoView allows zooming.
 	 */
-	public boolean canZoom() {
+	public final boolean canZoom() {
 		return mZoomEnabled;
 	}
 
@@ -552,7 +552,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * @param focalY
 	 *            - Y Focus Point
 	 */
-	public void zoomTo(float scale, float focalX, float focalY) {
+	public final void zoomTo(float scale, float focalX, float focalY) {
 		mImageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
 	}
 
