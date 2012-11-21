@@ -17,10 +17,9 @@ package uk.co.senab.photoview;
 
 import android.content.Context;
 import android.graphics.Matrix;
+import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -89,13 +88,16 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 
 		public void fling(int velocityX, int velocityY) {
+			final RectF rect = getDisplayRect();
+			if (null == rect) {
+				return;
+			}
+
 			final int viewHeight = mImageView.getHeight();
 			final int viewWidth = mImageView.getWidth();
-			final RectF rect = getDisplayRect();
-
+			final int startX = Math.round(-rect.left);
 			final int minX, maxX, minY, maxY;
 
-			final int startX = Math.round(-rect.left);
 			if (viewWidth < rect.width()) {
 				minX = 0;
 				maxX = Math.round(rect.width() - viewWidth);
@@ -117,7 +119,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			if (DEBUG) {
 				Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY + " MaxX:" + maxX + " MaxY:" + maxY);
 			}
-			mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, 0, 0);
+
+			// If we actually can move, fling the scroller
+			if (startX != maxX || startY != maxY) {
+				mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, 0, 0);
+			}
 		}
 
 		@Override
@@ -127,17 +133,19 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 				final int newX = mScroller.getCurrX();
 				final int newY = mScroller.getCurrY();
 
+				if (DEBUG) {
+					Log.d(LOG_TAG, "fling run(). CurrentX:" + mCurrentX + " CurrentY:" + mCurrentY + " NewX:" + newX
+							+ " NewY:" + newY);
+				}
+
 				mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
 				setImageViewMatrix(getDisplayMatrix());
 
 				mCurrentX = newX;
 				mCurrentY = newY;
 
-				if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-					SDK16.postOnAnimation(mImageView, this);
-				} else {
-					mImageView.postDelayed(this, 10);
-				}
+				// Post On animation
+				Compat.postOnAnimation(mImageView, this);
 			}
 		}
 
@@ -174,29 +182,35 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 		public void run() {
 			mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX, mFocalY);
-			centerAndDisplayMatrix();
+			checkAndDisplayMatrix();
 
 			final float currentScale = getScale();
 
 			if ((mDeltaScale > 1f && currentScale < mTargetZoom) || (mDeltaScale < 1f && mTargetZoom < currentScale)) {
 				// We haven't hit our target scale yet, so post ourselves again
-				postSelf();
+				Compat.postOnAnimation(mImageView, this);
 
 			} else {
 				// We've scaled past our target zoom, so calculate the
 				// necessary scale so we're back at target zoom
 				final float delta = mTargetZoom / currentScale;
 				mSuppMatrix.postScale(delta, delta, mFocalX, mFocalY);
-				centerAndDisplayMatrix();
+				checkAndDisplayMatrix();
 			}
 		}
+	}
 
-		private void postSelf() {
-			if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-				SDK16.postOnAnimation(mImageView, this);
-			} else {
-				mImageView.postDelayed(this, 10);
-			}
+	private static boolean isSupportedScaleType(final ScaleType scaleType) {
+		if (null == scaleType) {
+			return false;
+		}
+
+		switch (scaleType) {
+			case MATRIX:
+				throw new IllegalArgumentException(scaleType.name() + " is not supported in PhotoView");
+
+			default:
+				return true;
 		}
 	}
 
@@ -213,9 +227,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private GestureDetector mGestureDetector;
 	private VersionedGestureDetector mScaleDragDetector;
 
+	// These are set so we don't keep allocating them on the heap
 	private final Matrix mBaseMatrix = new Matrix();
 	private final Matrix mDrawMatrix = new Matrix();
 	private final Matrix mSuppMatrix = new Matrix();
+	private final RectF mDisplayRect = new RectF();
 
 	// Listeners
 	private OnMatrixChangedListener mMatrixChangeListener;
@@ -226,6 +242,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 	private int mScrollEdge = EDGE_BOTH;
 	private boolean mZoomEnabled;
+	private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
 	private FlingRunnable mCurrentFlingRunnable;
 
@@ -238,18 +255,19 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		mImageView.setOnTouchListener(this);
 		mImageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
-		if(!imageView.isInEditMode()) {
+		if (!imageView.isInEditMode()) {
 			// Create Gesture Detectors...
 			// When we're not in the Graphical Layout Editor
 			mScaleDragDetector = VersionedGestureDetector.newInstance(mImageView.getContext(), this);
-			mGestureDetector = new GestureDetector(mImageView.getContext(), new GestureDetector.SimpleOnGestureListener());
+			mGestureDetector = new GestureDetector(mImageView.getContext(),
+					new GestureDetector.SimpleOnGestureListener());
 			mGestureDetector.setOnDoubleTapListener(this);
 		}
 
 		// Make sure we using MATRIX Scale Type
-		mImageView.setScaleType(ScaleType.MATRIX);
+		setImageViewScaleTypeMatrix();
 
-		if(!imageView.isInEditMode()) {
+		if (!imageView.isInEditMode()) {
 			// Finally, update the UI so that we're zoomable
 			// If we're not in the Graphical Layout Editor
 			setZoomable(true);
@@ -261,7 +279,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * 
 	 * @return true if the PhotoView allows zooming.
 	 */
-	public boolean canZoom() {
+	public final boolean canZoom() {
 		return mZoomEnabled;
 	}
 
@@ -272,7 +290,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * 
 	 * @return - RectF of Displayed Drawable
 	 */
-	public RectF getDisplayRect() {
+	public final RectF getDisplayRect() {
 		checkMatrixBounds();
 		return getDisplayRect(getDisplayMatrix());
 	}
@@ -282,8 +300,15 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * 
 	 * @return float - current scale value
 	 */
-	public float getScale() {
+	public final float getScale() {
 		return getValue(mSuppMatrix, Matrix.MSCALE_X);
+	}
+
+	/**
+	 * Return the current scale type in use by the ImageView.
+	 */
+	public final ScaleType getScaleType() {
+		return mScaleType;
 	}
 
 	public final boolean onDoubleTap(MotionEvent ev) {
@@ -316,22 +341,24 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
 		}
 
-		mSuppMatrix.postTranslate(dx, dy);
-		centerAndDisplayMatrix();
+		if (hasDrawable()) {
+			mSuppMatrix.postTranslate(dx, dy);
+			checkAndDisplayMatrix();
 
-		/**
-		 * Here we decide whether to let the ImageView's parent to start taking
-		 * over the touch event.
-		 * 
-		 * We never want the parent to take over if we're scaling. We then check
-		 * the edge we're on, and the direction of the scroll (i.e. if we're
-		 * pulling against the edge, aka 'overscrolling', let the parent take
-		 * over).
-		 */
-		if (!mScaleDragDetector.isScaling()) {
-			if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
-					|| (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
-				mImageView.getParent().requestDisallowInterceptTouchEvent(false);
+			/**
+			 * Here we decide whether to let the ImageView's parent to start
+			 * taking over the touch event.
+			 * 
+			 * We never want the parent to take over if we're scaling. We then
+			 * check the edge we're on, and the direction of the scroll (i.e. if
+			 * we're pulling against the edge, aka 'overscrolling', let the
+			 * parent take over).
+			 */
+			if (!mScaleDragDetector.isScaling()) {
+				if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
+						|| (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
+					mImageView.getParent().requestDisallowInterceptTouchEvent(false);
+				}
 			}
 		}
 	}
@@ -342,9 +369,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
 		}
 
-		mCurrentFlingRunnable = new FlingRunnable();
-		mCurrentFlingRunnable.fling((int) velocityX, (int) velocityY);
-		mImageView.post(mCurrentFlingRunnable);
+		if (hasDrawable()) {
+			mCurrentFlingRunnable = new FlingRunnable();
+			mCurrentFlingRunnable.fling((int) velocityX, (int) velocityY);
+			mImageView.post(mCurrentFlingRunnable);
+		}
 	}
 
 	@Override
@@ -381,9 +410,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
 		}
 
-		if (getScale() < MAX_ZOOM || scaleFactor < 1f) {
+		if (hasDrawable() && (getScale() < MAX_ZOOM || scaleFactor < 1f)) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-			centerAndDisplayMatrix();
+			checkAndDisplayMatrix();
 		}
 	}
 
@@ -429,7 +458,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 					// If the user has zoomed less than MIN_ZOOM, zoom back
 					// to 1.0f
 					if (getScale() < MIN_ZOOM) {
-						v.post(new AnimatedZoomRunnable(getScale(), MIN_ZOOM, 0f, 0f));
+						RectF rect = getDisplayRect();
+						if (null != rect) {
+							v.post(new AnimatedZoomRunnable(getScale(), MIN_ZOOM, rect.centerX(), rect.centerY()));
+						}
 						return true;
 					}
 					break;
@@ -450,13 +482,30 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	/**
+	 * Controls how the image should be resized or moved to match the size of
+	 * the ImageView. Any scaling or panning will happen within the confines of
+	 * this {@link ScaleType}.
+	 * 
+	 * @param scaleType
+	 *            - The desired scaling mode.
+	 */
+	public final void setScaleType(ScaleType scaleType) {
+		if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
+			mScaleType = scaleType;
+
+			// Finally update
+			update();
+		}
+	}
+
+	/**
 	 * Register a callback to be invoked when the Matrix has changed for this
 	 * View. An example would be the user panning or scaling the Photo.
 	 * 
 	 * @param listener
 	 *            - Listener to be registered.
 	 */
-	public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
+	public final void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mMatrixChangeListener = listener;
 	}
 
@@ -467,7 +516,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * @param listener
 	 *            - Listener to be registered.
 	 */
-	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
+	public final void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
 	}
 
@@ -486,7 +535,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	public final void update() {
 		if (mZoomEnabled) {
 			// Make sure we using MATRIX Scale Type
-			mImageView.setScaleType(ScaleType.MATRIX);
+			setImageViewScaleTypeMatrix();
 
 			// Update the base matrix using the current drawable
 			updateBaseMatrix(mImageView.getDrawable());
@@ -506,7 +555,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * @param focalY
 	 *            - Y Focus Point
 	 */
-	public void zoomTo(float scale, float focalX, float focalY) {
+	public final void zoomTo(float scale, float focalX, float focalY) {
 		mImageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
 	}
 
@@ -524,29 +573,48 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	/**
-	 * Helper method that simply centers the Matrix, and then displays the
-	 * result
+	 * Helper method that simply checks the Matrix, and then displays the result
 	 */
-	private void centerAndDisplayMatrix() {
+	private void checkAndDisplayMatrix() {
 		checkMatrixBounds();
 		setImageViewMatrix(getDisplayMatrix());
 	}
 
+	private void checkImageViewScaleType() {
+		/**
+		 * PhotoView's getScaleType() will just divert to this.getScaleType() so
+		 * only call if we're not attached to a PhotoView.
+		 */
+		if (!(mImageView instanceof PhotoView)) {
+			if (mImageView.getScaleType() != ScaleType.MATRIX) {
+				throw new IllegalStateException(
+						"The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
+			}
+		}
+	}
+
 	private void checkMatrixBounds() {
-		Drawable d = mImageView.getDrawable();
-		if (null == d) {
+		final RectF rect = getDisplayRect(getDisplayMatrix());
+		if (null == rect) {
 			return;
 		}
-
-		RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-		getDisplayMatrix().mapRect(rect);
 
 		final float height = rect.height(), width = rect.width();
 		float deltaX = 0, deltaY = 0;
 
 		final int viewHeight = mImageView.getHeight();
-		if (height < viewHeight) {
-			deltaY = (viewHeight - height) / 2 - rect.top;
+		if (height <= viewHeight) {
+			switch (mScaleType) {
+				case FIT_START:
+					deltaY = -rect.top;
+					break;
+				case FIT_END:
+					deltaY = viewHeight - height - rect.top;
+					break;
+				default:
+					deltaY = (viewHeight - height) / 2 - rect.top;
+					break;
+			}
 		} else if (rect.top > 0) {
 			deltaY = -rect.top;
 		} else if (rect.bottom < viewHeight) {
@@ -554,8 +622,18 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 
 		final int viewWidth = mImageView.getWidth();
-		if (width < viewWidth) {
-			deltaX = (viewWidth - width) / 2 - rect.left;
+		if (width <= viewWidth) {
+			switch (mScaleType) {
+				case FIT_START:
+					deltaX = -rect.left;
+					break;
+				case FIT_END:
+					deltaX = viewWidth - width - rect.left;
+					break;
+				default:
+					deltaX = (viewWidth - width) / 2 - rect.left;
+					break;
+			}
 			mScrollEdge = EDGE_BOTH;
 		} else if (rect.left > 0) {
 			mScrollEdge = EDGE_LEFT;
@@ -567,6 +645,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			mScrollEdge = EDGE_NONE;
 		}
 
+		// Finally actually translate the matrix
 		mSuppMatrix.postTranslate(deltaX, deltaY);
 	}
 
@@ -580,9 +659,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private RectF getDisplayRect(Matrix matrix) {
 		Drawable d = mImageView.getDrawable();
 		if (null != d) {
-			RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-			matrix.mapRect(rect);
-			return rect;
+			mDisplayRect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+			matrix.mapRect(mDisplayRect);
+			return mDisplayRect;
 		}
 		return null;
 	}
@@ -601,16 +680,33 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		return mMatrixValues[whichValue];
 	}
 
+	private boolean hasDrawable() {
+		return null != mImageView.getDrawable();
+	}
+
 	/**
 	 * Resets the Matrix back to FIT_CENTER, and then displays it.s
 	 */
 	private void resetMatrix() {
 		mSuppMatrix.reset();
 		setImageViewMatrix(getDisplayMatrix());
-		mScrollEdge = EDGE_BOTH;
+		checkMatrixBounds();
+	}
+
+	private void setImageViewScaleTypeMatrix() {
+		if (mImageView instanceof PhotoView) {
+			/**
+			 * PhotoView sets it's own ScaleType to Matrix, then diverts all
+			 * calls setScaleType to this.setScaleType. Basically we don't need
+			 * to do anything here
+			 */
+		} else {
+			mImageView.setScaleType(ScaleType.MATRIX);
+		}
 	}
 
 	private void setImageViewMatrix(Matrix matrix) {
+		checkImageViewScaleType();
 		mImageView.setImageMatrix(matrix);
 
 		// Call MatrixChangedListener if needed
@@ -633,21 +729,54 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			return;
 		}
 
-		float viewWidth = mImageView.getWidth();
-		float viewHeight = mImageView.getHeight();
-		int dWidth = d.getIntrinsicWidth();
-		int dHeight = d.getIntrinsicHeight();
+		final float viewWidth = mImageView.getWidth();
+		final float viewHeight = mImageView.getHeight();
+		final int drawableWidth = d.getIntrinsicWidth();
+		final int drawableHeight = d.getIntrinsicHeight();
 
 		mBaseMatrix.reset();
 
-		float widthScale = viewWidth / dWidth;
-		float heightScale = viewHeight / dHeight;
-		float scale = Math.min(widthScale, heightScale);
+		final float widthScale = viewWidth / drawableWidth;
+		final float heightScale = viewHeight / drawableHeight;
 
-		mBaseMatrix.postScale(scale, scale);
-		mBaseMatrix.postTranslate((viewWidth - dWidth * scale) / 2F, (viewHeight - dHeight * scale) / 2F);
+		if (mScaleType == ScaleType.CENTER) {
+			mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F, (viewHeight - drawableHeight) / 2F);
+
+		} else if (mScaleType == ScaleType.CENTER_CROP) {
+			float scale = Math.max(widthScale, heightScale);
+			mBaseMatrix.postScale(scale, scale);
+			mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
+					(viewHeight - drawableHeight * scale) / 2F);
+
+		} else if (mScaleType == ScaleType.CENTER_INSIDE) {
+			float scale = Math.min(1.0f, Math.min(widthScale, heightScale));
+			mBaseMatrix.postScale(scale, scale);
+			mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
+					(viewHeight - drawableHeight * scale) / 2F);
+
+		} else {
+			RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
+			RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+
+			switch (mScaleType) {
+				case FIT_CENTER:
+					mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+					break;
+
+				case FIT_START:
+					mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.START);
+					break;
+
+				case FIT_END:
+					mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.END);
+					break;
+
+				case FIT_XY:
+					mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
+					break;
+			}
+		}
 
 		resetMatrix();
 	}
-
 }

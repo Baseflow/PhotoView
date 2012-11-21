@@ -4,7 +4,7 @@
 	<groupId>com.github.chrisbanes.photoview</groupId>
 	<artifactId>parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1</version>
+	<version>1.2</version>
 	<name>PhotoView Project</name>
 	<description>A simple ImageView that support zooming, both by Multi-touch gestures and double-tap.</description>
 	<url>https://github.com/chrisbanes/PhotoView</url>
@@ -24,7 +24,7 @@
 		<url>https://github.com/chrisbanes/PhotoView</url>
 		<connection>scm:git:git://github.com/chrisbanes/PhotoView.git</connection>
 		<developerConnection>scm:git:git@github.com:chrisbanes/PhotoView.git</developerConnection>
-		<tag>v1.1</tag>
+		<tag>v1.2</tag>
 	</scm>
 	<developers>
 		<developer>

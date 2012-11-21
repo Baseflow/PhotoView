@@ -45,6 +45,9 @@ public void onCreate(Bundle savedInstanceState) {
 attacher.update();
 ```
 
+## Changelog
+Please see the new [Changelog](https://github.com/chrisbanes/PhotoView/wiki/Changelog) page to see what's recently changed.
+
 ## License
 
     Copyright 2011, 2012 Chris Banes

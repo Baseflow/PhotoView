@@ -33,7 +33,7 @@ public class ViewPagerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mViewPager = new ViewPager(this);
+		mViewPager = new HackyViewPager(this);
 		setContentView(mViewPager);
 
 		mViewPager.setAdapter(new SamplePagerAdapter());
