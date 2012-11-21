@@ -178,7 +178,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 		public void run() {
 			mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX, mFocalY);
-			centerAndDisplayMatrix();
+			checkAndDisplayMatrix();
 
 			final float currentScale = getScale();
 
@@ -191,7 +191,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 				// necessary scale so we're back at target zoom
 				final float delta = mTargetZoom / currentScale;
 				mSuppMatrix.postScale(delta, delta, mFocalX, mFocalY);
-				centerAndDisplayMatrix();
+				checkAndDisplayMatrix();
 			}
 		}
 
@@ -231,9 +231,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private GestureDetector mGestureDetector;
 	private VersionedGestureDetector mScaleDragDetector;
 
+	// These are set so we don't keep allocating them on the heap
 	private final Matrix mBaseMatrix = new Matrix();
 	private final Matrix mDrawMatrix = new Matrix();
 	private final Matrix mSuppMatrix = new Matrix();
+	private final RectF mDisplayRect = new RectF();
 
 	// Listeners
 	private OnMatrixChangedListener mMatrixChangeListener;
@@ -338,7 +340,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 		if (hasDrawable()) {
 			mSuppMatrix.postTranslate(dx, dy);
-			centerAndDisplayMatrix();
+			checkAndDisplayMatrix();
 
 			/**
 			 * Here we decide whether to let the ImageView's parent to start
@@ -407,7 +409,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 		if (hasDrawable() && (getScale() < MAX_ZOOM || scaleFactor < 1f)) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-			centerAndDisplayMatrix();
+			checkAndDisplayMatrix();
 		}
 	}
 
@@ -557,10 +559,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	/**
-	 * Helper method that simply centers the Matrix, and then displays the
-	 * result
+	 * Helper method that simply checks the Matrix, and then displays the result
 	 */
-	private void centerAndDisplayMatrix() {
+	private void checkAndDisplayMatrix() {
 		checkMatrixBounds();
 		setImageViewMatrix(getDisplayMatrix());
 	}
@@ -573,13 +574,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	private void checkMatrixBounds() {
-		Drawable d = mImageView.getDrawable();
-		if (null == d) {
+		final RectF rect = getDisplayRect(getDisplayMatrix());
+		if (null == rect) {
 			return;
 		}
-
-		RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-		getDisplayMatrix().mapRect(rect);
 
 		final float height = rect.height(), width = rect.width();
 		float deltaX = 0, deltaY = 0;
@@ -627,6 +625,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			mScrollEdge = EDGE_NONE;
 		}
 
+		// Finally actually translate the matrix
 		mSuppMatrix.postTranslate(deltaX, deltaY);
 	}
 
@@ -640,9 +639,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private RectF getDisplayRect(Matrix matrix) {
 		Drawable d = mImageView.getDrawable();
 		if (null != d) {
-			RectF rect = new RectF(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-			matrix.mapRect(rect);
-			return rect;
+			mDisplayRect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+			matrix.mapRect(mDisplayRect);
+			return mDisplayRect;
 		}
 		return null;
 	}
