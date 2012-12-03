@@ -4,7 +4,7 @@
     android:versionCode="120"
     android:versionName="1.2" >
 
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="4" />
 
     <application />
 
