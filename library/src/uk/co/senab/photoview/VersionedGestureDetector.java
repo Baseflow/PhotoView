@@ -119,7 +119,17 @@ public abstract class VersionedGestureDetector {
 					break;
 				}
 
-				case MotionEvent.ACTION_CANCEL:
+				case MotionEvent.ACTION_CANCEL: {
+					mIsDragging = false;
+
+					// Recycle Velocity Tracker
+					if (null != mVelocityTracker) {
+						mVelocityTracker.recycle();
+						mVelocityTracker = null;
+					}
+					break;
+				}
+
 				case MotionEvent.ACTION_UP: {
 					if (mIsDragging) {
 						mIsDragging = false;
