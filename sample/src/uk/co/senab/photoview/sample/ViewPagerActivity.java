@@ -15,7 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview.sample;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
+import uk.co.senab.photoview.PhotoView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -23,7 +23,6 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
 
 public class ViewPagerActivity extends Activity {
 
@@ -51,17 +50,13 @@ public class ViewPagerActivity extends Activity {
 
 		@Override
 		public View instantiateItem(ViewGroup container, int position) {
+			PhotoView photoView = new PhotoView(container.getContext());
+			photoView.setImageResource(sDrawables[position]);
 
-			ImageView imageView = new ImageView(container.getContext());
-			PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
+			// Now just add PhotoView to ViewPager and return it
+			container.addView(photoView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-			imageView.setImageResource(sDrawables[position]);
-			attacher.update();
-
-			// Now just add ImageView to ViewPager and return it
-			container.addView(imageView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
-			return imageView;
+			return photoView;
 		}
 
 		@Override

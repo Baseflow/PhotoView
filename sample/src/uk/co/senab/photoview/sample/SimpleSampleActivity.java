@@ -67,6 +67,14 @@ public class SimpleSampleActivity extends Activity {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		// Need to call clean-up
+		mAttacher.cleanup();
+	}
+
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
 		zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
