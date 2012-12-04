@@ -132,5 +132,11 @@ public class PhotoView extends ImageView {
 	public void zoomTo(float scale, float focalX, float focalY) {
 		mAttacher.zoomTo(scale, focalX, focalY);
 	}
+	
+	@Override
+	protected void onDetachedFromWindow() {
+		mAttacher.cleanup();
+		super.onDetachedFromWindow();
+	}
 
 }

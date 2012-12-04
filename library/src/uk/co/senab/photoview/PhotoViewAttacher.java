@@ -284,6 +284,16 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	/**
+	 * Clean-up the resources attached to this object. This needs to be called
+	 * when the ImageView is no longer used. A good example is from
+	 * {@link View#onDetachedFromWindow()} or from {@link Activity#onDestroy()}.
+	 * This is automatically called if you are using {@link PhotoView}.
+	 */
+	public final void cleanup() {
+		mImageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+	}
+
+	/**
 	 * Gets the Display Rectangle of the currently displayed Drawable. The
 	 * Rectangle is relative to this View and includes all scaling and
 	 * translations.
