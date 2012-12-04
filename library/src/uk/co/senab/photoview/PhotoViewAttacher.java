@@ -289,8 +289,13 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * {@link View#onDetachedFromWindow()} or from {@link Activity#onDestroy()}.
 	 * This is automatically called if you are using {@link PhotoView}.
 	 */
+	@SuppressWarnings("deprecation")
 	public final void cleanup() {
 		mImageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+		
+		// Clear listeners too
+		mMatrixChangeListener = null;
+		mPhotoTapListener = null;
 	}
 
 	/**
