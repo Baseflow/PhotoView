@@ -17,14 +17,12 @@ package uk.co.senab.photoview;
 
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-@TargetApi(9)
 public class PhotoView extends ImageView {
 
 	private final PhotoViewAttacher mAttacher;
