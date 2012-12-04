@@ -20,6 +20,7 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import android.content.Context;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -67,16 +68,33 @@ public class PhotoView extends ImageView {
 	public float getScale() {
 		return mAttacher.getScale();
 	}
-	
+
 	@Override
 	public ScaleType getScaleType() {
 		return mAttacher.getScaleType();
 	}
 
 	@Override
+	// setImageBitmap calls through to this method
 	public void setImageDrawable(Drawable drawable) {
 		super.setImageDrawable(drawable);
-		if(mAttacher != null) {
+		if (null != mAttacher) {
+			mAttacher.update();
+		}
+	}
+
+	@Override
+	public void setImageResource(int resId) {
+		super.setImageResource(resId);
+		if (null != mAttacher) {
+			mAttacher.update();
+		}
+	}
+
+	@Override
+	public void setImageURI(Uri uri) {
+		super.setImageURI(uri);
+		if (null != mAttacher) {
 			mAttacher.update();
 		}
 	}
@@ -102,7 +120,7 @@ public class PhotoView extends ImageView {
 	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mAttacher.setOnPhotoTapListener(listener);
 	}
-	
+
 	@Override
 	public void setScaleType(ScaleType scaleType) {
 		mAttacher.setScaleType(scaleType);
@@ -132,7 +150,7 @@ public class PhotoView extends ImageView {
 	public void zoomTo(float scale, float focalX, float focalY) {
 		mAttacher.zoomTo(scale, focalX, focalY);
 	}
-	
+
 	@Override
 	protected void onDetachedFromWindow() {
 		mAttacher.cleanup();
