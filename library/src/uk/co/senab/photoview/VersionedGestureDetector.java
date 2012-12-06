@@ -99,6 +99,7 @@ public abstract class VersionedGestureDetector {
 					mIsDragging = false;
 					break;
 				}
+
 				case MotionEvent.ACTION_MOVE: {
 					final float x = getActiveX(ev);
 					final float y = getActiveY(ev);
@@ -123,8 +124,6 @@ public abstract class VersionedGestureDetector {
 				}
 
 				case MotionEvent.ACTION_CANCEL: {
-					mIsDragging = false;
-
 					// Recycle Velocity Tracker
 					if (null != mVelocityTracker) {
 						mVelocityTracker.recycle();
@@ -135,8 +134,6 @@ public abstract class VersionedGestureDetector {
 
 				case MotionEvent.ACTION_UP: {
 					if (mIsDragging) {
-						mIsDragging = false;
-
 						if (null != mVelocityTracker) {
 							mLastTouchX = getActiveX(ev);
 							mLastTouchY = getActiveY(ev);
@@ -163,7 +160,8 @@ public abstract class VersionedGestureDetector {
 					break;
 				}
 			}
-			return true;
+
+			return mIsDragging;
 		}
 	}
 
