@@ -15,6 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
@@ -75,6 +76,30 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		 *            Drawable height.
 		 */
 		void onPhotoTap(View view, float x, float y);
+	}
+
+	/**
+	 * Interface definition for a callback to be invoked when the ImageView is
+	 * tapped with a single tap.
+	 * 
+	 * @author Chris Banes
+	 */
+	public static interface OnViewTapListener
+	{
+
+		/**
+		 * A callback to receive where the user taps on a ImageView. You will
+		 * receive a callback if the user taps anywhere on the view, tapping on
+		 * 'whitespace' will not be ignored.
+		 * 
+		 * @param view
+		 *            - View the user tapped
+		 * @param x
+		 *            - where the user tapped from the left
+		 * @param y
+		 *            - where the user tapped from the top
+		 */
+		void onViewTap(View view, float x, float y);
 	}
 
 	private class FlingRunnable implements Runnable {
@@ -236,6 +261,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	// Listeners
 	private OnMatrixChangedListener mMatrixChangeListener;
 	private OnPhotoTapListener mPhotoTapListener;
+	private OnViewTapListener mViewTapListener;
 
 	// Saves us allocating a new float[] when getValue is called
 	private final float[] mMatrixValues = new float[9];
@@ -296,6 +322,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		// Clear listeners too
 		mMatrixChangeListener = null;
 		mPhotoTapListener = null;
+		mViewTapListener = null;
 	}
 
 	/**
@@ -449,6 +476,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 				}
 			}
 		}
+		if (null != mViewTapListener)
+		{
+			mViewTapListener.onViewTap(mImageView, e.getX(), e.getY());
+		}
 
 		return false;
 	}
@@ -533,6 +564,18 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 */
 	public final void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
+	}
+
+	/**
+	 * Register a callback to be invoked when the View
+	 * is tapped with a single tap.
+	 * 
+	 * @param listener
+	 *            - Listener to be registered.
+	 */
+	public final void setOnPhotoTapListener(OnViewTapListener listener)
+	{
+		mViewTapListener = listener;
 	}
 
 	/**

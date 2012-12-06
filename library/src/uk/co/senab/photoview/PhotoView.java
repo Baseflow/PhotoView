@@ -17,6 +17,7 @@ package uk.co.senab.photoview;
 
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 import android.content.Context;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -118,6 +119,18 @@ public class PhotoView extends ImageView {
 	 *            - Listener to be registered.
 	 */
 	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
+		mAttacher.setOnPhotoTapListener(listener);
+	}
+
+	/**
+	 * Register a callback to be invoked when the View
+	 * is tapped with a single tap.
+	 * 
+	 * @param listener
+	 *            - Listener to be registered.
+	 */
+	public void setOnViewTapListener(OnViewTapListener listener)
+	{
 		mAttacher.setOnPhotoTapListener(listener);
 	}
 
