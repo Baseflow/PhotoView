@@ -47,8 +47,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		 * This could be because the View's bounds have changed, or the user has
 		 * zoomed.
 		 * 
-		 * @param rect
-		 *            - Rectangle displaying the Drawable's new bounds.
+		 * @param rect - Rectangle displaying the Drawable's new bounds.
 		 */
 		void onMatrixChanged(RectF rect);
 	}
@@ -66,14 +65,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		 * receive a callback if the user taps on the actual photo, tapping on
 		 * 'whitespace' will be ignored.
 		 * 
-		 * @param view
-		 *            - View the user tapped
-		 * @param x
-		 *            - where the user tapped from the left, as percentage of
-		 *            the Drawable width.
-		 * @param y
-		 *            - where the user tapped from the top, as percentage of the
-		 *            Drawable height.
+		 * @param view - View the user tapped.
+		 * @param x - where the user tapped from the of the Drawable, as
+		 *            percentage of the Drawable width.
+		 * @param y - where the user tapped from the top of the Drawable, as
+		 *            percentage of the Drawable height.
 		 */
 		void onPhotoTap(View view, float x, float y);
 	}
@@ -84,20 +80,16 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * 
 	 * @author Chris Banes
 	 */
-	public static interface OnViewTapListener
-	{
+	public static interface OnViewTapListener {
 
 		/**
 		 * A callback to receive where the user taps on a ImageView. You will
 		 * receive a callback if the user taps anywhere on the view, tapping on
 		 * 'whitespace' will not be ignored.
 		 * 
-		 * @param view
-		 *            - View the user tapped
-		 * @param x
-		 *            - where the user tapped from the left
-		 * @param y
-		 *            - where the user tapped from the top
+		 * @param view - View the user tapped.
+		 * @param x - where the user tapped from the left of the View.
+		 * @param y - where the user tapped from the top of the View.
 		 */
 		void onViewTap(View view, float x, float y);
 	}
@@ -318,7 +310,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	@SuppressWarnings("deprecation")
 	public final void cleanup() {
 		mImageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-		
+
 		// Clear listeners too
 		mMatrixChangeListener = null;
 		mPhotoTapListener = null;
@@ -476,8 +468,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 				}
 			}
 		}
-		if (null != mViewTapListener)
-		{
+		if (null != mViewTapListener) {
 			mViewTapListener.onViewTap(mImageView, e.getX(), e.getY());
 		}
 
@@ -532,8 +523,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * the ImageView. Any scaling or panning will happen within the confines of
 	 * this {@link ScaleType}.
 	 * 
-	 * @param scaleType
-	 *            - The desired scaling mode.
+	 * @param scaleType - The desired scaling mode.
 	 */
 	public final void setScaleType(ScaleType scaleType) {
 		if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
@@ -548,8 +538,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * Register a callback to be invoked when the Matrix has changed for this
 	 * View. An example would be the user panning or scaling the Photo.
 	 * 
-	 * @param listener
-	 *            - Listener to be registered.
+	 * @param listener - Listener to be registered.
 	 */
 	public final void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mMatrixChangeListener = listener;
@@ -559,22 +548,19 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * Register a callback to be invoked when the Photo displayed by this View
 	 * is tapped with a single tap.
 	 * 
-	 * @param listener
-	 *            - Listener to be registered.
+	 * @param listener - Listener to be registered.
 	 */
 	public final void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
 	}
 
 	/**
-	 * Register a callback to be invoked when the View
-	 * is tapped with a single tap.
+	 * Register a callback to be invoked when the View is tapped with a single
+	 * tap.
 	 * 
-	 * @param listener
-	 *            - Listener to be registered.
+	 * @param listener - Listener to be registered.
 	 */
-	public final void setOnPhotoTapListener(OnViewTapListener listener)
-	{
+	public final void setOnPhotoTapListener(OnViewTapListener listener) {
 		mViewTapListener = listener;
 	}
 
@@ -582,8 +568,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * Allows you to enable/disable the zoom functionality on the ImageView.
 	 * When disable the ImageView reverts to using the FIT_CENTER matrix.
 	 * 
-	 * @param zoomable
-	 *            - Whether the zoom functionality is enabled.
+	 * @param zoomable - Whether the zoom functionality is enabled.
 	 */
 	public final void setZoomable(boolean zoomable) {
 		mZoomEnabled = zoomable;
@@ -606,12 +591,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Zooms to the specified scale, around the focal point given.
 	 * 
-	 * @param scale
-	 *            - Scale to zoom to
-	 * @param focalX
-	 *            - X Focus Point
-	 * @param focalY
-	 *            - Y Focus Point
+	 * @param scale - Scale to zoom to
+	 * @param focalX - X Focus Point
+	 * @param focalY - Y Focus Point
 	 */
 	public final void zoomTo(float scale, float focalX, float focalY) {
 		mImageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
@@ -710,8 +692,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Helper method that maps the supplied Matrix to the current Drawable
 	 * 
-	 * @param Matrix
-	 *            - Matrix to map Drawable against
+	 * @param Matrix - Matrix to map Drawable against
 	 * @return RectF - Displayed Rectangle
 	 */
 	private RectF getDisplayRect(Matrix matrix) {
@@ -727,10 +708,8 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Helper method that 'unpacks' a Matrix and returns the required value
 	 * 
-	 * @param matrix
-	 *            - Matrix to unpack
-	 * @param whichValue
-	 *            - Which value from Matrix.M* to return
+	 * @param matrix - Matrix to unpack
+	 * @param whichValue - Which value from Matrix.M* to return
 	 * @return float - returned value
 	 */
 	private float getValue(Matrix matrix, int whichValue) {
@@ -779,8 +758,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Calculate Matrix for FIT_CENTER
 	 * 
-	 * @param d
-	 *            - Drawable being displayed
+	 * @param d - Drawable being displayed
 	 */
 	private void updateBaseMatrix(Drawable d) {
 		if (null == d) {
@@ -831,6 +809,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 				case FIT_XY:
 					mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
+					break;
+
+				default:
 					break;
 			}
 		}
