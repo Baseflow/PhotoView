@@ -40,6 +40,12 @@ public class PhotoView extends ImageView {
 		super.setScaleType(ScaleType.MATRIX);
 		mAttacher = new PhotoViewAttacher(this);
 	}
+	
+	public PhotoView(Context context, AttributeSet attr, int defStyle) {
+		super(context, attr, defStyle);
+		super.setScaleType(ScaleType.MATRIX);
+		mAttacher = new PhotoViewAttacher(this);
+	}
 
 	/**
 	 * Returns true if the PhotoView is set to allow zooming of Photos.
