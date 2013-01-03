@@ -161,7 +161,7 @@ public abstract class VersionedGestureDetector {
 				}
 			}
 
-			return mIsDragging;
+			return true;
 		}
 	}
 
