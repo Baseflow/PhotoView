@@ -353,12 +353,9 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 	@Override
 	public final boolean onTouch(View v, MotionEvent ev) {
-		if (DEBUG) {
-			Log.d(LOG_TAG, "onTouch: " + ev.toString());
-		}
+		boolean handled = false;
 
 		if (mZoomEnabled) {
-
 			switch (ev.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					// First, disable the Parent from intercepting the touch
@@ -378,24 +375,24 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 						RectF rect = getDisplayRect();
 						if (null != rect) {
 							v.post(new AnimatedZoomRunnable(getScale(), MIN_ZOOM, rect.centerX(), rect.centerY()));
+							handled = true;
 						}
-						return true;
 					}
 					break;
 			}
 
 			// Check to see if the user double tapped
 			if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
-				return true;
+				handled = true;
 			}
 
 			// Finally, try the Scale/Drag detector
 			if (null != mScaleDragDetector && mScaleDragDetector.onTouchEvent(ev)) {
-				return true;
+				handled = true;
 			}
 		}
 
-		return false;
+		return handled;
 	}
 
 	/**
