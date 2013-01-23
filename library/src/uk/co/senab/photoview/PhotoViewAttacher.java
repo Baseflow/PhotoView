@@ -28,6 +28,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -105,6 +106,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	private OnMatrixChangedListener mMatrixChangeListener;
 	private OnPhotoTapListener mPhotoTapListener;
 	private OnViewTapListener mViewTapListener;
+	private OnLongClickListener mLongClickListener;
 
 	private int mIvTop, mIvRight, mIvBottom, mIvLeft;
 	private FlingRunnable mCurrentFlingRunnable;
@@ -129,7 +131,17 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			mScaleDragDetector = VersionedGestureDetector.newInstance(imageView.getContext(), this);
 
 			mGestureDetector = new GestureDetector(imageView.getContext(),
-					new GestureDetector.SimpleOnGestureListener());
+					new GestureDetector.SimpleOnGestureListener() {
+				
+						// forward long click listener
+						@Override
+						public void onLongPress(MotionEvent e) {
+							super.onLongPress(e);
+							
+							if(mLongClickListener != null) {
+								mLongClickListener.onLongClick(mImageView.get());
+							}
+						}});
 			mGestureDetector.setOnDoubleTapListener(this);
 
 			// Finally, update the UI so that we're zoomable
@@ -393,6 +405,16 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 
 		return handled;
+	}
+
+	/**
+	 * Register a callback to be invoked when the Photo displayed by this view is long-pressed.
+	 * 
+	 * @param listener
+	 *            - Listener to be registered.
+	 */
+	public final void setOnLongClickListener(OnLongClickListener listener) {
+		mLongClickListener = listener;
 	}
 
 	/**
