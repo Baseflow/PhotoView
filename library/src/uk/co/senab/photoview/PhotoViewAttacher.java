@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -236,6 +237,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	// Listeners
 	private OnMatrixChangedListener mMatrixChangeListener;
 	private OnPhotoTapListener mPhotoTapListener;
+	private OnLongClickListener mLongClickListener;
 
 	// Saves us allocating a new float[] when getValue is called
 	private final float[] mMatrixValues = new float[9];
@@ -260,7 +262,17 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			// When we're not in the Graphical Layout Editor
 			mScaleDragDetector = VersionedGestureDetector.newInstance(mImageView.getContext(), this);
 			mGestureDetector = new GestureDetector(mImageView.getContext(),
-					new GestureDetector.SimpleOnGestureListener());
+					new GestureDetector.SimpleOnGestureListener() {
+				
+						// forward long click listener
+						@Override
+						public void onLongPress(MotionEvent e) {
+							super.onLongPress(e);
+							
+							if(mLongClickListener != null) {
+								mLongClickListener.onLongClick(mImageView);
+							}
+						}});
 			mGestureDetector.setOnDoubleTapListener(this);
 		}
 
@@ -496,6 +508,16 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			// Finally update
 			update();
 		}
+	}
+
+	/**
+	 * Register a callback to be invoked when the Photo displayed by this view is long-pressed.
+	 * 
+	 * @param listener
+	 *            - Listener to be registered.
+	 */
+	public final void setOnLongClickListener(OnLongClickListener listener) {
+		mLongClickListener = listener;
 	}
 
 	/**
