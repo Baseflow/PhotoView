@@ -117,6 +117,12 @@ public class PhotoView extends ImageView {
 		mAttacher.setOnMatrixChangeListener(listener);
 	}
 
+	@Override
+	public void setOnLongClickListener(OnLongClickListener l) {
+		// delegate to the attacher
+		mAttacher.setOnLongClickListener(l);
+	}
+
 	/**
 	 * Register a callback to be invoked when the Photo displayed by this View
 	 * is tapped with a single tap.
