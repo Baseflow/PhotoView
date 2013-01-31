@@ -35,8 +35,10 @@ import android.widget.ImageView.ScaleType;
 public class PhotoViewAttacher implements View.OnTouchListener, VersionedGestureDetector.OnGestureListener,
 		GestureDetector.OnDoubleTapListener, ViewTreeObserver.OnGlobalLayoutListener {
 
-	static final boolean DEBUG = true;
 	static final String LOG_TAG = "PhotoViewAttacher";
+	
+	// let debug flag be dynamic, but still Proguard can be used to remove from release builds
+	static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
 
 	static final int EDGE_NONE = -1;
 	static final int EDGE_LEFT = 0;
