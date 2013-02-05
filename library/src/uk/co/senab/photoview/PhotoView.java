@@ -25,7 +25,7 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class PhotoView extends ImageView {
+public class PhotoView extends ImageView implements IPhotoView {
 
 	private final PhotoViewAttacher mAttacher;
 
@@ -50,31 +50,32 @@ public class PhotoView extends ImageView {
 		}
 	}
 
-	/**
-	 * Returns true if the PhotoView is set to allow zooming of Photos.
-	 * 
-	 * @return true if the PhotoView allows zooming.
-	 */
+	@Override
 	public boolean canZoom() {
 		return mAttacher.canZoom();
 	}
 
-	/**
-	 * Gets the Display Rectangle of the currently displayed Drawable. The
-	 * Rectangle is relative to this View and includes all scaling and
-	 * translations.
-	 * 
-	 * @return - RectF of Displayed Drawable
-	 */
+	@Override
 	public RectF getDisplayRect() {
 		return mAttacher.getDisplayRect();
 	}
 
-	/**
-	 * Returns the current scale value
-	 * 
-	 * @return float - current scale value
-	 */
+	@Override
+	public float getMinScale() {
+		return mAttacher.getMinScale();
+	}
+
+	@Override
+	public float getMidScale() {
+		return mAttacher.getMidScale();
+	}
+
+	@Override
+	public float getMaxScale() {
+		return mAttacher.getMaxScale();
+	}
+
+	@Override
 	public float getScale() {
 		return mAttacher.getScale();
 	}
@@ -82,6 +83,21 @@ public class PhotoView extends ImageView {
 	@Override
 	public ScaleType getScaleType() {
 		return mAttacher.getScaleType();
+	}
+
+	@Override
+	public void setMinScale(float minScale) {
+		mAttacher.setMinScale(minScale);
+	}
+
+	@Override
+	public void setMidScale(float midScale) {
+		mAttacher.setMidScale(midScale);
+	}
+
+	@Override
+	public void setMaxScale(float maxScale) {
+		mAttacher.setMaxScale(maxScale);
 	}
 
 	@Override
@@ -109,41 +125,27 @@ public class PhotoView extends ImageView {
 		}
 	}
 
-	/**
-	 * Register a callback to be invoked when the Matrix has changed for this
-	 * View. An example would be the user panning or scaling the Photo.
-	 * 
-	 * @param listener
-	 *            - Listener to be registered.
-	 */
+	@Override
 	public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mAttacher.setOnMatrixChangeListener(listener);
 	}
 
 	@Override
 	public void setOnLongClickListener(OnLongClickListener l) {
-		// delegate to the attacher
 		mAttacher.setOnLongClickListener(l);
 	}
 
-	/**
-	 * Register a callback to be invoked when the Photo displayed by this View
-	 * is tapped with a single tap.
-	 * 
-	 * @param listener
-	 *            - Listener to be registered.
-	 */
+	@Override
 	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mAttacher.setOnPhotoTapListener(listener);
 	}
 
-	/**
-	 * Register a callback to be invoked when the View
-	 * is tapped with a single tap.
-	 * 
-	 * @param listener
-	 *            - Listener to be registered.
-	 */
+	@Override
+	public void setOnPhotoTapListener(OnViewTapListener listener) {
+		mAttacher.setOnPhotoTapListener(listener);
+	}
+
+	@Override
 	public void setOnViewTapListener(OnViewTapListener listener)
 	{
 		mAttacher.setOnPhotoTapListener(listener);
@@ -158,27 +160,12 @@ public class PhotoView extends ImageView {
 		}
 	}
 
-	/**
-	 * Allows you to enable/disable the zoom functionality on the ImageView.
-	 * When disable the ImageView reverts to using the FIT_CENTER matrix.
-	 * 
-	 * @param zoomable
-	 *            - Whether the zoom functionality is enabled.
-	 */
+	@Override
 	public void setZoomable(boolean zoomable) {
 		mAttacher.setZoomable(zoomable);
 	}
 
-	/**
-	 * Zooms to the specified scale, around the focal point given.
-	 * 
-	 * @param scale
-	 *            - Scale to zoom to
-	 * @param focalX
-	 *            - X Focus Point
-	 * @param focalY
-	 *            - Y Focus Point
-	 */
+	@Override
 	public void zoomTo(float scale, float focalX, float focalY) {
 		mAttacher.zoomTo(scale, focalX, focalY);
 	}

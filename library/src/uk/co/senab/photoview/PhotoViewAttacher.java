@@ -15,9 +15,6 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
-import java.lang.ref.WeakReference;
-
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
@@ -27,12 +24,14 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.View.OnLongClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-public class PhotoViewAttacher implements View.OnTouchListener, VersionedGestureDetector.OnGestureListener,
+import java.lang.ref.WeakReference;
+
+public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, VersionedGestureDetector.OnGestureListener,
 		GestureDetector.OnDoubleTapListener, ViewTreeObserver.OnGlobalLayoutListener {
 
 	static final String LOG_TAG = "PhotoViewAttacher";
@@ -162,11 +161,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 	}
 
-	/**
-	 * Returns true if the PhotoView is set to allow zooming of Photos.
-	 *
-	 * @return true if the PhotoView allows zooming.
-	 */
+	@Override
 	public final boolean canZoom() {
 		return mZoomEnabled;
 	}
@@ -174,8 +169,8 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Clean-up the resources attached to this object. This needs to be called
 	 * when the ImageView is no longer used. A good example is from
-	 * {@link View#onDetachedFromWindow()} or from {@link Activity#onDestroy()}.
-	 * This is automatically called if you are using {@link PhotoView}.
+	 * {@link android.view.View#onDetachedFromWindow()} or from {@link android.app.Activity#onDestroy()}.
+	 * This is automatically called if you are using {@link uk.co.senab.photoview.PhotoView}.
 	 */
 	@SuppressWarnings("deprecation")
 	public final void cleanup() {
@@ -193,13 +188,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		mImageView = null;
 	}
 
-	/**
-	 * Gets the Display Rectangle of the currently displayed Drawable. The
-	 * Rectangle is relative to this View and includes all scaling and
-	 * translations.
-	 *
-	 * @return - RectF of Displayed Drawable
-	 */
+	@Override
 	public final RectF getDisplayRect() {
 		checkMatrixBounds();
 		return getDisplayRect(getDisplayMatrix());
@@ -222,39 +211,27 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		return imageView;
 	}
 
-	/**
-	 * @return The current minimum scale level. What this value represents depends on the current {@link ScaleType}.
-	 */
+	@Override
 	public float getMinScale() {
 		return mMinScale;
 	}
 
-	/**
-	 * @return The current middle scale level. What this value represents depends on the current {@link ScaleType}.
-	 */
+	@Override
 	public float getMidScale() {
 		return mMidScale;
 	}
 
-	/**
-	 * @return The current maximum scale level. What this value represents depends on the current {@link ScaleType}.
-	 */
+	@Override
 	public float getMaxScale() {
 		return mMaxScale;
 	}
 
-	/**
-	 * Returns the current scale value
-	 *
-	 * @return float - current scale value
-	 */
+	@Override
 	public final float getScale() {
 		return getValue(mSuppMatrix, Matrix.MSCALE_X);
 	}
 
-	/**
-	 * Return the current scale type in use by the ImageView.
-	 */
+	@Override
 	public final ScaleType getScaleType() {
 		return mScaleType;
 	}
@@ -441,77 +418,45 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		return handled;
 	}
 
-	/**
-	 * Sets the minimum scale level. What this value represents depends on the current {@link ScaleType}.
-	 */
+	@Override
 	public void setMinScale(float minScale) {
 		checkZoomLevels(minScale, mMidScale, mMaxScale);
 		mMinScale = minScale;
 	}
 
-	/**
-	 * Sets the middle scale level. What this value represents depends on the current {@link ScaleType}.
-	 */
+	@Override
 	public void setMidScale(float midScale) {
 		checkZoomLevels(mMinScale, midScale, mMaxScale);
 		mMidScale = midScale;
 	}
 
-	/**
-	 * Sets the maximum scale level. What this value represents depends on the current {@link ScaleType}.
-	 */
+	@Override
 	public void setMaxScale(float maxScale) {
 		checkZoomLevels(mMinScale, mMidScale, maxScale);
 		mMaxScale = maxScale;
 	}
 
-	/**
-	 * Register a callback to be invoked when the Photo displayed by this view is long-pressed.
-	 *
-	 * @param listener
-	 *            - Listener to be registered.
-	 */
+	@Override
 	public final void setOnLongClickListener(OnLongClickListener listener) {
 		mLongClickListener = listener;
 	}
 
-	/**
-	 * Register a callback to be invoked when the Matrix has changed for this
-	 * View. An example would be the user panning or scaling the Photo.
-	 *
-	 * @param listener - Listener to be registered.
-	 */
+	@Override
 	public final void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mMatrixChangeListener = listener;
 	}
 
-	/**
-	 * Register a callback to be invoked when the Photo displayed by this View
-	 * is tapped with a single tap.
-	 *
-	 * @param listener - Listener to be registered.
-	 */
+	@Override
 	public final void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mPhotoTapListener = listener;
 	}
 
-	/**
-	 * Register a callback to be invoked when the View is tapped with a single
-	 * tap.
-	 *
-	 * @param listener - Listener to be registered.
-	 */
+	@Override
 	public final void setOnPhotoTapListener(OnViewTapListener listener) {
 		mViewTapListener = listener;
 	}
 
-	/**
-	 * Controls how the image should be resized or moved to match the size of
-	 * the ImageView. Any scaling or panning will happen within the confines of
-	 * this {@link ScaleType}.
-	 *
-	 * @param scaleType - The desired scaling mode.
-	 */
+	@Override
 	public final void setScaleType(ScaleType scaleType) {
 		if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
 			mScaleType = scaleType;
@@ -521,12 +466,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 	}
 
-	/**
-	 * Allows you to enable/disable the zoom functionality on the ImageView.
-	 * When disable the ImageView reverts to using the FIT_CENTER matrix.
-	 * 
-	 * @param zoomable - Whether the zoom functionality is enabled.
-	 */
+	@Override
 	public final void setZoomable(boolean zoomable) {
 		mZoomEnabled = zoomable;
 		update();
@@ -549,13 +489,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		}
 	}
 
-	/**
-	 * Zooms to the specified scale, around the focal point given.
-	 * 
-	 * @param scale - Scale to zoom to
-	 * @param focalX - X Focus Point
-	 * @param focalY - Y Focus Point
-	 */
+	@Override
 	public final void zoomTo(float scale, float focalX, float focalY) {
 		ImageView imageView = getImageView();
 
