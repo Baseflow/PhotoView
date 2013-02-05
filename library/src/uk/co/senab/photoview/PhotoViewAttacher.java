@@ -36,7 +36,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 		GestureDetector.OnDoubleTapListener, ViewTreeObserver.OnGlobalLayoutListener {
 
 	static final String LOG_TAG = "PhotoViewAttacher";
-	
+
 	// let debug flag be dynamic, but still Proguard can be used to remove from release builds
 	static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
 
@@ -45,9 +45,21 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	static final int EDGE_RIGHT = 1;
 	static final int EDGE_BOTH = 2;
 
-	private static final float MAX_ZOOM = 3.0f;
-	private static final float MID_ZOOM = 1.75f;
-	private static final float MIN_ZOOM = 1.0f;
+	public static final float DEFAULT_MAX_SCALE = 3.0f;
+	public static final float DEFAULT_MID_SCALE = 1.75f;
+	public static final float DEFAULT_MIN_SCALE = 1.0f;
+
+	private float mMinScale = DEFAULT_MIN_SCALE;
+	private float mMidScale = DEFAULT_MID_SCALE;
+	private float mMaxScale = DEFAULT_MAX_SCALE;
+
+	private static void checkZoomLevels(float minZoom, float midZoom, float maxZoom) {
+		if (minZoom >= midZoom) {
+			throw new IllegalArgumentException("MinZoom should be less than MidZoom");
+		} else if (midZoom >= maxZoom) {
+			throw new IllegalArgumentException("MidZoom should be less than MaxZoom");
+		}
+	}
 
 	/**
 	 * @return true if the ImageView exists, and it's Drawable existss
@@ -134,7 +146,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 			mGestureDetector = new GestureDetector(imageView.getContext(),
 					new GestureDetector.SimpleOnGestureListener() {
-				
+
 						// forward long click listener
 						@Override
 						public void onLongPress(MotionEvent e) {
@@ -152,7 +164,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 	/**
 	 * Returns true if the PhotoView is set to allow zooming of Photos.
-	 * 
+	 *
 	 * @return true if the PhotoView allows zooming.
 	 */
 	public final boolean canZoom() {
@@ -185,7 +197,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * Gets the Display Rectangle of the currently displayed Drawable. The
 	 * Rectangle is relative to this View and includes all scaling and
 	 * translations.
-	 * 
+	 *
 	 * @return - RectF of Displayed Drawable
 	 */
 	public final RectF getDisplayRect() {
@@ -211,8 +223,29 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	/**
+	 * @return The current minimum scale level. What this value represents depends on the current {@link ScaleType}.
+	 */
+	public float getMinScale() {
+		return mMinScale;
+	}
+
+	/**
+	 * @return The current middle scale level. What this value represents depends on the current {@link ScaleType}.
+	 */
+	public float getMidScale() {
+		return mMidScale;
+	}
+
+	/**
+	 * @return The current maximum scale level. What this value represents depends on the current {@link ScaleType}.
+	 */
+	public float getMaxScale() {
+		return mMaxScale;
+	}
+
+	/**
 	 * Returns the current scale value
-	 * 
+	 *
 	 * @return float - current scale value
 	 */
 	public final float getScale() {
@@ -232,12 +265,12 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			float x = ev.getX();
 			float y = ev.getY();
 
-			if (scale < MID_ZOOM) {
-				zoomTo(MID_ZOOM, x, y);
-			} else if (scale >= MID_ZOOM && scale < MAX_ZOOM) {
-				zoomTo(MAX_ZOOM, x, y);
+			if (scale < mMidScale) {
+				zoomTo(mMidScale, x, y);
+			} else if (scale >= mMidScale && scale < mMaxScale) {
+				zoomTo(mMaxScale, x, y);
 			} else {
-				zoomTo(MIN_ZOOM, x, y);
+				zoomTo(mMinScale, x, y);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// Can sometimes happen when getX() and getY() is called
@@ -265,7 +298,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			/**
 			 * Here we decide whether to let the ImageView's parent to start
 			 * taking over the touch event.
-			 * 
+			 *
 			 * We never want the parent to take over if we're scaling. We then
 			 * check the edge we're on, and the direction of the scroll (i.e. if
 			 * we're pulling against the edge, aka 'overscrolling', let the
@@ -329,7 +362,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 			Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
 		}
 
-		if (hasDrawable(getImageView()) && (getScale() < MAX_ZOOM || scaleFactor < 1f)) {
+		if (hasDrawable(getImageView()) && (getScale() < mMaxScale || scaleFactor < 1f)) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
 			checkAndDisplayMatrix();
 		}
@@ -382,12 +415,12 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 
 				case MotionEvent.ACTION_CANCEL:
 				case MotionEvent.ACTION_UP:
-					// If the user has zoomed less than MIN_ZOOM, zoom back
-					// to 1.0f
-					if (getScale() < MIN_ZOOM) {
+					// If the user has zoomed less than min scale, zoom back
+					// to min scale
+					if (getScale() < mMinScale) {
 						RectF rect = getDisplayRect();
 						if (null != rect) {
-							v.post(new AnimatedZoomRunnable(getScale(), MIN_ZOOM, rect.centerX(), rect.centerY()));
+							v.post(new AnimatedZoomRunnable(getScale(), mMinScale, rect.centerX(), rect.centerY()));
 							handled = true;
 						}
 					}
@@ -409,8 +442,32 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	}
 
 	/**
+	 * Sets the minimum scale level. What this value represents depends on the current {@link ScaleType}.
+	 */
+	public void setMinScale(float minScale) {
+		checkZoomLevels(minScale, mMidScale, mMaxScale);
+		mMinScale = minScale;
+	}
+
+	/**
+	 * Sets the middle scale level. What this value represents depends on the current {@link ScaleType}.
+	 */
+	public void setMidScale(float midScale) {
+		checkZoomLevels(mMinScale, midScale, mMaxScale);
+		mMidScale = midScale;
+	}
+
+	/**
+	 * Sets the maximum scale level. What this value represents depends on the current {@link ScaleType}.
+	 */
+	public void setMaxScale(float maxScale) {
+		checkZoomLevels(mMinScale, mMidScale, maxScale);
+		mMaxScale = maxScale;
+	}
+
+	/**
 	 * Register a callback to be invoked when the Photo displayed by this view is long-pressed.
-	 * 
+	 *
 	 * @param listener
 	 *            - Listener to be registered.
 	 */
@@ -421,7 +478,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Register a callback to be invoked when the Matrix has changed for this
 	 * View. An example would be the user panning or scaling the Photo.
-	 * 
+	 *
 	 * @param listener - Listener to be registered.
 	 */
 	public final void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
@@ -431,7 +488,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Register a callback to be invoked when the Photo displayed by this View
 	 * is tapped with a single tap.
-	 * 
+	 *
 	 * @param listener - Listener to be registered.
 	 */
 	public final void setOnPhotoTapListener(OnPhotoTapListener listener) {
@@ -441,7 +498,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Register a callback to be invoked when the View is tapped with a single
 	 * tap.
-	 * 
+	 *
 	 * @param listener - Listener to be registered.
 	 */
 	public final void setOnPhotoTapListener(OnViewTapListener listener) {
@@ -452,7 +509,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	 * Controls how the image should be resized or moved to match the size of
 	 * the ImageView. Any scaling or panning will happen within the confines of
 	 * this {@link ScaleType}.
-	 * 
+	 *
 	 * @param scaleType - The desired scaling mode.
 	 */
 	public final void setScaleType(ScaleType scaleType) {
@@ -607,7 +664,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 	/**
 	 * Helper method that maps the supplied Matrix to the current Drawable
 	 * 
-	 * @param Matrix - Matrix to map Drawable against
+	 * @param matrix - Matrix to map Drawable against
 	 * @return RectF - Displayed Rectangle
 	 */
 	private RectF getDisplayRect(Matrix matrix) {
