@@ -138,12 +138,11 @@ public class PhotoViewAttacher implements View.OnTouchListener, VersionedGesture
 						// forward long click listener
 						@Override
 						public void onLongPress(MotionEvent e) {
-							super.onLongPress(e);
-							
-							if(mLongClickListener != null) {
+							if(null != mLongClickListener) {
 								mLongClickListener.onLongClick(mImageView.get());
 							}
 						}});
+
 			mGestureDetector.setOnDoubleTapListener(this);
 
 			// Finally, update the UI so that we're zoomable
