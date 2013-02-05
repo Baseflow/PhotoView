@@ -29,22 +29,25 @@ public class PhotoView extends ImageView {
 
 	private final PhotoViewAttacher mAttacher;
 
+	private ScaleType mPendingScaleType;
+
 	public PhotoView(Context context) {
-		super(context);
-		super.setScaleType(ScaleType.MATRIX);
-		mAttacher = new PhotoViewAttacher(this);
+		this(context, null);
 	}
 
 	public PhotoView(Context context, AttributeSet attr) {
-		super(context, attr);
-		super.setScaleType(ScaleType.MATRIX);
-		mAttacher = new PhotoViewAttacher(this);
+		this(context, attr, 0);
 	}
 	
 	public PhotoView(Context context, AttributeSet attr, int defStyle) {
 		super(context, attr, defStyle);
 		super.setScaleType(ScaleType.MATRIX);
 		mAttacher = new PhotoViewAttacher(this);
+
+		if (null != mPendingScaleType) {
+			setScaleType(mPendingScaleType);
+			mPendingScaleType = null;
+		}
 	}
 
 	/**
@@ -148,11 +151,10 @@ public class PhotoView extends ImageView {
 
 	@Override
 	public void setScaleType(ScaleType scaleType) {
-		// setScaleType can be called from within ImageView constructor if there is a scaleType attribute set in a PhotoView embedded in a layout.
-		// Avoid NPE in that situation, we're overriding the scaletype to MATRIX on creation anyway so we could log a warning that the resource definition is
-		// unused.
 		if (null != mAttacher) {
 			mAttacher.setScaleType(scaleType);
+		} else {
+			mPendingScaleType = scaleType;
 		}
 	}
 
