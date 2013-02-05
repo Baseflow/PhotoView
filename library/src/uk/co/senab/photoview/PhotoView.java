@@ -117,6 +117,12 @@ public class PhotoView extends ImageView {
 		mAttacher.setOnMatrixChangeListener(listener);
 	}
 
+	@Override
+	public void setOnLongClickListener(OnLongClickListener l) {
+		// delegate to the attacher
+		mAttacher.setOnLongClickListener(l);
+	}
+
 	/**
 	 * Register a callback to be invoked when the Photo displayed by this View
 	 * is tapped with a single tap.
@@ -142,7 +148,12 @@ public class PhotoView extends ImageView {
 
 	@Override
 	public void setScaleType(ScaleType scaleType) {
-		mAttacher.setScaleType(scaleType);
+		// setScaleType can be called from within ImageView constructor if there is a scaleType attribute set in a PhotoView embedded in a layout.
+		// Avoid NPE in that situation, we're overriding the scaletype to MATRIX on creation anyway so we could log a warning that the resource definition is
+		// unused.
+		if (null != mAttacher) {
+			mAttacher.setScaleType(scaleType);
+		}
 	}
 
 	/**
