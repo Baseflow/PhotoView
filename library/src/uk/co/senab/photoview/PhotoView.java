@@ -85,7 +85,12 @@ public class PhotoView extends ImageView implements IPhotoView {
 		return mAttacher.getScaleType();
 	}
 
-	@Override
+    @Override
+    public void setAllowParentInterceptOnEdge(boolean allow) {
+        mAttacher.setAllowParentInterceptOnEdge(allow);
+    }
+
+    @Override
 	public void setMinScale(float minScale) {
 		mAttacher.setMinScale(minScale);
 	}
@@ -141,14 +146,8 @@ public class PhotoView extends ImageView implements IPhotoView {
 	}
 
 	@Override
-	public void setOnPhotoTapListener(OnViewTapListener listener) {
-		mAttacher.setOnPhotoTapListener(listener);
-	}
-
-	@Override
-	public void setOnViewTapListener(OnViewTapListener listener)
-	{
-		mAttacher.setOnPhotoTapListener(listener);
+	public void setOnViewTapListener(OnViewTapListener listener) {
+		mAttacher.setOnViewTapListener(listener);
 	}
 
 	@Override

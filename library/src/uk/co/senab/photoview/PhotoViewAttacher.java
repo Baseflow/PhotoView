@@ -52,6 +52,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	private float mMidScale = DEFAULT_MID_SCALE;
 	private float mMaxScale = DEFAULT_MAX_SCALE;
 
+    private boolean mAllowParentInterceptOnEdge = true;
+
 	private static void checkZoomLevels(float minZoom, float midZoom, float maxZoom) {
 		if (minZoom >= midZoom) {
 			throw new IllegalArgumentException("MinZoom should be less than MidZoom");
@@ -276,12 +278,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			 * Here we decide whether to let the ImageView's parent to start
 			 * taking over the touch event.
 			 *
-			 * We never want the parent to take over if we're scaling. We then
-			 * check the edge we're on, and the direction of the scroll (i.e. if
-			 * we're pulling against the edge, aka 'overscrolling', let the
-			 * parent take over).
+			 * First we check whether this function is enabled. We never want the
+             * parent to take over if we're scaling. We then check the edge we're
+             * on, and the direction of the scroll (i.e. if we're pulling against
+             * the edge, aka 'overscrolling', let the parent take over).
 			 */
-			if (!mScaleDragDetector.isScaling()) {
+			if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling()) {
 				if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
 						|| (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
 					imageView.getParent().requestDisallowInterceptTouchEvent(false);
@@ -418,6 +420,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		return handled;
 	}
 
+    @Override
+    public void setAllowParentInterceptOnEdge(boolean allow) {
+        mAllowParentInterceptOnEdge = allow;
+    }
+
 	@Override
 	public void setMinScale(float minScale) {
 		checkZoomLevels(minScale, mMidScale, mMaxScale);
@@ -452,7 +459,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	}
 
 	@Override
-	public final void setOnPhotoTapListener(OnViewTapListener listener) {
+	public final void setOnViewTapListener(OnViewTapListener listener) {
 		mViewTapListener = listener;
 	}
 
