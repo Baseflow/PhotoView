@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.co.senab.photoview.sample"
-    android:versionCode="120"
-    android:versionName="1.2" >
+    android:versionCode="121"
+    android:versionName="1.2.1" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="4"
         android:targetSdkVersion="15" />
 
     <application

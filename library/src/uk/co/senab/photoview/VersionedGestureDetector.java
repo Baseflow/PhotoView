@@ -16,11 +16,13 @@ package uk.co.senab.photoview;
  * limitations under the License.
  *******************************************************************************/
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
@@ -31,6 +33,7 @@ public abstract class VersionedGestureDetector {
 	public static VersionedGestureDetector newInstance(Context context, OnGestureListener listener) {
 		final int sdkVersion = Build.VERSION.SDK_INT;
 		VersionedGestureDetector detector = null;
+
 		if (sdkVersion < Build.VERSION_CODES.ECLAIR) {
 			detector = new CupcakeDetector(context);
 		} else if (sdkVersion < Build.VERSION_CODES.FROYO) {
@@ -96,6 +99,7 @@ public abstract class VersionedGestureDetector {
 					mIsDragging = false;
 					break;
 				}
+
 				case MotionEvent.ACTION_MOVE: {
 					final float x = getActiveX(ev);
 					final float y = getActiveY(ev);
@@ -119,11 +123,17 @@ public abstract class VersionedGestureDetector {
 					break;
 				}
 
-				case MotionEvent.ACTION_CANCEL:
+				case MotionEvent.ACTION_CANCEL: {
+					// Recycle Velocity Tracker
+					if (null != mVelocityTracker) {
+						mVelocityTracker.recycle();
+						mVelocityTracker = null;
+					}
+					break;
+				}
+
 				case MotionEvent.ACTION_UP: {
 					if (mIsDragging) {
-						mIsDragging = false;
-
 						if (null != mVelocityTracker) {
 							mLastTouchX = getActiveX(ev);
 							mLastTouchY = getActiveY(ev);
@@ -150,10 +160,12 @@ public abstract class VersionedGestureDetector {
 					break;
 				}
 			}
+
 			return true;
 		}
 	}
 
+	@TargetApi(5)
 	private static class EclairDetector extends CupcakeDetector {
 		private static final int INVALID_POINTER_ID = -1;
 		private int mActivePointerId = INVALID_POINTER_ID;
@@ -211,12 +223,35 @@ public abstract class VersionedGestureDetector {
 		}
 	}
 
-	private static class FroyoDetector extends EclairDetector implements ScaleGestureDetector.OnScaleGestureListener {
-		private ScaleGestureDetector mDetector;
+	@TargetApi(8)
+	private static class FroyoDetector extends EclairDetector {
+
+		private final ScaleGestureDetector mDetector;
+
+		// Needs to be an inner class so that we don't hit
+		// VerifyError's on API 4.
+		private final OnScaleGestureListener mScaleListener = new OnScaleGestureListener() {
+
+			@Override
+			public boolean onScale(ScaleGestureDetector detector) {
+				mListener.onScale(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY());
+				return true;
+			}
+
+			@Override
+			public boolean onScaleBegin(ScaleGestureDetector detector) {
+				return true;
+			}
+
+			@Override
+			public void onScaleEnd(ScaleGestureDetector detector) {
+				// NO-OP
+			}
+		};
 
 		public FroyoDetector(Context context) {
 			super(context);
-			mDetector = new ScaleGestureDetector(context, this);
+			mDetector = new ScaleGestureDetector(context, mScaleListener);
 		}
 
 		@Override
@@ -225,25 +260,10 @@ public abstract class VersionedGestureDetector {
 		}
 
 		@Override
-		public boolean onScale(ScaleGestureDetector detector) {
-			mListener.onScale(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY());
-			return true;
-		}
-
-		@Override
 		public boolean onTouchEvent(MotionEvent ev) {
 			mDetector.onTouchEvent(ev);
 			return super.onTouchEvent(ev);
 		}
 
-		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector) {
-			return true;
-		}
-
-		@Override
-		public void onScaleEnd(ScaleGestureDetector detector) {
-			// NO-OP
-		}
 	}
 }
