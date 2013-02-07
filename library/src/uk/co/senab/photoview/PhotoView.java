@@ -160,6 +160,11 @@ public class PhotoView extends ImageView implements IPhotoView {
 	}
 
 	@Override
+	public void setStartScale(float startScale) {
+		mAttacher.setStartScale(startScale);
+	}
+
+	@Override
 	public void setZoomable(boolean zoomable) {
 		mAttacher.setZoomable(zoomable);
 	}

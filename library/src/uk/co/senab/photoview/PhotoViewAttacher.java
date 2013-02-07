@@ -130,6 +130,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	private boolean mZoomEnabled;
 	private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
+	private float mStartScale = 1.0f;
+
 	public PhotoViewAttacher(ImageView imageView) {
 		mImageView = new WeakReference<ImageView>(imageView);
 
@@ -497,6 +499,16 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	}
 
 	@Override
+	public void setStartScale(float startScale) {
+		mStartScale = startScale;
+
+		final float delta = mStartScale / getScale();
+		mSuppMatrix.postScale(delta, delta, 0f, 0f);
+
+		checkAndDisplayMatrix();
+	}
+
+	@Override
 	public final void zoomTo(float scale, float focalX, float focalY) {
 		ImageView imageView = getImageView();
 
@@ -639,8 +651,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	 */
 	private void resetMatrix() {
 		mSuppMatrix.reset();
-		setImageViewMatrix(getDisplayMatrix());
-		checkMatrixBounds();
+
+		final float delta = mStartScale / getScale();
+		mSuppMatrix.postScale(delta, delta, 0f, 0f);
+
+		checkAndDisplayMatrix();
 	}
 
 	private void setImageViewMatrix(Matrix matrix) {
