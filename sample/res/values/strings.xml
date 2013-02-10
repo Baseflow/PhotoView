@@ -10,5 +10,7 @@
     <string name="menu_scale_center">Change to CENTER</string>
     <string name="menu_scale_center_inside">Change to CENTER_INSIDE</string>
     <string name="menu_scale_center_crop">Change to CENTER_CROP</string>
+    <string name="menu_zoom_random_animate">Animate scale to random value</string>
+    <string name="menu_zoom_random">Set scale to random value</string>
 
 </resources>

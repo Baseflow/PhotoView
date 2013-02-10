@@ -116,6 +116,31 @@ public interface IPhotoView {
     void setOnViewTapListener(PhotoViewAttacher.OnViewTapListener listener);
 
     /**
+     * Changes the current scale to the specified value.
+     *
+     * @param scale  - Value to scale to
+     */
+    void setScale(float scale);
+
+    /**
+     * Changes the current scale to the specified value.
+     *
+     * @param scale  - Value to scale to
+     * @param animate - Whether to animate the scale
+     */
+    void setScale(float scale, boolean animate);
+
+    /**
+     * Changes the current scale to the specified value, around the given focal point.
+     *
+     * @param scale  - Value to scale to
+     * @param focalX - X Focus Point
+     * @param focalY - Y Focus Point
+     * @param animate - Whether to animate the scale
+     */
+    void setScale(float scale, float focalX, float focalY, boolean animate);
+
+    /**
      * Controls how the image should be resized or moved to match the size of
      * the ImageView. Any scaling or panning will happen within the confines of
      * this {@link android.widget.ImageView.ScaleType}.
@@ -132,12 +157,4 @@ public interface IPhotoView {
      */
     void setZoomable(boolean zoomable);
 
-    /**
-     * Zooms to the specified scale, around the focal point given.
-     *
-     * @param scale  - Scale to zoom to
-     * @param focalX - X Focus Point
-     * @param focalY - Y Focus Point
-     */
-    void zoomTo(float scale, float focalX, float focalY);
 }
