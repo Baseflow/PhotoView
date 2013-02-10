@@ -245,11 +245,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			float y = ev.getY();
 
 			if (scale < mMidScale) {
-				zoomTo(mMidScale, x, y);
+				setScale(mMidScale, x, y, true);
 			} else if (scale >= mMidScale && scale < mMaxScale) {
-				zoomTo(mMaxScale, x, y);
+                setScale(mMaxScale, x, y, true);
 			} else {
-				zoomTo(mMinScale, x, y);
+                setScale(mMinScale, x, y, true);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// Can sometimes happen when getX() and getY() is called
@@ -477,10 +477,17 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
         }
     }
 
+    @Override
     public void setScale(float scale, float focalX, float focalY, boolean animate) {
         ImageView imageView = getImageView();
 
         if (null != imageView) {
+            // Check to see if the scale is within bounds
+            if (scale < mMinScale || scale > mMaxScale) {
+                Log.i(LOG_TAG, "Scale must be within the range of minScale and maxScale");
+                return;
+            }
+
             if (animate) {
                 imageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
             } else {
