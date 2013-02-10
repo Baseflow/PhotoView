@@ -150,7 +150,22 @@ public class PhotoView extends ImageView implements IPhotoView {
 		mAttacher.setOnViewTapListener(listener);
 	}
 
-	@Override
+    @Override
+    public void setScale(float scale) {
+        mAttacher.setScale(scale);
+    }
+
+    @Override
+    public void setScale(float scale, boolean animate) {
+        mAttacher.setScale(scale, animate);
+    }
+
+    @Override
+    public void setScale(float scale, float focalX, float focalY, boolean animate) {
+        mAttacher.setScale(scale, focalX, focalY, animate);
+    }
+
+    @Override
 	public void setScaleType(ScaleType scaleType) {
 		if (null != mAttacher) {
 			mAttacher.setScaleType(scaleType);
@@ -162,11 +177,6 @@ public class PhotoView extends ImageView implements IPhotoView {
 	@Override
 	public void setZoomable(boolean zoomable) {
 		mAttacher.setZoomable(zoomable);
-	}
-
-	@Override
-	public void zoomTo(float scale, float focalX, float focalY) {
-		mAttacher.zoomTo(scale, focalX, focalY);
 	}
 
 	@Override

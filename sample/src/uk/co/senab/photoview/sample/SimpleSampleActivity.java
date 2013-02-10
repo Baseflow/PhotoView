@@ -30,9 +30,12 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Random;
+
 public class SimpleSampleActivity extends Activity {
 
 	static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %%";
+    static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
 
 	private ImageView mImageView;
 	private TextView mCurrMatrixTv;
@@ -116,6 +119,19 @@ public class SimpleSampleActivity extends Activity {
 			case R.id.menu_scale_scale_center_inside:
 				mAttacher.setScaleType(ScaleType.CENTER_INSIDE);
 				return true;
+
+            case R.id.menu_scale_random_animate:
+            case R.id.menu_scale_random:
+                Random r = new Random();
+
+                float minScale = mAttacher.getMinScale();
+                float maxScale = mAttacher.getMaxScale();
+                float randomScale = minScale + (r.nextFloat() * (maxScale - minScale));
+                mAttacher.setScale(randomScale, item.getItemId() == R.id.menu_scale_random_animate);
+
+                showToast(String.format(SCALE_TOAST_STRING, randomScale));
+
+                return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -128,15 +144,18 @@ public class SimpleSampleActivity extends Activity {
 			float xPercentage = x * 100f;
 			float yPercentage = y * 100f;
 
-			if (null != mCurrentToast) {
-				mCurrentToast.cancel();
-			}
-
-			mCurrentToast = Toast.makeText(SimpleSampleActivity.this,
-					String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage), Toast.LENGTH_SHORT);
-			mCurrentToast.show();
+            showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage));
 		}
 	}
+
+    private void showToast(CharSequence text) {
+        if (null != mCurrentToast) {
+            mCurrentToast.cancel();
+        }
+
+        mCurrentToast = Toast.makeText(SimpleSampleActivity.this, text, Toast.LENGTH_SHORT);
+        mCurrentToast.show();
+    }
 
 	private class MatrixChangeListener implements OnMatrixChangedListener {
 

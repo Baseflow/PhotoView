@@ -463,6 +463,33 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		mViewTapListener = listener;
 	}
 
+    @Override
+    public void setScale(float scale) {
+        setScale(scale, false);
+    }
+
+    @Override
+    public void setScale(float scale, boolean animate) {
+        ImageView imageView = mImageView.get();
+
+        if (null != imageView) {
+            setScale(scale, imageView.getX() / 2, imageView.getY() / 2, animate);
+        }
+    }
+
+    public void setScale(float scale, float focalX, float focalY, boolean animate) {
+        ImageView imageView = getImageView();
+
+        if (null != imageView) {
+            if (animate) {
+                imageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
+            } else {
+                mSuppMatrix.setScale(scale, scale, focalX, focalY);
+                checkAndDisplayMatrix();
+            }
+        }
+    }
+
 	@Override
 	public final void setScaleType(ScaleType scaleType) {
 		if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
@@ -496,13 +523,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		}
 	}
 
-	@Override
+    /**
+     * @deprecated Use {@link #setScale(float, float, float, boolean)} instead.
+     */
 	public final void zoomTo(float scale, float focalX, float focalY) {
-		ImageView imageView = getImageView();
-
-		if (null != imageView) {
-			imageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
-		}
+		setScale(scale, focalX, focalY, true);
 	}
 
 	protected Matrix getDisplayMatrix() {

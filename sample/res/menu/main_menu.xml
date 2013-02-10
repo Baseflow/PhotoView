@@ -30,5 +30,13 @@
         android:id="@+id/menu_scale_scale_center_inside"
         android:showAsAction="never"
         android:title="@string/menu_scale_center_inside"/>
+    <item
+        android:id="@+id/menu_scale_random_animate"
+        android:showAsAction="never"
+        android:title="@string/menu_zoom_random_animate" />
+    <item
+        android:id="@+id/menu_scale_random"
+        android:showAsAction="never"
+        android:title="@string/menu_zoom_random" />
 
 </menu>
