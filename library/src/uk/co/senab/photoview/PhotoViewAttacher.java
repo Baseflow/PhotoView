@@ -47,6 +47,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	public static final float DEFAULT_MAX_SCALE = 3.0f;
 	public static final float DEFAULT_MID_SCALE = 1.75f;
 	public static final float DEFAULT_MIN_SCALE = 1.0f;
+	
+	private static final int DEFAULT_ZOOM_LEVEL=10;
 
 	private float mMinScale = DEFAULT_MIN_SCALE;
 	private float mMidScale = DEFAULT_MID_SCALE;
@@ -718,7 +720,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		final float heightScale = viewHeight / drawableHeight;
 
 		if (mScaleType == ScaleType.CENTER) {
-			mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F, (viewHeight - drawableHeight) / 2F);
+			if(drawableHeight>viewHeight){
+                		mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F, 0);//for very long image,make it at start position
+            		}else{
+                		mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F, (viewHeight - drawableHeight) / 2F);
+            		}
 
 		} else if (mScaleType == ScaleType.CENTER_CROP) {
 			float scale = Math.max(widthScale, heightScale);
