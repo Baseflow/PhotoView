@@ -104,7 +104,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	}
 
 	private WeakReference<ImageView> mImageView;
-	private ViewTreeObserver mViewTreeObserver;
 
 	// Gesture Detectors
 	private GestureDetector mGestureDetector;
@@ -135,8 +134,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
 		imageView.setOnTouchListener(this);
 
-		mViewTreeObserver = imageView.getViewTreeObserver();
-		mViewTreeObserver.addOnGlobalLayoutListener(this);
+		imageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 		// Make sure we using MATRIX Scale Type
 		setImageViewScaleTypeMatrix(imageView);
@@ -176,10 +174,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	 */
 	@SuppressWarnings("deprecation")
 	public final void cleanup() {
-		if (null != mViewTreeObserver && mViewTreeObserver.isAlive()) {
-			mViewTreeObserver.removeGlobalOnLayoutListener(this);
+		ViewTreeObserver viewTreeObserver = (mImageView==null || mImageView.get()==null) ? null : mImageView.get().getViewTreeObserver();
+		if (null != viewTreeObserver && viewTreeObserver.isAlive()) {
+			viewTreeObserver.removeGlobalOnLayoutListener(this);
 		}
-		mViewTreeObserver = null;
+		viewTreeObserver = null;
 
 		// Clear listeners too
 		mMatrixChangeListener = null;
