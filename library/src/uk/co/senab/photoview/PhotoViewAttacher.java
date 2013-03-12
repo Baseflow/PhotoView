@@ -104,7 +104,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	}
 
 	private WeakReference<ImageView> mImageView;
-	private ViewTreeObserver mViewTreeObserver;
 
 	// Gesture Detectors
 	private GestureDetector mGestureDetector;
@@ -135,8 +134,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
 		imageView.setOnTouchListener(this);
 
-		mViewTreeObserver = imageView.getViewTreeObserver();
-		mViewTreeObserver.addOnGlobalLayoutListener(this);
+		imageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 		// Make sure we using MATRIX Scale Type
 		setImageViewScaleTypeMatrix(imageView);
@@ -176,10 +174,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	 */
 	@SuppressWarnings("deprecation")
 	public final void cleanup() {
-		if (null != mImageView) {
-			mImageView.get().getViewTreeObserver().removeGlobalOnLayoutListener(this);
-		}
-		mViewTreeObserver = null;
+        ViewTreeObserver viewTreeObserver = (mImageView == null || mImageView.get() == null) ? null
+                : mImageView.get().getViewTreeObserver();
+        if (null != viewTreeObserver && viewTreeObserver.isAlive()) {
+            viewTreeObserver.removeGlobalOnLayoutListener(this);
+        }
+        viewTreeObserver = null;
 
 		// Clear listeners too
 		mMatrixChangeListener = null;
@@ -714,7 +714,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		final float heightScale = viewHeight / drawableHeight;
 
 		if (mScaleType == ScaleType.CENTER) {
-			mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F, (viewHeight - drawableHeight) / 2F);
+			mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
+                    (viewHeight - drawableHeight) / 2F);
 
 		} else if (mScaleType == ScaleType.CENTER_CROP) {
 			float scale = Math.max(widthScale, heightScale);
