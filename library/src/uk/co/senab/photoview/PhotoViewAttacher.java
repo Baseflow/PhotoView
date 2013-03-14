@@ -181,6 +181,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
         }
         viewTreeObserver = null;
 
+		if (null != mGestureDetector) {
+			mGestureDetector.setOnDoubleTapListener(null);
+		}
+
+		if (null != mImageView.get()) {
+			mImageView.get().setOnTouchListener(null);
+		}
+
 		// Clear listeners too
 		mMatrixChangeListener = null;
 		mPhotoTapListener = null;
