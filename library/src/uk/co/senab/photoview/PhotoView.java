@@ -168,6 +168,16 @@ public class PhotoView extends ImageView implements IPhotoView {
 	public void zoomTo(float scale, float focalX, float focalY) {
 		mAttacher.zoomTo(scale, focalX, focalY);
 	}
+	
+	@Override
+    	public void zoomIn() {
+        	mAttacher.zoomIn();
+    	}
+
+    	@Override
+    	public void zoomOut() {
+        	mAttacher.zoomOut();
+    	}
 
 	@Override
 	protected void onDetachedFromWindow() {
