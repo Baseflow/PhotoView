@@ -177,19 +177,22 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		if (null == mImageView) {
 			return; // cleanup already done
 		}
-		
-		ViewTreeObserver viewTreeObserver = (mImageView==null || mImageView.get()==null) ? null : mImageView.get().getViewTreeObserver();
-		if (null != viewTreeObserver && viewTreeObserver.isAlive()) {
-			viewTreeObserver.removeGlobalOnLayoutListener(this);
-		}
-		viewTreeObserver = null;
+
+        final ImageView imageView = mImageView.get();
+
+        if (null != imageView) {
+            // Remove this as a global layout listener
+            ViewTreeObserver observer = imageView.getViewTreeObserver();
+            if (null != observer && observer.isAlive()) {
+                observer.removeGlobalOnLayoutListener(this);
+            }
+
+            // Remove the ImageView's reference to this
+            imageView.setOnTouchListener(null);
+        }
 
 		if (null != mGestureDetector) {
 			mGestureDetector.setOnDoubleTapListener(null);
-		}
-
-		if (null != mImageView.get()) {
-			mImageView.get().setOnTouchListener(null);
 		}
 
 		// Clear listeners too
