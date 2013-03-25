@@ -39,6 +39,8 @@ public abstract class ScrollerProxy {
 
 	public abstract void forceFinished(boolean finished);
 
+	public abstract boolean isFinished();
+
 	public abstract int getCurrX();
 
 	public abstract int getCurrY();
@@ -66,6 +68,11 @@ public abstract class ScrollerProxy {
 		@Override
 		public void forceFinished(boolean finished) {
 			mScroller.forceFinished(finished);
+		}
+		
+		@Override
+		public boolean isFinished() {
+			return mScroller.isFinished();
 		}
 
 		@Override
@@ -101,6 +108,10 @@ public abstract class ScrollerProxy {
 		@Override
 		public void forceFinished(boolean finished) {
 			mScroller.forceFinished(finished);
+		}
+
+		public boolean isFinished() {
+			return mScroller.isFinished();
 		}
 
 		@Override

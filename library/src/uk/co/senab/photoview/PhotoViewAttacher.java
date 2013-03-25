@@ -189,6 +189,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
             // Remove the ImageView's reference to this
             imageView.setOnTouchListener(null);
+            
+            // make sure a pending fling runnable won't be run
+            cancelFling();
         }
 
 		if (null != mGestureDetector) {
@@ -935,6 +938,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
 		@Override
 		public void run() {
+			if (mScroller.isFinished()) {
+				return; // remaining post that should not be handled
+			}
+			
 			ImageView imageView = getImageView();
 			if (null != imageView && mScroller.computeScrollOffset()) {
 
