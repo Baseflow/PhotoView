@@ -939,6 +939,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
 		@Override
 		public void run() {
+			if (mScroller.isFinished()) {
+				return; // remaining post that should not be handled
+			}
+			
 			ImageView imageView = getImageView();
 			if (null != imageView && mScroller.computeScrollOffset()) {
 
