@@ -238,7 +238,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		return mScaleType;
 	}
 
-	public final boolean onDoubleTap(MotionEvent ev) {
+	public boolean onDoubleTap(MotionEvent ev) {
 		try {
 			float scale = getScale();
 			float x = ev.getX();
