@@ -71,6 +71,11 @@ public class PhotoView extends ImageView implements IPhotoView {
 	}
 
 	@Override
+	public boolean isMidScaleDisabled() {
+		return mAttacher.isMidScaleDisabled();
+	}
+
+	@Override
 	public float getMaxScale() {
 		return mAttacher.getMaxScale();
 	}
@@ -98,6 +103,11 @@ public class PhotoView extends ImageView implements IPhotoView {
 	@Override
 	public void setMidScale(float midScale) {
 		mAttacher.setMidScale(midScale);
+	}
+
+	@Override
+	public void disableMidScale() {
+		mAttacher.disableMidScale();
 	}
 
 	@Override
