@@ -47,6 +47,11 @@ public interface IPhotoView {
      */
     float getMidScale();
 
+	/**
+	 * @return true if middle scale level is disabled.
+	 */
+	boolean isMidScaleDisabled();
+
     /**
      * @return The current maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
@@ -78,6 +83,11 @@ public interface IPhotoView {
      * Sets the middle scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
     void setMidScale(float midScale);
+
+	/**
+	 * Disables the middle scsale level.
+	 */
+	void disableMidScale();
 
     /**
      * Sets the maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.

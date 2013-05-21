@@ -53,6 +53,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	private float mMaxScale = DEFAULT_MAX_SCALE;
 
     private boolean mAllowParentInterceptOnEdge = true;
+	private boolean mMidScaleEnabled = true;
 
 	private static void checkZoomLevels(float minZoom, float midZoom, float maxZoom) {
 		if (minZoom >= midZoom) {
@@ -224,6 +225,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	}
 
 	@Override
+	public boolean isMidScaleDisabled() {
+		return !mMidScaleEnabled;
+	}
+
+	@Override
 	public float getMaxScale() {
 		return mMaxScale;
 	}
@@ -244,12 +250,20 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			float x = ev.getX();
 			float y = ev.getY();
 
-			if (scale < mMidScale) {
-				zoomTo(mMidScale, x, y);
-			} else if (scale >= mMidScale && scale < mMaxScale) {
-				zoomTo(mMaxScale, x, y);
+			if (mMidScaleEnabled) {
+				if (scale < mMidScale) {
+					zoomTo(mMidScale, x, y);
+				} else if (scale >= mMidScale && scale < mMaxScale) {
+					zoomTo(mMaxScale, x, y);
+				} else {
+					zoomTo(mMinScale, x, y);
+				}
 			} else {
-				zoomTo(mMinScale, x, y);
+				if (scale < mMaxScale) {
+					zoomTo(mMaxScale, x, y);
+				} else {
+					zoomTo(mMinScale, x, y);
+				}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// Can sometimes happen when getX() and getY() is called
@@ -435,6 +449,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	public void setMidScale(float midScale) {
 		checkZoomLevels(mMinScale, midScale, mMaxScale);
 		mMidScale = midScale;
+	}
+
+	@Override
+	public void disableMidScale() {
+		this.mMidScaleEnabled = false;
 	}
 
 	@Override
