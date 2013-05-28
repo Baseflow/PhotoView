@@ -300,11 +300,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 					imageView.getParent().requestDisallowInterceptTouchEvent(false);
 				}
 			}
+		}
 
-			// allow pager to scroll to next item if image has not been loaded
-			if (!hasDrawable(imageView)) {
-				imageView.getParent().requestDisallowInterceptTouchEvent(false);
-			}
+		// allow pager to scroll to next item if image has not been loaded
+		if (!hasDrawable(imageView)) {
+			imageView.getParent().requestDisallowInterceptTouchEvent(false);
 		}
 	}
 
