@@ -255,6 +255,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		return mScaleType;
 	}
 
+    @Override
 	public final boolean onDoubleTap(MotionEvent ev) {
 		try {
 			float scale = getScale();
@@ -275,53 +276,50 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		return true;
 	}
 
+    @Override
 	public final boolean onDoubleTapEvent(MotionEvent e) {
 		// Wait for the confirmed onDoubleTap() instead
 		return false;
 	}
 
+    @Override
 	public final void onDrag(float dx, float dy) {
 		if (DEBUG) {
 			LogManager.logger.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
 		}
 
-		ImageView imageView = getImageView();
+        ImageView imageView = getImageView();
+        mSuppMatrix.postTranslate(dx, dy);
+        checkAndDisplayMatrix();
 
-		if (null != imageView && hasDrawable(imageView)) {
-			mSuppMatrix.postTranslate(dx, dy);
-			checkAndDisplayMatrix();
-
-			/**
-			 * Here we decide whether to let the ImageView's parent to start
-			 * taking over the touch event.
-			 *
-			 * First we check whether this function is enabled. We never want the
-             * parent to take over if we're scaling. We then check the edge we're
-             * on, and the direction of the scroll (i.e. if we're pulling against
-             * the edge, aka 'overscrolling', let the parent take over).
-			 */
-			if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling()) {
-				if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
-						|| (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
-					imageView.getParent().requestDisallowInterceptTouchEvent(false);
-				}
-			}
-		}
-	}
+        /**
+         * Here we decide whether to let the ImageView's parent to start
+         * taking over the touch event.
+         *
+         * First we check whether this function is enabled. We never want the
+         * parent to take over if we're scaling. We then check the edge we're
+         * on, and the direction of the scroll (i.e. if we're pulling against
+         * the edge, aka 'overscrolling', let the parent take over).
+         */
+        if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling()) {
+            if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
+                    || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
+                imageView.getParent().requestDisallowInterceptTouchEvent(false);
+            }
+        }
+    }
 
 	@Override
 	public final void onFling(float startX, float startY, float velocityX, float velocityY) {
 		if (DEBUG) {
 			LogManager.logger.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
 		}
-
-		ImageView imageView = getImageView();
-		if (hasDrawable(imageView)) {
-			mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
-			mCurrentFlingRunnable.fling(imageView.getWidth(), imageView.getHeight(), (int) velocityX, (int) velocityY);
-			imageView.post(mCurrentFlingRunnable);
-		}
-	}
+        ImageView imageView = getImageView();
+        mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
+        mCurrentFlingRunnable.fling(imageView.getWidth(), imageView.getHeight(), (int) velocityX,
+                (int) velocityY);
+        imageView.post(mCurrentFlingRunnable);
+    }
 
 	@Override
 	public final void onGlobalLayout() {
@@ -358,7 +356,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			LogManager.logger.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
 		}
 
-		if (hasDrawable(getImageView()) && (getScale() < mMaxScale || scaleFactor < 1f)) {
+		if (getScale() < mMaxScale || scaleFactor < 1f) {
 			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
 			checkAndDisplayMatrix();
 		}
@@ -368,37 +366,35 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	public final boolean onSingleTapConfirmed(MotionEvent e) {
 		ImageView imageView = getImageView();
 
-		if (null != imageView) {
-			if (null != mPhotoTapListener) {
-				final RectF displayRect = getDisplayRect();
+        if (null != mPhotoTapListener) {
+            final RectF displayRect = getDisplayRect();
 
-				if (null != displayRect) {
-					final float x = e.getX(), y = e.getY();
+            if (null != displayRect) {
+                final float x = e.getX(), y = e.getY();
 
-					// Check to see if the user tapped on the photo
-					if (displayRect.contains(x, y)) {
+                // Check to see if the user tapped on the photo
+                if (displayRect.contains(x, y)) {
 
-						float xResult = (x - displayRect.left) / displayRect.width();
-						float yResult = (y - displayRect.top) / displayRect.height();
+                    float xResult = (x - displayRect.left) / displayRect.width();
+                    float yResult = (y - displayRect.top) / displayRect.height();
 
-						mPhotoTapListener.onPhotoTap(imageView, xResult, yResult);
-						return true;
-					}
-				}
-			}
-			if (null != mViewTapListener) {
-				mViewTapListener.onViewTap(imageView, e.getX(), e.getY());
-			}
-		}
+                    mPhotoTapListener.onPhotoTap(imageView, xResult, yResult);
+                    return true;
+                }
+            }
+        }
+        if (null != mViewTapListener) {
+            mViewTapListener.onViewTap(imageView, e.getX(), e.getY());
+        }
 
-		return false;
+        return false;
 	}
 
 	@Override
 	public final boolean onTouch(View v, MotionEvent ev) {
 		boolean handled = false;
 
-		if (mZoomEnabled) {
+		if (mZoomEnabled && hasDrawable((ImageView) v)) {
 			switch (ev.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					// First, disable the Parent from intercepting the touch
