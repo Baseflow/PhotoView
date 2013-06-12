@@ -114,8 +114,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	private final Matrix mBaseMatrix = new Matrix();
 	private final Matrix mDrawMatrix = new Matrix();
 	private final Matrix mSuppMatrix = new Matrix();
+	private final Matrix mInitMatrix = new Matrix();
 	private final RectF mDisplayRect = new RectF();
 	private final float[] mMatrixValues = new float[9];
+
+	private boolean mUseInitMatrix = false;
 
 	// Listeners
 	private OnMatrixChangedListener mMatrixChangeListener;
@@ -194,6 +197,17 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	public final RectF getDisplayRect() {
 		checkMatrixBounds();
 		return getDisplayRect(getDisplayMatrix());
+	}
+
+	public Matrix getSupportingMatrix(){
+		return mSuppMatrix;
+	}
+
+	public void setSupportingMatrixValues(float[] newMatrix){
+		mSuppMatrix.setValues(newMatrix);
+		mInitMatrix.setValues(newMatrix);
+		mUseInitMatrix = true;
+		setImageViewMatrix(getDisplayMatrix());
 	}
 
 	public final ImageView getImageView() {
@@ -326,6 +340,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			if (top != mIvTop || bottom != mIvBottom || left != mIvLeft || right != mIvRight) {
 				// Update our base matrix, as the bounds have changed
 				updateBaseMatrix(imageView.getDrawable());
+
+				if(mUseInitMatrix == true){
+					mSuppMatrix.set( mInitMatrix );
+					setImageViewMatrix( getDisplayMatrix() );
+				}
 
 				// Update values as something has changed
 				mIvTop = top;
