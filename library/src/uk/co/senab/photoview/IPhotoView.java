@@ -40,17 +40,22 @@ public interface IPhotoView {
     /**
      * @return The current minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    float getMinScale();
+    float getMinimumScale();
+    
+    /**
+     * @return The current normal scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    float getNormalScale();
 
     /**
-     * @return The current middle scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     * @return The current double tap scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    float getMidScale();
+    float getDoubleTapScale();
 
     /**
      * @return The current maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    float getMaxScale();
+    float getMaximumScale();
 
     /**
      * Returns the current scale value
@@ -72,17 +77,22 @@ public interface IPhotoView {
     /**
      * Sets the minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    void setMinScale(float minScale);
+    void setMinimumScale(float minScale);
+    
+    /**
+     * Sets the normal scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    void setNormalScale(float normalScale);
 
     /**
-     * Sets the middle scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     * Sets the double tap scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    void setMidScale(float midScale);
+    void setDoubleTapScale(float tapScale);
 
     /**
      * Sets the maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    void setMaxScale(float maxScale);
+    void setMaximumScale(float maxScale);
 
     /**
      * Register a callback to be invoked when the Photo displayed by this view is long-pressed.

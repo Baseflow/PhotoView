@@ -61,18 +61,23 @@ public class PhotoView extends ImageView implements IPhotoView {
 	}
 
 	@Override
-	public float getMinScale() {
-		return mAttacher.getMinScale();
+	public float getMinimumScale() {
+		return mAttacher.getMinimumScale();
+	}
+	
+	@Override
+	public float getNormalScale() {
+		return mAttacher.getNormalScale();
 	}
 
 	@Override
-	public float getMidScale() {
-		return mAttacher.getMidScale();
+	public float getDoubleTapScale() {
+		return mAttacher.getDoubleTapScale();
 	}
 
 	@Override
-	public float getMaxScale() {
-		return mAttacher.getMaxScale();
+	public float getMaximumScale() {
+		return mAttacher.getMaximumScale();
 	}
 
 	@Override
@@ -89,20 +94,25 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAttacher.setAllowParentInterceptOnEdge(allow);
     }
+    
+    @Override
+    public void setMinimumScale(float minScale) {
+    	mAttacher.setMinimumScale(minScale);
+    }
 
     @Override
-	public void setMinScale(float minScale) {
-		mAttacher.setMinScale(minScale);
+	public void setNormalScale(float normalScale) {
+		mAttacher.setNormalScale(normalScale);
 	}
 
 	@Override
-	public void setMidScale(float midScale) {
-		mAttacher.setMidScale(midScale);
+	public void setDoubleTapScale(float tapScale) {
+		mAttacher.setDoubleTapScale(tapScale);
 	}
 
 	@Override
-	public void setMaxScale(float maxScale) {
-		mAttacher.setMaxScale(maxScale);
+	public void setMaximumScale(float maxScale) {
+		mAttacher.setMaximumScale(maxScale);
 	}
 
 	@Override
