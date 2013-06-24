@@ -45,12 +45,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	static final int EDGE_BOTH = 2;
 
 	public static final float DEFAULT_MAX_SCALE = 3.0f;
-	public static final float DEFAULT_MID_SCALE = 1.75f;
-	public static final float DEFAULT_MIN_SCALE = 1.0f;
+	public static final float DEFAULT_TAP_SCALE = 1.75f;
+	public static final float DEFAULT_NORMAL_SCALE = 1.0f;
+	public static final float DEFAULT_MIN_SCALE = 0.5f;
 
-	private float mMinScale = DEFAULT_MIN_SCALE;
-	private float mMidScale = DEFAULT_MID_SCALE;
-	private float mMaxScale = DEFAULT_MAX_SCALE;
+	private float mMinimumScale = DEFAULT_MIN_SCALE;
+	private float mNormalScale = DEFAULT_NORMAL_SCALE;
+	private float mDoubleTapScale = DEFAULT_TAP_SCALE;
+	private float mMaximumScale = DEFAULT_MAX_SCALE;
 
     private boolean mAllowParentInterceptOnEdge = true;
 
@@ -212,20 +214,25 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
 		return imageView;
 	}
-
+	
 	@Override
-	public float getMinScale() {
-		return mMinScale;
+	public float getMinimumScale() {
+		return mMinimumScale;
 	}
 
 	@Override
-	public float getMidScale() {
-		return mMidScale;
+	public float getNormalScale() {
+		return mNormalScale;
 	}
 
 	@Override
-	public float getMaxScale() {
-		return mMaxScale;
+	public float getDoubleTapScale() {
+		return mDoubleTapScale;
+	}
+
+	@Override
+	public float getMaximumScale() {
+		return mMaximumScale;
 	}
 
 	@Override
@@ -244,12 +251,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			float x = ev.getX();
 			float y = ev.getY();
 
-			if (scale < mMidScale) {
-				zoomTo(mMidScale, x, y);
-			} else if (scale >= mMidScale && scale < mMaxScale) {
-				zoomTo(mMaxScale, x, y);
+			if (scale < mDoubleTapScale) {
+				zoomTo(mDoubleTapScale, x, y);
+			} else if (scale >= mDoubleTapScale && scale < mMaximumScale) {
+				zoomTo(mMaximumScale, x, y);
 			} else {
-				zoomTo(mMinScale, x, y);
+				zoomTo(mNormalScale, x, y);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// Can sometimes happen when getX() and getY() is called
@@ -341,9 +348,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
 		}
 
-		if (hasDrawable(getImageView()) && (getScale() < mMaxScale || scaleFactor < 1f)) {
-			mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-			checkAndDisplayMatrix();
+		if (hasDrawable(getImageView())) {
+			final float newScale = getScale() * scaleFactor;
+			if (newScale < mMaximumScale && newScale > mMinimumScale) {
+				mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+				checkAndDisplayMatrix();
+			}
 		}
 	}
 
@@ -396,10 +406,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 				case MotionEvent.ACTION_UP:
 					// If the user has zoomed less than min scale, zoom back
 					// to min scale
-					if (getScale() < mMinScale) {
+					if (getScale() < mNormalScale) {
 						RectF rect = getDisplayRect();
 						if (null != rect) {
-							v.post(new AnimatedZoomRunnable(getScale(), mMinScale, rect.centerX(), rect.centerY()));
+							v.post(new AnimatedZoomRunnable(getScale(), mNormalScale, rect.centerX(), rect.centerY()));
 							handled = true;
 						}
 					}
@@ -424,23 +434,29 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAllowParentInterceptOnEdge = allow;
     }
+    
+    @Override
+    public void setMinimumScale(float minScale) {
+    	checkZoomLevels(minScale, mNormalScale, mDoubleTapScale);
+    	mMinimumScale = minScale;
+    }
 
 	@Override
-	public void setMinScale(float minScale) {
-		checkZoomLevels(minScale, mMidScale, mMaxScale);
-		mMinScale = minScale;
+	public void setNormalScale(float normalScale) {
+		checkZoomLevels(mMinimumScale, normalScale, mMaximumScale);
+		mNormalScale = normalScale;
 	}
 
 	@Override
-	public void setMidScale(float midScale) {
-		checkZoomLevels(mMinScale, midScale, mMaxScale);
-		mMidScale = midScale;
+	public void setDoubleTapScale(float tapScale) {
+		checkZoomLevels(mNormalScale, tapScale, mMaximumScale);
+		mDoubleTapScale = tapScale;
 	}
 
 	@Override
-	public void setMaxScale(float maxScale) {
-		checkZoomLevels(mMinScale, mMidScale, maxScale);
-		mMaxScale = maxScale;
+	public void setMaximumScale(float maxScale) {
+		checkZoomLevels(mNormalScale, mDoubleTapScale, maxScale);
+		mMaximumScale = maxScale;
 	}
 
 	@Override
