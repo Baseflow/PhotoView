@@ -27,8 +27,10 @@ public abstract class ScrollerProxy {
 	public static ScrollerProxy getScroller(Context context) {
 		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
 			return new PreGingerScroller(context);
-		} else {
+		} else if (VERSION.SDK_INT < VERSION_CODES.ICE_CREAM_SANDWICH) {
 			return new GingerScroller(context);
+		} else {
+			return new IcsScroller(context);
 		}
 	}
 
@@ -43,10 +45,25 @@ public abstract class ScrollerProxy {
 
 	public abstract int getCurrY();
 
+	@TargetApi(14)
+	private static class IcsScroller extends GingerScroller {
+
+		public IcsScroller(Context context) {
+			super(context);
+		}
+
+		@Override
+		public boolean computeScrollOffset() {
+			return mScroller.computeScrollOffset();
+		}
+		
+	}
+	
 	@TargetApi(9)
 	private static class GingerScroller extends ScrollerProxy {
 
-		private OverScroller mScroller;
+		protected OverScroller mScroller;
+		private boolean mFirstScroll = false;
 
 		public GingerScroller(Context context) {
 			mScroller = new OverScroller(context);
@@ -54,6 +71,12 @@ public abstract class ScrollerProxy {
 
 		@Override
 		public boolean computeScrollOffset() {
+			// Workaround for first scroll returning 0 for the direction of the edge it hits.
+			// Simply recompute values.
+			if (mFirstScroll) {
+				mScroller.computeScrollOffset();
+				mFirstScroll = false;
+			}
 			return mScroller.computeScrollOffset();
 		}
 
