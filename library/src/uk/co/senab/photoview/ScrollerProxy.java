@@ -63,7 +63,7 @@ public abstract class ScrollerProxy {
 	private static class GingerScroller extends ScrollerProxy {
 
 		protected OverScroller mScroller;
-		private boolean mFirstScroll = false;
+		private boolean mFirstScroll = true;
 
 		public GingerScroller(Context context) {
 			mScroller = new OverScroller(context);
