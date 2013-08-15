@@ -299,11 +299,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 		}
 
 		ImageView imageView = getImageView();
-		if (hasDrawable(imageView)) {
+        try {
 			mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
 			mCurrentFlingRunnable.fling(imageView.getWidth(), imageView.getHeight(), (int) velocityX, (int) velocityY);
 			imageView.post(mCurrentFlingRunnable);
-		}
+		} catch (Exception ex) {
+            Log.e("Topface",ex.toString());
+        }
 	}
 
 	@Override
