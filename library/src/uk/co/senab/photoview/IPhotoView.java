@@ -124,6 +124,8 @@ public interface IPhotoView {
      */
     void setScaleType(ImageView.ScaleType scaleType);
 
+    void setStartScale(float startScale);
+
     /**
      * Allows you to enable/disable the zoom functionality on the ImageView.
      * When disable the ImageView reverts to using the FIT_CENTER matrix.
