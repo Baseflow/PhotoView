@@ -414,9 +414,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 			}
 
 			// Finally, try the Scale/Drag detector
-			if (null != mScaleDragDetector && mScaleDragDetector.onTouchEvent(ev)) {
-				handled = true;
-			}
+            try {
+                if (null != mScaleDragDetector && mScaleDragDetector.onTouchEvent(ev)) {
+                    handled = true;
+                }
+            } catch (Exception ex) {
+                Log.e(LOG_TAG, ex.toString());
+            }
 		}
 
 		return handled;
