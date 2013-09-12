@@ -118,14 +118,14 @@ public interface IPhotoView {
     /**
      * Changes the current scale to the specified value.
      *
-     * @param scale  - Value to scale to
+     * @param scale - Value to scale to
      */
     void setScale(float scale);
 
     /**
      * Changes the current scale to the specified value.
      *
-     * @param scale  - Value to scale to
+     * @param scale   - Value to scale to
      * @param animate - Whether to animate the scale
      */
     void setScale(float scale, boolean animate);
@@ -133,9 +133,9 @@ public interface IPhotoView {
     /**
      * Changes the current scale to the specified value, around the given focal point.
      *
-     * @param scale  - Value to scale to
-     * @param focalX - X Focus Point
-     * @param focalY - Y Focus Point
+     * @param scale   - Value to scale to
+     * @param focalX  - X Focus Point
+     * @param focalY  - Y Focus Point
      * @param animate - Whether to animate the scale
      */
     void setScale(float scale, float focalX, float focalY, boolean animate);
