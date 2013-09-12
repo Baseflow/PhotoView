@@ -80,7 +80,7 @@ public class SimpleSampleActivity extends Activity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
-        assert zoomToggle != null;
+        assert null != zoomToggle;
         zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
 
 		return super.onPrepareOptionsMenu(menu);

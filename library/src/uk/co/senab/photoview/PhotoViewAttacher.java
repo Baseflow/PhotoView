@@ -133,7 +133,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
         imageView.setOnTouchListener(this);
 
-        imageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        ViewTreeObserver observer = imageView.getViewTreeObserver();
+        if (null != observer)
+            observer.addOnGlobalLayoutListener(this);
 
         // Make sure we using MATRIX Scale Type
         setImageViewScaleTypeMatrix(imageView);
@@ -304,7 +306,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
             if (mScrollEdge == EDGE_BOTH || (mScrollEdge == EDGE_LEFT && dx >= 1f)
                     || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
                 ViewParent parent = imageView.getParent();
-                if (parent != null)
+                if (null != parent)
                     parent.requestDisallowInterceptTouchEvent(false);
             }
         }
@@ -401,8 +403,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
                     // First, disable the Parent from intercepting the touch
                     // event
                     ViewParent parent = v.getParent();
-                    if (parent != null)
+                    if (null != parent)
                         parent.requestDisallowInterceptTouchEvent(true);
+                    else
+                        Log.i(LOG_TAG, "onTouch getParent() returned null");
 
                     // If we're flinging, and the user presses down, cancel
                     // fling
@@ -583,7 +587,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
          * only call if we're not attached to a PhotoView.
          */
         if (null != imageView && !(imageView instanceof PhotoView)) {
-            if (imageView.getScaleType() != ScaleType.MATRIX) {
+            if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
                 throw new IllegalStateException(
                         "The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
             }

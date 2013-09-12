@@ -102,7 +102,7 @@ public abstract class VersionedGestureDetector {
             switch (ev.getAction()) {
                 case ACTION_DOWN: {
                     mVelocityTracker = VelocityTracker.obtain();
-                    if (mVelocityTracker != null) {
+                    if (null != mVelocityTracker) {
                         mVelocityTracker.addMovement(ev);
                     } else {
                         Log.i(LOG_TAG, "Velocity tracker is null");
