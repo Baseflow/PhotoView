@@ -15,7 +15,6 @@
  *******************************************************************************/
 package uk.co.senab.photoview.sample;
 
-import uk.co.senab.photoview.PhotoView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -24,15 +23,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
+import uk.co.senab.photoview.PhotoView;
+
 public class ViewPagerActivity extends Activity {
 
-	private ViewPager mViewPager;
-
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mViewPager = new HackyViewPager(this);
+        ViewPager mViewPager = new HackyViewPager(this);
 		setContentView(mViewPager);
 
 		mViewPager.setAdapter(new SamplePagerAdapter());

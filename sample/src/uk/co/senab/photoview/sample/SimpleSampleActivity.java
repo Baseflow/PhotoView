@@ -15,9 +15,6 @@
  *******************************************************************************/
 package uk.co.senab.photoview.sample;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
-import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import android.app.Activity;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -32,13 +29,16 @@ import android.widget.Toast;
 
 import java.util.Random;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
+import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+
 public class SimpleSampleActivity extends Activity {
 
 	static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %%";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
 
-	private ImageView mImageView;
-	private TextView mCurrMatrixTv;
+    private TextView mCurrMatrixTv;
 
 	private PhotoViewAttacher mAttacher;
 
@@ -49,7 +49,7 @@ public class SimpleSampleActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mImageView = (ImageView) findViewById(R.id.iv_photo);
+        ImageView mImageView = (ImageView) findViewById(R.id.iv_photo);
 		mCurrMatrixTv = (TextView) findViewById(R.id.tv_current_matrix);
 
 		Drawable bitmap = getResources().getDrawable(R.drawable.wallpaper);
@@ -80,7 +80,8 @@ public class SimpleSampleActivity extends Activity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
-		zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
+        assert zoomToggle != null;
+        zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
