@@ -491,7 +491,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 
     @Override
     public void setScale(float scale, boolean animate) {
-        ImageView imageView = mImageView.get();
+        ImageView imageView = getImageView();
 
         if (null != imageView) {
             setScale(scale, imageView.getX() / 2, imageView.getY() / 2, animate);
