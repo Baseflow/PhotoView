@@ -92,13 +92,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
      */
     private static void setImageViewScaleTypeMatrix(ImageView imageView) {
         if (null != imageView) {
-            if (imageView instanceof PhotoView) {
-                /**
-                 * PhotoView sets it's own ScaleType to Matrix, then diverts all
-                 * calls setScaleType to this.setScaleType. Basically we don't
-                 * need to do anything here
-                 */
-            } else {
+            /**
+             * PhotoView sets it's own ScaleType to Matrix, then diverts all
+             * calls setScaleType to this.setScaleType automatically.
+             */
+            if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
                 imageView.setScaleType(ScaleType.MATRIX);
             }
         }
