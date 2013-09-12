@@ -20,11 +20,14 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
+
+import static android.view.MotionEvent.*;
 
 public abstract class VersionedGestureDetector {
     static final String LOG_TAG = "VersionedGestureDetector";
@@ -90,9 +93,13 @@ public abstract class VersionedGestureDetector {
         @Override
         public boolean onTouchEvent(MotionEvent ev) {
             switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN: {
+                case ACTION_DOWN: {
                     mVelocityTracker = VelocityTracker.obtain();
-                    mVelocityTracker.addMovement(ev);
+                    if (mVelocityTracker != null) {
+                        mVelocityTracker.addMovement(ev);
+                    }else{
+                        Log.i(LOG_TAG, "Velocity tracker is null");
+                    }
 
                     mLastTouchX = getActiveX(ev);
                     mLastTouchY = getActiveY(ev);
@@ -100,7 +107,7 @@ public abstract class VersionedGestureDetector {
                     break;
                 }
 
-                case MotionEvent.ACTION_MOVE: {
+                case ACTION_MOVE: {
                     final float x = getActiveX(ev);
                     final float y = getActiveY(ev);
                     final float dx = x - mLastTouchX, dy = y - mLastTouchY;
@@ -123,7 +130,7 @@ public abstract class VersionedGestureDetector {
                     break;
                 }
 
-                case MotionEvent.ACTION_CANCEL: {
+                case ACTION_CANCEL: {
                     // Recycle Velocity Tracker
                     if (null != mVelocityTracker) {
                         mVelocityTracker.recycle();
@@ -132,7 +139,7 @@ public abstract class VersionedGestureDetector {
                     break;
                 }
 
-                case MotionEvent.ACTION_UP: {
+                case ACTION_UP: {
                     if (mIsDragging) {
                         if (null != mVelocityTracker) {
                             mLastTouchX = getActiveX(ev);
@@ -196,16 +203,18 @@ public abstract class VersionedGestureDetector {
         @Override
         public boolean onTouchEvent(MotionEvent ev) {
             final int action = ev.getAction();
-            switch (action & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
+            switch (action & ACTION_MASK) {
+                case ACTION_DOWN:
                     mActivePointerId = ev.getPointerId(0);
                     break;
-                case MotionEvent.ACTION_CANCEL:
-                case MotionEvent.ACTION_UP:
+                case ACTION_CANCEL:
+                case ACTION_UP:
                     mActivePointerId = INVALID_POINTER_ID;
                     break;
-                case MotionEvent.ACTION_POINTER_UP:
-                    final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+                case ACTION_POINTER_UP:
+                    // Ignore deprecation, ACTION_POINTER_ID_MASK and ACTION_POINTER_ID_SHIFT has same value and are deprecated
+                    // You can have either deprecation or lint target api warning
+                    final int pointerIndex = (ev.getAction() & ACTION_POINTER_INDEX_MASK) >> ACTION_POINTER_INDEX_SHIFT;
                     final int pointerId = ev.getPointerId(pointerIndex);
                     if (pointerId == mActivePointerId) {
                         // This was our active pointer going up. Choose a new
