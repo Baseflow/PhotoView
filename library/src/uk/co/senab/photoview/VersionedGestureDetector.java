@@ -27,7 +27,14 @@ import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-import static android.view.MotionEvent.*;
+import static android.view.MotionEvent.ACTION_CANCEL;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_MASK;
+import static android.view.MotionEvent.ACTION_MOVE;
+import static android.view.MotionEvent.ACTION_POINTER_INDEX_MASK;
+import static android.view.MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+import static android.view.MotionEvent.ACTION_POINTER_UP;
+import static android.view.MotionEvent.ACTION_UP;
 
 public abstract class VersionedGestureDetector {
     static final String LOG_TAG = "VersionedGestureDetector";
@@ -97,7 +104,7 @@ public abstract class VersionedGestureDetector {
                     mVelocityTracker = VelocityTracker.obtain();
                     if (mVelocityTracker != null) {
                         mVelocityTracker.addMovement(ev);
-                    }else{
+                    } else {
                         Log.i(LOG_TAG, "Velocity tracker is null");
                     }
 
