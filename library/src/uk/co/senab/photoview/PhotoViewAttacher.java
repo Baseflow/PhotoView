@@ -551,13 +551,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
         }
     }
 
-    /**
-     * @deprecated Use {@link #setScale(float, float, float, boolean)} instead.
-     */
-    public final void zoomTo(float scale, float focalX, float focalY) {
-        setScale(scale, focalX, focalY, true);
-    }
-
     protected Matrix getDisplayMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
