@@ -15,6 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,15 @@ public interface IPhotoView {
      * @return - RectF of Displayed Drawable
      */
     RectF getDisplayRect();
+
+    /**
+     * Sets the Display Rectangle of the currently displayed Drawable. The
+     * Rectangle is considered relative to this View and includes all scaling and
+     * translations.
+     *
+     * @return - true if rectangle was applied successfully
+     */
+    boolean setDisplayMatrix(Matrix finalRectangle);
 
     /**
      * @return The current minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.

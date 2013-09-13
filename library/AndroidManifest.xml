@@ -6,6 +6,6 @@
 
     <uses-sdk android:minSdkVersion="4" />
 
-    <application />
+    <application android:hardwareAccelerated="true"/>
 
 </manifest>

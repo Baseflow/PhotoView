@@ -16,6 +16,7 @@
 package uk.co.senab.photoview;
 
 import android.content.Context;
+import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -59,6 +60,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     public RectF getDisplayRect() {
         return mAttacher.getDisplayRect();
+    }
+
+    @Override
+    public boolean setDisplayMatrix(Matrix finalRectangle) {
+        return mAttacher.setDisplayMatrix(finalRectangle);
     }
 
     @Override

@@ -231,6 +231,22 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return getDisplayRect(getDisplayMatrix());
     }
 
+    @Override
+    public boolean setDisplayMatrix(Matrix finalRectangle) {
+        ImageView imageView = getImageView();
+        if (null == imageView)
+            return false;
+
+        Drawable drawable = imageView.getDrawable();
+        if (null == drawable)
+            return false;
+
+        imageView.setImageMatrix(getDisplayMatrix());
+        update();
+
+        return true;
+    }
+
     public final ImageView getImageView() {
         ImageView imageView = null;
 
@@ -590,7 +606,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
-    protected Matrix getDisplayMatrix() {
+    public Matrix getDisplayMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
         return mDrawMatrix;
