@@ -30,8 +30,8 @@ public class ViewPagerActivity extends Activity {
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-        ViewPager mViewPager = new HackyViewPager(this);
+        setContentView(R.layout.activity_view_pager);
+        ViewPager mViewPager = (HackyViewPager) findViewById(R.id.view_pager);
 		setContentView(mViewPager);
 
 		mViewPager.setAdapter(new SamplePagerAdapter());
