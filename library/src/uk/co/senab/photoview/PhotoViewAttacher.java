@@ -32,6 +32,8 @@ import android.widget.ImageView.ScaleType;
 
 import java.lang.ref.WeakReference;
 
+import uk.co.senab.photoview.scrollerproxy.ScrollerProxy;
+
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, VersionedGestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener, ViewTreeObserver.OnGlobalLayoutListener {
 
