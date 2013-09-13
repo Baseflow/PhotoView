@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_zoom_toggle"/>
+    <item
+        android:id="@+id/menu_zoom_toggle"
+        android:title="@string/menu_zoom_disable"/>
     <item
         android:id="@+id/menu_scale_fit_center"
         android:showAsAction="never"
@@ -33,10 +35,10 @@
     <item
         android:id="@+id/menu_scale_random_animate"
         android:showAsAction="never"
-        android:title="@string/menu_zoom_random_animate" />
+        android:title="@string/menu_zoom_random_animate"/>
     <item
         android:id="@+id/menu_scale_random"
         android:showAsAction="never"
-        android:title="@string/menu_zoom_random" />
+        android:title="@string/menu_zoom_random"/>
 
 </menu>
