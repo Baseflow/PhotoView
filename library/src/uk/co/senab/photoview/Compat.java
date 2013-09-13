@@ -16,8 +16,10 @@
 package uk.co.senab.photoview;
 
 import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class Compat {
@@ -35,6 +37,24 @@ public class Compat {
     @TargetApi(16)
     private static void postOnAnimationJellyBean(View view, Runnable runnable) {
         view.postOnAnimation(runnable);
+    }
+
+    public static int getPointerIndex(int action) {
+        if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB)
+            return getPointerIndexHoneyComb(action);
+        else
+            return getPointerIndexEclair(action);
+    }
+
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.ECLAIR)
+    private static int getPointerIndexEclair(int action) {
+        return (action & MotionEvent.ACTION_POINTER_ID_MASK) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private static int getPointerIndexHoneyComb(int action) {
+        return (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
     }
 
 }
