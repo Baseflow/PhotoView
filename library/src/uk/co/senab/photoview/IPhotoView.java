@@ -39,13 +39,22 @@ public interface IPhotoView {
     RectF getDisplayRect();
 
     /**
-     * Sets the Display Rectangle of the currently displayed Drawable. The
+     * Sets the Display Matrix of the currently displayed Drawable. The
      * Rectangle is considered relative to this View and includes all scaling and
      * translations.
      *
      * @return - true if rectangle was applied successfully
      */
-    boolean setDisplayMatrix(Matrix finalRectangle);
+    boolean setDisplayMatrix(Matrix finalMatrix);
+
+    /**
+     * Gets the Display Matrix of the currently displayed Drawable. The
+     * Rectangle is considered relative to this View and includes all scaling and
+     * translations.
+     *
+     * @return - true if rectangle was applied successfully
+     */
+    Matrix getDisplayMatrix();
 
     /**
      * @return The current minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.

@@ -156,28 +156,29 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         // Make sure we using MATRIX Scale Type
         setImageViewScaleTypeMatrix(imageView);
 
-        if (!imageView.isInEditMode()) {
-            // Create Gesture Detectors...
-            mScaleDragDetector = VersionedGestureDetector.newInstance(
-                    imageView.getContext(), this);
-
-            mGestureDetector = new GestureDetector(imageView.getContext(),
-                    new GestureDetector.SimpleOnGestureListener() {
-
-                        // forward long click listener
-                        @Override
-                        public void onLongPress(MotionEvent e) {
-                            if (null != mLongClickListener) {
-                                mLongClickListener.onLongClick(mImageView.get());
-                            }
-                        }
-                    });
-
-            mGestureDetector.setOnDoubleTapListener(this);
-
-            // Finally, update the UI so that we're zoomable
-            setZoomable(true);
+        if (imageView.isInEditMode()) {
+            return;
         }
+        // Create Gesture Detectors...
+        mScaleDragDetector = VersionedGestureDetector.newInstance(
+                imageView.getContext(), this);
+
+        mGestureDetector = new GestureDetector(imageView.getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    // forward long click listener
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        if (null != mLongClickListener) {
+                            mLongClickListener.onLongClick(getImageView());
+                        }
+                    }
+                });
+
+        mGestureDetector.setOnDoubleTapListener(this);
+
+        // Finally, update the UI so that we're zoomable
+        setZoomable(true);
     }
 
     @Override
@@ -230,11 +231,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public final RectF getDisplayRect() {
         checkMatrixBounds();
-        return getDisplayRect(getDisplayMatrix());
+        return getDisplayRect(getDrawMatrix());
     }
 
     @Override
-    public boolean setDisplayMatrix(Matrix finalRectangle) {
+    public boolean setDisplayMatrix(Matrix finalMatrix) {
+        if (finalMatrix == null)
+            throw new IllegalArgumentException("Matrix cannot be null");
+
         ImageView imageView = getImageView();
         if (null == imageView)
             return false;
@@ -243,8 +247,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (null == drawable)
             return false;
 
-        imageView.setImageMatrix(getDisplayMatrix());
-        update();
+        mSuppMatrix.set(finalMatrix);
+        setImageViewMatrix(getDrawMatrix());
+        checkMatrixBounds();
 
         return true;
     }
@@ -608,7 +613,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    @Override
     public Matrix getDisplayMatrix() {
+        return new Matrix(mSuppMatrix);
+    }
+
+    protected Matrix getDrawMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
         return mDrawMatrix;
@@ -626,7 +636,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      */
     private void checkAndDisplayMatrix() {
         checkMatrixBounds();
-        setImageViewMatrix(getDisplayMatrix());
+        setImageViewMatrix(getDrawMatrix());
     }
 
     private void checkImageViewScaleType() {
@@ -650,7 +660,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             return;
         }
 
-        final RectF rect = getDisplayRect(getDisplayMatrix());
+        final RectF rect = getDisplayRect(getDrawMatrix());
         if (null == rect) {
             return;
         }
@@ -743,7 +753,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      */
     private void resetMatrix() {
         mSuppMatrix.reset();
-        setImageViewMatrix(getDisplayMatrix());
+        setImageViewMatrix(getDrawMatrix());
         checkMatrixBounds();
     }
 
@@ -1019,7 +1029,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 }
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
-                setImageViewMatrix(getDisplayMatrix());
+                setImageViewMatrix(getDrawMatrix());
 
                 mCurrentX = newX;
                 mCurrentY = newY;
