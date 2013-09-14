@@ -140,6 +140,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
+    private int mRotateDegrees = 90;
 
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
@@ -243,8 +244,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (null == imageView)
             return false;
 
-        Drawable drawable = imageView.getDrawable();
-        if (null == drawable)
+        if (null == imageView.getDrawable())
             return false;
 
         mSuppMatrix.set(finalMatrix);
