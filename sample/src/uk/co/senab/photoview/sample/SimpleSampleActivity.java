@@ -45,7 +45,9 @@ public class SimpleSampleActivity extends Activity {
 
     private Toast mCurrentToast;
 
-    private Matrix currentDisplayMatrix = null;
+    private Matrix mCurrentDisplayMatrix = null;
+
+    private float mRotateAngle = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,13 +139,21 @@ public class SimpleSampleActivity extends Activity {
 
                 return true;
             case R.id.menu_matrix_restore:
-                if (currentDisplayMatrix == null)
+                if (mCurrentDisplayMatrix == null)
                     showToast("You need to capture display matrix first");
                 else
-                    mAttacher.setDisplayMatrix(currentDisplayMatrix);
+                    mAttacher.setDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.menu_matrix_capture:
-                currentDisplayMatrix = mAttacher.getDisplayMatrix();
+                mCurrentDisplayMatrix = mAttacher.getDisplayMatrix();
+                return true;
+            case R.id.menu_rotate_left:
+                mRotateAngle += 10;
+                mAttacher.setRotation(mRotateAngle);
+                return true;
+            case R.id.menu_rotate_right:
+                mRotateAngle -= 10;
+                mAttacher.setRotation(mRotateAngle);
                 return true;
         }
 
