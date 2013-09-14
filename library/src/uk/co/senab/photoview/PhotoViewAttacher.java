@@ -140,7 +140,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
-    private int mRotateDegrees = 90;
 
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
