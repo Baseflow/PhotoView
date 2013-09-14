@@ -32,6 +32,8 @@ import android.widget.ImageView.ScaleType;
 
 import java.lang.ref.WeakReference;
 
+import uk.co.senab.photoview.gestures.OnGestureListener;
+import uk.co.senab.photoview.gestures.VersionedGestureDetector;
 import uk.co.senab.photoview.log.LogManager;
 import uk.co.senab.photoview.scrollerproxy.ScrollerProxy;
 
@@ -40,8 +42,8 @@ import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
-        VersionedGestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener,
+        OnGestureListener,
+        android.view.GestureDetector.OnDoubleTapListener,
         ViewTreeObserver.OnGlobalLayoutListener {
 
     private static final String LOG_TAG = "PhotoViewAttacher";
@@ -120,7 +122,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
-    private VersionedGestureDetector mScaleDragDetector;
+    private uk.co.senab.photoview.gestures.GestureDetector mScaleDragDetector;
 
     // These are set so we don't keep allocating them on the heap
     private final Matrix mBaseMatrix = new Matrix();
