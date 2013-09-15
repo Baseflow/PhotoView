@@ -253,8 +253,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return true;
     }
 
-    public boolean setRotation(float degrees){
-        mSuppMatrix.postRotate(degrees);
+    public boolean setRotation(float degrees) {
+        mSuppMatrix.postRotate(degrees % 360);
         checkAndDisplayMatrix();
         return true;
     }
@@ -640,8 +640,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      * Helper method that simply checks the Matrix, and then displays the result
      */
     private void checkAndDisplayMatrix() {
-        checkMatrixBounds();
-        setImageViewMatrix(getDrawMatrix());
+        if (checkMatrixBounds()) {
+            setImageViewMatrix(getDrawMatrix());
+        }
     }
 
     private void checkImageViewScaleType() {
@@ -659,15 +660,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
-    private void checkMatrixBounds() {
+    private boolean checkMatrixBounds() {
         final ImageView imageView = getImageView();
         if (null == imageView) {
-            return;
+            return false;
         }
 
         final RectF rect = getDisplayRect(getDrawMatrix());
         if (null == rect) {
-            return;
+            return false;
         }
 
         final float height = rect.height(), width = rect.width();
@@ -718,6 +719,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         // Finally actually translate the matrix
         mSuppMatrix.postTranslate(deltaX, deltaY);
+        return true;
     }
 
     /**
