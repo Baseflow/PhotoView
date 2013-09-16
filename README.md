@@ -1,4 +1,4 @@
-# PhotoView
+# PhotoView [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=dev)](https://travis-ci.org/chrisbanes/PhotoView)
 
 ![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/header_graphic.png)
 
