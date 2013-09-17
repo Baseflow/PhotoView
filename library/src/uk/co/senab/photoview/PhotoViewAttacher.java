@@ -15,6 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import android.view.animation.Interpolator;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -51,6 +53,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
     private static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
+
+    static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
+    static final int ZOOM_DURATION = 200;
 
     static final int EDGE_NONE = -1;
     static final int EDGE_LEFT = 0;
@@ -911,55 +916,48 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         void onViewTap(View view, float x, float y);
     }
 
-    private class AnimatedZoomRunnable implements Runnable {
+	private class AnimatedZoomRunnable implements Runnable {
 
-        // These are 'postScale' values, means they're compounded each iteration
-        static final float ANIMATION_SCALE_PER_ITERATION_IN = 1.07f;
-        static final float ANIMATION_SCALE_PER_ITERATION_OUT = 0.93f;
+		private final float mFocalX, mFocalY;
+		private final long mStartTime;
+		private final float mZoomStart, mZoomEnd;
 
-        private final float mFocalX, mFocalY;
-        private final float mTargetZoom;
-        private final float mDeltaScale;
+		public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
+				final float focalX, final float focalY) {
+			mFocalX = focalX;
+			mFocalY = focalY;
+			mStartTime = System.currentTimeMillis();
+			mZoomStart = currentZoom;
+			mZoomEnd = targetZoom;
+		}
 
-        public AnimatedZoomRunnable(final float currentZoom,
-                                    final float targetZoom, final float focalX, final float focalY) {
-            mTargetZoom = targetZoom;
-            mFocalX = focalX;
-            mFocalY = focalY;
+		@Override
+		public void run() {
+			ImageView imageView = getImageView();
+			if (imageView == null) {
+				return;
+			}
 
-            if (currentZoom < targetZoom) {
-                mDeltaScale = ANIMATION_SCALE_PER_ITERATION_IN;
-            } else {
-                mDeltaScale = ANIMATION_SCALE_PER_ITERATION_OUT;
-            }
-        }
+			float t = interpolate();
+			float scale = mZoomStart + t * (mZoomEnd - mZoomStart);
+			float deltaScale = scale / getScale();
 
-        public void run() {
-            ImageView imageView = getImageView();
+			mSuppMatrix.postScale(deltaScale, deltaScale, mFocalX, mFocalY);
+			checkAndDisplayMatrix();
 
-            if (null != imageView) {
-                mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX,
-                        mFocalY);
-                checkAndDisplayMatrix();
+			// We haven't hit our target scale yet, so post ourselves again
+			if (t < 1f) {
+				Compat.postOnAnimation(imageView, this);
+			}
+		}
 
-                final float currentScale = getScale();
-
-                if ((mDeltaScale > 1f && currentScale < mTargetZoom)
-                        || (mDeltaScale < 1f && mTargetZoom < currentScale)) {
-                    // We haven't hit our target scale yet, so post ourselves
-                    // again
-                    Compat.postOnAnimation(imageView, this);
-
-                } else {
-                    // We've scaled past our target zoom, so calculate the
-                    // necessary scale so we're back at target zoom
-                    final float delta = mTargetZoom / currentScale;
-                    mSuppMatrix.postScale(delta, delta, mFocalX, mFocalY);
-                    checkAndDisplayMatrix();
-                }
-            }
-        }
-    }
+		private float interpolate() {
+			float t = 1f * (System.currentTimeMillis() - mStartTime) / ZOOM_DURATION;
+			t = Math.min(1f, t);
+			t = sInterpolator.getInterpolation(t);
+			return t;
+		}
+	}
 
     private class FlingRunnable implements Runnable {
 
