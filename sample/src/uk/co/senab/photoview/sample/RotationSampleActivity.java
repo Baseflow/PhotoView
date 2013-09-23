@@ -49,6 +49,10 @@ public class RotationSampleActivity extends Activity {
         menu.add(Menu.NONE, 0, Menu.NONE, "Rotate 10° Right");
         menu.add(Menu.NONE, 1, Menu.NONE, "Rotate 10° Left");
         menu.add(Menu.NONE, 2, Menu.NONE, "Toggle automatic rotation");
+        menu.add(Menu.NONE, 3, Menu.NONE, "Reset to 0");
+        menu.add(Menu.NONE, 4, Menu.NONE, "Reset to 90");
+        menu.add(Menu.NONE, 5, Menu.NONE, "Reset to 180");
+        menu.add(Menu.NONE, 6, Menu.NONE, "Reset to 270");
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -65,6 +69,22 @@ public class RotationSampleActivity extends Activity {
                 return true;
             case 2:
                 toggleRotation();
+                return true;
+            case 3:
+                currentRotation = 0;
+                photo.setPhotoViewRotation(currentRotation);
+                return true;
+            case 4:
+                currentRotation = 90;
+                photo.setPhotoViewRotation(currentRotation);
+                return true;
+            case 5:
+                currentRotation = 180;
+                photo.setPhotoViewRotation(currentRotation);
+                return true;
+            case 6:
+                currentRotation = 270;
+                photo.setPhotoViewRotation(currentRotation);
                 return true;
         }
 
@@ -84,11 +104,11 @@ public class RotationSampleActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                currentRotation += 10;
+                currentRotation += 1;
                 photo.setPhotoViewRotation(currentRotation);
                 rotateLoop();
             }
-        }, 1000);
+        }, 15);
     }
 
 }
