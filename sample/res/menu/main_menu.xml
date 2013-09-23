@@ -46,11 +46,5 @@
     <item
         android:id="@+id/menu_matrix_capture"
         android:title="@string/menu_matrix_capture" />
-    <item
-        android:id="@+id/menu_rotate_right"
-        android:title="@string/menu_rotate_right" />
-    <item
-        android:id="@+id/menu_rotate_left"
-        android:title="@string/menu_rotate_left" />
 
 </menu>
