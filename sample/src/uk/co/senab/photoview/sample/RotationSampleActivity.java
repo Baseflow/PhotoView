@@ -39,6 +39,12 @@ public class RotationSampleActivity extends Activity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, 0, Menu.NONE, "Rotate 10° Right");
         menu.add(Menu.NONE, 1, Menu.NONE, "Rotate 10° Left");
