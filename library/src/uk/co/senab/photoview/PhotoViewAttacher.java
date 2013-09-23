@@ -15,7 +15,6 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
-import android.view.animation.Interpolator;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
@@ -29,6 +28,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -258,8 +258,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return true;
     }
 
+    private float lastRotation = 0;
+
     public boolean setRotation(float degrees) {
-        mSuppMatrix.postRotate(degrees % 360);
+        mSuppMatrix.postRotate(lastRotation - degrees);
+        lastRotation = degrees;
         checkAndDisplayMatrix();
         return true;
     }
@@ -494,7 +497,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
                 handled = true;
             }
-            
+
             if (!handled && null != parent) {
                 parent.requestDisallowInterceptTouchEvent(false);
             }
@@ -916,48 +919,48 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         void onViewTap(View view, float x, float y);
     }
 
-	private class AnimatedZoomRunnable implements Runnable {
+    private class AnimatedZoomRunnable implements Runnable {
 
-		private final float mFocalX, mFocalY;
-		private final long mStartTime;
-		private final float mZoomStart, mZoomEnd;
+        private final float mFocalX, mFocalY;
+        private final long mStartTime;
+        private final float mZoomStart, mZoomEnd;
 
-		public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
-				final float focalX, final float focalY) {
-			mFocalX = focalX;
-			mFocalY = focalY;
-			mStartTime = System.currentTimeMillis();
-			mZoomStart = currentZoom;
-			mZoomEnd = targetZoom;
-		}
+        public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
+                                    final float focalX, final float focalY) {
+            mFocalX = focalX;
+            mFocalY = focalY;
+            mStartTime = System.currentTimeMillis();
+            mZoomStart = currentZoom;
+            mZoomEnd = targetZoom;
+        }
 
-		@Override
-		public void run() {
-			ImageView imageView = getImageView();
-			if (imageView == null) {
-				return;
-			}
+        @Override
+        public void run() {
+            ImageView imageView = getImageView();
+            if (imageView == null) {
+                return;
+            }
 
-			float t = interpolate();
-			float scale = mZoomStart + t * (mZoomEnd - mZoomStart);
-			float deltaScale = scale / getScale();
+            float t = interpolate();
+            float scale = mZoomStart + t * (mZoomEnd - mZoomStart);
+            float deltaScale = scale / getScale();
 
-			mSuppMatrix.postScale(deltaScale, deltaScale, mFocalX, mFocalY);
-			checkAndDisplayMatrix();
+            mSuppMatrix.postScale(deltaScale, deltaScale, mFocalX, mFocalY);
+            checkAndDisplayMatrix();
 
-			// We haven't hit our target scale yet, so post ourselves again
-			if (t < 1f) {
-				Compat.postOnAnimation(imageView, this);
-			}
-		}
+            // We haven't hit our target scale yet, so post ourselves again
+            if (t < 1f) {
+                Compat.postOnAnimation(imageView, this);
+            }
+        }
 
-		private float interpolate() {
-			float t = 1f * (System.currentTimeMillis() - mStartTime) / ZOOM_DURATION;
-			t = Math.min(1f, t);
-			t = sInterpolator.getInterpolation(t);
-			return t;
-		}
-	}
+        private float interpolate() {
+            float t = 1f * (System.currentTimeMillis() - mStartTime) / ZOOM_DURATION;
+            t = Math.min(1f, t);
+            t = sInterpolator.getInterpolation(t);
+            return t;
+        }
+    }
 
     private class FlingRunnable implements Runnable {
 
