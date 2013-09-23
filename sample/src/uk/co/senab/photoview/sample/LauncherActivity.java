@@ -24,29 +24,32 @@ import android.widget.ListView;
 
 public class LauncherActivity extends ListActivity {
 
-	public static final String[] options = { "Simple Sample", "ViewPager Sample" };
+    public static final String[] options = {"Simple Sample", "ViewPager Sample", "Rotation Sample"};
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options));
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options));
+    }
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent intent;
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent;
 
-		switch (position) {
-			default:
-			case 0:
-				intent = new Intent(this, SimpleSampleActivity.class);
-				break;
-			case 1:
-				intent = new Intent(this, ViewPagerActivity.class);
-				break;
-		}
+        switch (position) {
+            default:
+            case 0:
+                intent = new Intent(this, SimpleSampleActivity.class);
+                break;
+            case 1:
+                intent = new Intent(this, ViewPagerActivity.class);
+                break;
+            case 2:
+                intent = new Intent(this, RotationSampleActivity.class);
+                break;
+        }
 
-		startActivity(intent);
-	}
+        startActivity(intent);
+    }
 
 }

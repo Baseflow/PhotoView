@@ -47,8 +47,6 @@ public class SimpleSampleActivity extends Activity {
 
     private Matrix mCurrentDisplayMatrix = null;
 
-    private float mRotateAngle = 0;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,14 +144,6 @@ public class SimpleSampleActivity extends Activity {
                 return true;
             case R.id.menu_matrix_capture:
                 mCurrentDisplayMatrix = mAttacher.getDisplayMatrix();
-                return true;
-            case R.id.menu_rotate_left:
-                mRotateAngle += 10;
-                mAttacher.setRotation(mRotateAngle);
-                return true;
-            case R.id.menu_rotate_right:
-                mRotateAngle -= 10;
-                mAttacher.setRotation(mRotateAngle);
                 return true;
         }
 
