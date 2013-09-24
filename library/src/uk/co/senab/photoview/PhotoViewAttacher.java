@@ -380,8 +380,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
         ImageView imageView = getImageView();
         mCurrentFlingRunnable = new FlingRunnable(imageView.getContext());
-        mCurrentFlingRunnable.fling(imageView.getWidth(),
-                imageView.getHeight(), (int) velocityX, (int) velocityY);
+        mCurrentFlingRunnable.fling(getImageViewWidth(imageView),
+                getImageViewHeight(imageView), (int) velocityX, (int) velocityY);
         imageView.post(mCurrentFlingRunnable);
     }
 
@@ -688,7 +688,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         final float height = rect.height(), width = rect.width();
         float deltaX = 0, deltaY = 0;
 
-        final int viewHeight = imageView.getHeight();
+        final int viewHeight = getImageViewHeight(imageView);
         if (height <= viewHeight) {
             switch (mScaleType) {
                 case FIT_START:
@@ -707,7 +707,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             deltaY = viewHeight - rect.bottom;
         }
 
-        final int viewWidth = imageView.getWidth();
+        final int viewWidth = getImageViewWidth(imageView);
         if (width <= viewWidth) {
             switch (mScaleType) {
                 case FIT_START:
@@ -806,8 +806,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             return;
         }
 
-        final float viewWidth = imageView.getWidth();
-        final float viewHeight = imageView.getHeight();
+        final float viewWidth = getImageViewWidth(imageView);
+        final float viewHeight = getImageViewHeight(imageView);
         final int drawableWidth = d.getIntrinsicWidth();
         final int drawableHeight = d.getIntrinsicHeight();
 
@@ -860,6 +860,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         resetMatrix();
+    }
+
+    private int getImageViewWidth(ImageView imageView) {
+        if (null == imageView)
+            return 0;
+        return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
+    }
+
+    private int getImageViewHeight(ImageView imageView) {
+        if (null == imageView)
+            return 0;
+        return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
     }
 
     /**
