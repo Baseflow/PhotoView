@@ -63,13 +63,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	}
 
 	/**
-	 * @return true if the ImageView exists, and it's Drawable existss
-	 */
-	private static boolean hasDrawable(ImageView imageView) {
-		return null != imageView && null != imageView.getDrawable();
-	}
-
-	/**
 	 * @return true if the ScaleType is supported.
 	 */
 	private static boolean isSupportedScaleType(final ScaleType scaleType) {
