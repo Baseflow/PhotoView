@@ -287,17 +287,35 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
+    @Deprecated
     public float getMinScale() {
+        return getMinimumScale();
+    }
+
+    @Override
+    public float getMinimumScale() {
         return mMinScale;
     }
 
     @Override
+    @Deprecated
     public float getMidScale() {
+        return getMediumScale();
+    }
+
+    @Override
+    public float getMediumScale() {
         return mMidScale;
     }
 
     @Override
+    @Deprecated
     public float getMaxScale() {
+        return getMaximumScale();
+    }
+
+    @Override
+    public float getMaximumScale() {
         return mMaxScale;
     }
 
@@ -520,21 +538,39 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
+    @Deprecated
     public void setMinScale(float minScale) {
-        checkZoomLevels(minScale, mMidScale, mMaxScale);
-        mMinScale = minScale;
+        setMinimumScale(minScale);
     }
 
     @Override
+    public void setMinimumScale(float minimumScale) {
+        checkZoomLevels(minimumScale, mMidScale, mMaxScale);
+        mMinScale = minimumScale;
+    }
+
+    @Override
+    @Deprecated
     public void setMidScale(float midScale) {
-        checkZoomLevels(mMinScale, midScale, mMaxScale);
-        mMidScale = midScale;
+        setMediumScale(midScale);
     }
 
     @Override
+    public void setMediumScale(float mediumScale) {
+        checkZoomLevels(mMinScale, mediumScale, mMaxScale);
+        mMidScale = mediumScale;
+    }
+
+    @Override
+    @Deprecated
     public void setMaxScale(float maxScale) {
-        checkZoomLevels(mMinScale, mMidScale, maxScale);
-        mMaxScale = maxScale;
+        setMaximumScale(maxScale);
+    }
+
+    @Override
+    public void setMaximumScale(float maximumScale) {
+        checkZoomLevels(mMinScale, mMidScale, maximumScale);
+        mMaxScale = maximumScale;
     }
 
     @Override

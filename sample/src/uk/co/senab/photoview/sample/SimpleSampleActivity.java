@@ -128,8 +128,8 @@ public class SimpleSampleActivity extends Activity {
             case R.id.menu_scale_random:
                 Random r = new Random();
 
-                float minScale = mAttacher.getMinScale();
-                float maxScale = mAttacher.getMaxScale();
+                float minScale = mAttacher.getMinimumScale();
+                float maxScale = mAttacher.getMaximumScale();
                 float randomScale = minScale + (r.nextFloat() * (maxScale - minScale));
                 mAttacher.setScale(randomScale, item.getItemId() == R.id.menu_scale_random_animate);
 

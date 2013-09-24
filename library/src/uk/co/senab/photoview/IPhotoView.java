@@ -57,19 +57,43 @@ public interface IPhotoView {
     Matrix getDisplayMatrix();
 
     /**
+     * Use {@link #getMinimumScale()} instead, this will be removed in future release
+     *
      * @return The current minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
+    @Deprecated
     float getMinScale();
 
     /**
+     * @return The current minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    float getMinimumScale();
+
+    /**
+     * Use {@link #getMediumScale()} instead, this will be removed in future release
+     *
      * @return The current middle scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
+    @Deprecated
     float getMidScale();
+
+    /**
+     * @return The current medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    float getMediumScale();
+
+    /**
+     * Use {@link #getMaximumScale()} instead, this will be removed in future release
+     *
+     * @return The current maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    @Deprecated
+    float getMaxScale();
 
     /**
      * @return The current maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    float getMaxScale();
+    float getMaximumScale();
 
     /**
      * Returns the current scale value
@@ -89,19 +113,43 @@ public interface IPhotoView {
     void setAllowParentInterceptOnEdge(boolean allow);
 
     /**
+     * Use {@link #setMinimumScale(float minimumScale)} instead, this will be removed in future release
+     * <p/>
      * Sets the minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
+    @Deprecated
     void setMinScale(float minScale);
 
     /**
+     * Sets the minimum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    void setMinimumScale(float minimumScale);
+
+    /**
+     * Use {@link #setMediumScale(float mediumScale)} instead, this will be removed in future release
+     * <p/>
      * Sets the middle scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
+    @Deprecated
     void setMidScale(float midScale);
+
+    /*
+     * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    void setMediumScale(float mediumScale);
+
+    /**
+     * Use {@link #setMaximumScale(float maximumScale)} instead, this will be removed in future release
+     * <p/>
+     * Sets the maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     */
+    @Deprecated
+    void setMaxScale(float maxScale);
 
     /**
      * Sets the maximum scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
-    void setMaxScale(float maxScale);
+    void setMaximumScale(float maximumScale);
 
     /**
      * Register a callback to be invoked when the Photo displayed by this view is long-pressed.

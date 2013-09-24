@@ -78,18 +78,36 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    @Deprecated
     public float getMinScale() {
-        return mAttacher.getMinScale();
+        return getMinimumScale();
     }
 
     @Override
+    public float getMinimumScale() {
+        return mAttacher.getMinimumScale();
+    }
+
+    @Override
+    @Deprecated
     public float getMidScale() {
-        return mAttacher.getMidScale();
+        return getMediumScale();
     }
 
     @Override
+    public float getMediumScale() {
+        return mAttacher.getMediumScale();
+    }
+
+    @Override
+    @Deprecated
     public float getMaxScale() {
-        return mAttacher.getMaxScale();
+        return getMaximumScale();
+    }
+
+    @Override
+    public float getMaximumScale() {
+        return mAttacher.getMaximumScale();
     }
 
     @Override
@@ -108,18 +126,36 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    @Deprecated
     public void setMinScale(float minScale) {
-        mAttacher.setMinScale(minScale);
+        setMinimumScale(minScale);
     }
 
     @Override
+    public void setMinimumScale(float minimumScale) {
+        mAttacher.setMinimumScale(minimumScale);
+    }
+
+    @Override
+    @Deprecated
     public void setMidScale(float midScale) {
-        mAttacher.setMidScale(midScale);
+        setMediumScale(midScale);
     }
 
     @Override
+    public void setMediumScale(float mediumScale) {
+        mAttacher.setMediumScale(mediumScale);
+    }
+
+    @Override
+    @Deprecated
     public void setMaxScale(float maxScale) {
-        mAttacher.setMaxScale(maxScale);
+        setMaximumScale(maxScale);
+    }
+
+    @Override
+    public void setMaximumScale(float maximumScale) {
+        mAttacher.setMaximumScale(maximumScale);
     }
 
     @Override
