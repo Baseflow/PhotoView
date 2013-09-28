@@ -1,17 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.co.senab.photoview.sample"
-    android:versionCode="121"
-    android:versionName="1.2.1" >
+    android:versionCode="122"
+    android:versionName="1.2.2-SNAPSHOT">
 
     <uses-sdk
         android:minSdkVersion="4"
-        android:targetSdkVersion="15" />
+        android:targetSdkVersion="18" />
 
     <application
+        android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
-        <activity android:name=".LauncherActivity" >
+        android:label="@string/app_name">
+        <activity android:name=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,6 +21,7 @@
         </activity>
         <activity android:name=".SimpleSampleActivity" />
         <activity android:name=".ViewPagerActivity" />
+        <activity android:name=".RotationSampleActivity" />
     </application>
 
 </manifest>

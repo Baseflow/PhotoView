@@ -1,5 +1,8 @@
 # PhotoView
 
+Branch **Dev**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=dev)](https://travis-ci.org/chrisbanes/PhotoView)  
+Branch **Master**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=master)](https://travis-ci.org/chrisbanes/PhotoView)
+
 ![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/header_graphic.png)
 
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView. It is currently being used in [photup](https://play.google.com/store/apps/details?id=uk.co.senab.photup).
