@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.github.chrisbanes.photoview</groupId>
+  <artifactId>library</artifactId>
+  <versioning>
+    <release>1.2.2</release>
+    <versions>
+      <version>1.2.2</version>
+    </versions>
+    <lastUpdated>20131004214625</lastUpdated>
+  </versioning>
+</metadata>
