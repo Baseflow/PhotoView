@@ -1,0 +1,19 @@
+apply plugin: 'android'
+
+dependencies {
+  compile 'com.android.support:support-v4:18.0.+'
+  compile project(':library')
+}
+
+android {
+  compileSdkVersion 18
+  buildToolsVersion '18.0.1'
+
+  sourceSets {
+    main {
+      manifest.srcFile 'AndroidManifest.xml'
+      java.srcDirs = ['src']
+      res.srcDirs = ['res']
+    }
+  }
+}

@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package uk.co.senab.photoview;
+package uk.co.senab.photoview.scrollerproxy;
 
 import android.annotation.TargetApi;
-import android.view.View;
+import android.content.Context;
 
-@TargetApi(16)
-public class SDK16 {
+@TargetApi(14)
+public class IcsScroller extends GingerScroller {
 
-	public static void postOnAnimation(View view, Runnable r) {
-		view.postOnAnimation(r);
-	}
-	
+    public IcsScroller(Context context) {
+        super(context);
+    }
+
+    @Override
+    public boolean computeScrollOffset() {
+        return mScroller.computeScrollOffset();
+    }
+
 }
