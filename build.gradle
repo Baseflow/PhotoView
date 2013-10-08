@@ -10,7 +10,7 @@ buildscript {
 
 allprojects {
   group = 'uk.co.senab.photoview'
-  version = '1.2.2-SHAPSHOT'
+  version = '1.2.3-SHAPSHOT'
 
   repositories {
     mavenCentral()
