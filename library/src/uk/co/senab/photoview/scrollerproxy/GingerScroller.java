@@ -22,7 +22,7 @@ import android.widget.OverScroller;
 @TargetApi(9)
 public class GingerScroller extends ScrollerProxy {
 
-    protected OverScroller mScroller;
+    protected final OverScroller mScroller;
     private boolean mFirstScroll = false;
 
     public GingerScroller(Context context) {
