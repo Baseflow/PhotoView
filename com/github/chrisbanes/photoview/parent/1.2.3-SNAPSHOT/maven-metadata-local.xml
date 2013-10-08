@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.github.chrisbanes.photoview</groupId>
+  <artifactId>parent</artifactId>
+  <version>1.2.3-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20131008195416</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.2.3-SNAPSHOT</value>
+        <updated>20131008195416</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
