@@ -147,6 +147,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
 
+    private boolean mRotationDetectionEnabled = false;
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
@@ -513,11 +514,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     break;
             }
 
-            // Check to see if the user double tapped
-            if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
-                handled = true;
-            }
-
             // Finally, try the Scale/Drag detector
             if (null != mScaleDragDetector
                     && mScaleDragDetector.onTouchEvent(ev)) {
@@ -526,6 +522,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
             if (!handled && null != parent) {
                 parent.requestDisallowInterceptTouchEvent(false);
+            }
+
+            // Check to see if the user double tapped
+            if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
+                handled = true;
             }
         }
 
