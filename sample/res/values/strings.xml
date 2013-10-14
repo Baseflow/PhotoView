@@ -14,5 +14,6 @@
     <string name="menu_zoom_random">Set scale to random value</string>
     <string name="menu_matrix_restore">Restore Display Matrix</string>
     <string name="menu_matrix_capture">Capture Display Matrix</string>
+    <string name="extract_visible_bitmap">Extract visible bitmap</string>
 
 </resources>
