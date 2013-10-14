@@ -16,6 +16,7 @@
 package uk.co.senab.photoview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
@@ -147,12 +148,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
 
+    private boolean mRotationDetectionEnabled = false;
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     public PhotoViewAttacher(ImageView imageView) {
         mImageView = new WeakReference<ImageView>(imageView);
 
+        imageView.setDrawingCacheEnabled(true);
         imageView.setOnTouchListener(this);
 
         ViewTreeObserver observer = imageView.getViewTreeObserver();
@@ -513,8 +516,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     break;
             }
 
-            // Check to see if the user double tapped
-            if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
+            // Finally, try the Scale/Drag detector
+            if (null != mScaleDragDetector
+                    && mScaleDragDetector.onTouchEvent(ev)) {
                 handled = true;
             }
 
@@ -522,9 +526,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 parent.requestDisallowInterceptTouchEvent(false);
             }
 
-            // Finally, try the Scale/Drag detector
-            if (null != mScaleDragDetector
-                    && mScaleDragDetector.onTouchEvent(ev)) {
+            // Check to see if the user double tapped
+            if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
                 handled = true;
             }
         }
@@ -791,6 +794,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             }
         }
         return null;
+    }
+
+    public Bitmap getVisibleRectangleBitmap() {
+        ImageView imageView = getImageView();
+        return imageView == null ? null : imageView.getDrawingCache();
     }
 
     /**

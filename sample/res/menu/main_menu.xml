@@ -46,5 +46,8 @@
     <item
         android:id="@+id/menu_matrix_capture"
         android:title="@string/menu_matrix_capture" />
+    <item
+        android:id="@+id/extract_visible_bitmap"
+        android:title="@string/extract_visible_bitmap" />
 
 </menu>

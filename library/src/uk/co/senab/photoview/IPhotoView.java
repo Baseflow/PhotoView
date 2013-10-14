@@ -15,6 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.view.View;
@@ -231,5 +232,13 @@ public interface IPhotoView {
      * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
      */
     void setPhotoViewRotation(float rotationDegree);
+
+    /**
+     * Extracts currently visible area to Bitmap object, if there is no image loaded yet or the
+     * ImageView is already destroyed, returns {@code null}
+     *
+     * @return currently visible area as bitmap or null
+     */
+    public Bitmap getVisibleRectangleBitmap();
 
 }
