@@ -16,6 +16,7 @@
 package uk.co.senab.photoview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -230,6 +231,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     public void setZoomable(boolean zoomable) {
         mAttacher.setZoomable(zoomable);
+    }
+
+    @Override
+    public Bitmap getVisibleRectangleBitmap() {
+        return mAttacher.getVisibleRectangleBitmap();
     }
 
     @Override
