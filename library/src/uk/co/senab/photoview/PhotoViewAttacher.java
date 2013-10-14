@@ -330,7 +330,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final boolean onDoubleTap(MotionEvent ev) {
+    public boolean onDoubleTap(MotionEvent ev) {
         try {
             float scale = getScale();
             float x = ev.getX();
