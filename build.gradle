@@ -1,0 +1,23 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:0.6.+'
+  }
+}
+
+allprojects {
+  group = 'uk.co.senab.photoview'
+  version = '1.2.2-SHAPSHOT'
+
+  repositories {
+    mavenCentral()
+  }
+
+  tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+  }
+}
+

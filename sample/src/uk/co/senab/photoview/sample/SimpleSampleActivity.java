@@ -15,10 +15,8 @@
  *******************************************************************************/
 package uk.co.senab.photoview.sample;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
-import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import android.app.Activity;
+import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,120 +28,154 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Random;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
+import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
+import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+
 public class SimpleSampleActivity extends Activity {
 
-	static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %%";
+    static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %%";
+    static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
 
-	private ImageView mImageView;
-	private TextView mCurrMatrixTv;
+    private TextView mCurrMatrixTv;
 
-	private PhotoViewAttacher mAttacher;
+    private PhotoViewAttacher mAttacher;
 
-	private Toast mCurrentToast;
+    private Toast mCurrentToast;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    private Matrix mCurrentDisplayMatrix = null;
 
-		mImageView = (ImageView) findViewById(R.id.iv_photo);
-		mCurrMatrixTv = (TextView) findViewById(R.id.tv_current_matrix);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		Drawable bitmap = getResources().getDrawable(R.drawable.wallpaper);
-		mImageView.setImageDrawable(bitmap);
+        ImageView mImageView = (ImageView) findViewById(R.id.iv_photo);
+        mCurrMatrixTv = (TextView) findViewById(R.id.tv_current_matrix);
 
-		// The MAGIC happens here!
-		mAttacher = new PhotoViewAttacher(mImageView);
+        Drawable bitmap = getResources().getDrawable(R.drawable.wallpaper);
+        mImageView.setImageDrawable(bitmap);
 
-		// Lets attach some listeners, not required though!
-		mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
-		mAttacher.setOnPhotoTapListener(new PhotoTapListener());
-	}
+        // The MAGIC happens here!
+        mAttacher = new PhotoViewAttacher(mImageView);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main_menu, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+        // Lets attach some listeners, not required though!
+        mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
+        mAttacher.setOnPhotoTapListener(new PhotoTapListener());
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-		// Need to call clean-up
-		mAttacher.cleanup();
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
-		zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
+        // Need to call clean-up
+        mAttacher.cleanup();
+    }
 
-		return super.onPrepareOptionsMenu(menu);
-	}
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
+        assert null != zoomToggle;
+        zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_zoom_toggle:
-				mAttacher.setZoomable(!mAttacher.canZoom());
-				return true;
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-			case R.id.menu_scale_fit_center:
-				mAttacher.setScaleType(ScaleType.FIT_CENTER);
-				return true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_zoom_toggle:
+                mAttacher.setZoomable(!mAttacher.canZoom());
+                return true;
 
-			case R.id.menu_scale_fit_start:
-				mAttacher.setScaleType(ScaleType.FIT_START);
-				return true;
+            case R.id.menu_scale_fit_center:
+                mAttacher.setScaleType(ScaleType.FIT_CENTER);
+                return true;
 
-			case R.id.menu_scale_fit_end:
-				mAttacher.setScaleType(ScaleType.FIT_END);
-				return true;
+            case R.id.menu_scale_fit_start:
+                mAttacher.setScaleType(ScaleType.FIT_START);
+                return true;
 
-			case R.id.menu_scale_fit_xy:
-				mAttacher.setScaleType(ScaleType.FIT_XY);
-				return true;
+            case R.id.menu_scale_fit_end:
+                mAttacher.setScaleType(ScaleType.FIT_END);
+                return true;
 
-			case R.id.menu_scale_scale_center:
-				mAttacher.setScaleType(ScaleType.CENTER);
-				return true;
+            case R.id.menu_scale_fit_xy:
+                mAttacher.setScaleType(ScaleType.FIT_XY);
+                return true;
 
-			case R.id.menu_scale_scale_center_crop:
-				mAttacher.setScaleType(ScaleType.CENTER_CROP);
-				return true;
+            case R.id.menu_scale_scale_center:
+                mAttacher.setScaleType(ScaleType.CENTER);
+                return true;
 
-			case R.id.menu_scale_scale_center_inside:
-				mAttacher.setScaleType(ScaleType.CENTER_INSIDE);
-				return true;
-		}
+            case R.id.menu_scale_scale_center_crop:
+                mAttacher.setScaleType(ScaleType.CENTER_CROP);
+                return true;
 
-		return super.onOptionsItemSelected(item);
-	}
+            case R.id.menu_scale_scale_center_inside:
+                mAttacher.setScaleType(ScaleType.CENTER_INSIDE);
+                return true;
 
-	private class PhotoTapListener implements OnPhotoTapListener {
+            case R.id.menu_scale_random_animate:
+            case R.id.menu_scale_random:
+                Random r = new Random();
 
-		@Override
-		public void onPhotoTap(View view, float x, float y) {
-			float xPercentage = x * 100f;
-			float yPercentage = y * 100f;
+                float minScale = mAttacher.getMinimumScale();
+                float maxScale = mAttacher.getMaximumScale();
+                float randomScale = minScale + (r.nextFloat() * (maxScale - minScale));
+                mAttacher.setScale(randomScale, item.getItemId() == R.id.menu_scale_random_animate);
 
-			if (null != mCurrentToast) {
-				mCurrentToast.cancel();
-			}
+                showToast(String.format(SCALE_TOAST_STRING, randomScale));
 
-			mCurrentToast = Toast.makeText(SimpleSampleActivity.this,
-					String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage), Toast.LENGTH_SHORT);
-			mCurrentToast.show();
-		}
-	}
+                return true;
+            case R.id.menu_matrix_restore:
+                if (mCurrentDisplayMatrix == null)
+                    showToast("You need to capture display matrix first");
+                else
+                    mAttacher.setDisplayMatrix(mCurrentDisplayMatrix);
+                return true;
+            case R.id.menu_matrix_capture:
+                mCurrentDisplayMatrix = mAttacher.getDisplayMatrix();
+                return true;
+        }
 
-	private class MatrixChangeListener implements OnMatrixChangedListener {
+        return super.onOptionsItemSelected(item);
+    }
 
-		@Override
-		public void onMatrixChanged(RectF rect) {
-			mCurrMatrixTv.setText(rect.toString());
-		}
-	}
+    private class PhotoTapListener implements OnPhotoTapListener {
+
+        @Override
+        public void onPhotoTap(View view, float x, float y) {
+            float xPercentage = x * 100f;
+            float yPercentage = y * 100f;
+
+            showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage));
+        }
+    }
+
+    private void showToast(CharSequence text) {
+        if (null != mCurrentToast) {
+            mCurrentToast.cancel();
+        }
+
+        mCurrentToast = Toast.makeText(SimpleSampleActivity.this, text, Toast.LENGTH_SHORT);
+        mCurrentToast.show();
+    }
+
+    private class MatrixChangeListener implements OnMatrixChangedListener {
+
+        @Override
+        public void onMatrixChanged(RectF rect) {
+            mCurrMatrixTv.setText(rect.toString());
+        }
+    }
 
 }
