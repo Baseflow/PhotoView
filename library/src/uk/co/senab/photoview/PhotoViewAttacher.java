@@ -47,7 +47,6 @@ import static android.view.MotionEvent.ACTION_UP;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,
-        android.view.GestureDetector.OnDoubleTapListener,
         ViewTreeObserver.OnGlobalLayoutListener {
 
     private static final String LOG_TAG = "PhotoViewAttacher";
@@ -184,10 +183,23 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     }
                 });
 
-        mGestureDetector.setOnDoubleTapListener(this);
+        mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
 
         // Finally, update the UI so that we're zoomable
         setZoomable(true);
+    }
+
+    /**
+     * Sets custom double tap listener, to intercept default given functions.
+     * To reset behavior to default, you can just pass in "null" or public field of PhotoViewAttacher.defaultOnDoubleTapListener
+     *
+     * @param newOnDoubleTapListener custom OnDoubleTapListener to be set on ImageView
+     */
+    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
+        if (newOnDoubleTapListener != null)
+            this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener);
+        else
+            this.mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
     }
 
     @Override
@@ -333,33 +345,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final boolean onDoubleTap(MotionEvent ev) {
-        try {
-            float scale = getScale();
-            float x = ev.getX();
-            float y = ev.getY();
-
-            if (scale < mMidScale) {
-                setScale(mMidScale, x, y, true);
-            } else if (scale >= mMidScale && scale < mMaxScale) {
-                setScale(mMaxScale, x, y, true);
-            } else {
-                setScale(mMinScale, x, y, true);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            // Can sometimes happen when getX() and getY() is called
-        }
-
-        return true;
-    }
-
-    @Override
-    public final boolean onDoubleTapEvent(MotionEvent e) {
-        // Wait for the confirmed onDoubleTap() instead
-        return false;
-    }
-
-    @Override
     public final void onDrag(float dx, float dy) {
         if (DEBUG) {
             LogManager.getLogger().d(LOG_TAG,
@@ -449,36 +434,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
             checkAndDisplayMatrix();
         }
-    }
-
-    @Override
-    public final boolean onSingleTapConfirmed(MotionEvent e) {
-        ImageView imageView = getImageView();
-
-        if (null != mPhotoTapListener) {
-            final RectF displayRect = getDisplayRect();
-
-            if (null != displayRect) {
-                final float x = e.getX(), y = e.getY();
-
-                // Check to see if the user tapped on the photo
-                if (displayRect.contains(x, y)) {
-
-                    float xResult = (x - displayRect.left)
-                            / displayRect.width();
-                    float yResult = (y - displayRect.top)
-                            / displayRect.height();
-
-                    mPhotoTapListener.onPhotoTap(imageView, xResult, yResult);
-                    return true;
-                }
-            }
-        }
-        if (null != mViewTapListener) {
-            mViewTapListener.onViewTap(imageView, e.getX(), e.getY());
-        }
-
-        return false;
     }
 
     @Override
@@ -592,8 +547,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
+    public final OnPhotoTapListener getOnPhotoTapListener() {
+        return mPhotoTapListener;
+    }
+
+    @Override
     public final void setOnViewTapListener(OnViewTapListener listener) {
         mViewTapListener = listener;
+    }
+
+    @Override
+    public final OnViewTapListener getOnViewTapListener() {
+        return mViewTapListener;
     }
 
     @Override

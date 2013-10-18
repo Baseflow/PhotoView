@@ -200,8 +200,18 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public OnPhotoTapListener getOnPhotoTapListener() {
+        return mAttacher.getOnPhotoTapListener();
+    }
+
+    @Override
     public void setOnViewTapListener(OnViewTapListener listener) {
         mAttacher.setOnViewTapListener(listener);
+    }
+
+    @Override
+    public OnViewTapListener getOnViewTapListener() {
+        return mAttacher.getOnViewTapListener();
     }
 
     @Override

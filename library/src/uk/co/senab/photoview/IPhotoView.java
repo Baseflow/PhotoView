@@ -176,12 +176,28 @@ public interface IPhotoView {
     void setOnPhotoTapListener(PhotoViewAttacher.OnPhotoTapListener listener);
 
     /**
+     * Returns a listener to be invoked when the Photo displayed by this View
+     * is tapped with a single tap.
+     *
+     * @return PhotoViewAttacher.OnPhotoTapListener currently set, may be null
+     */
+    PhotoViewAttacher.OnPhotoTapListener getOnPhotoTapListener();
+
+    /**
      * Register a callback to be invoked when the View is tapped with a single
      * tap.
      *
      * @param listener - Listener to be registered.
      */
     void setOnViewTapListener(PhotoViewAttacher.OnViewTapListener listener);
+
+    /**
+     * Returns a callback listener to be invoked when the View is tapped with a single
+     * tap.
+     *
+     * @return PhotoViewAttacher.OnViewTapListener currently set, may be null
+     */
+    PhotoViewAttacher.OnViewTapListener getOnViewTapListener();
 
     /**
      * Changes the current scale to the specified value.
