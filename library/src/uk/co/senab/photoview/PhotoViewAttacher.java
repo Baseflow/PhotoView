@@ -477,7 +477,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 handled = true;
             }
 
-            if (!handled && null != parent) {
+            if (!handled && null != parent && !mAllowParentInterceptOnEdge) {
                 parent.requestDisallowInterceptTouchEvent(false);
             }
 
