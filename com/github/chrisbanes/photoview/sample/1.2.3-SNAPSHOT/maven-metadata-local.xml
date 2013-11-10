@@ -7,22 +7,22 @@
     <snapshot>
       <localCopy>true</localCopy>
     </snapshot>
-    <lastUpdated>20131008195425</lastUpdated>
+    <lastUpdated>20131110123547</lastUpdated>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
         <value>1.2.3-SNAPSHOT</value>
-        <updated>20131008195425</updated>
+        <updated>20131110123547</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>apk</extension>
         <value>1.2.3-SNAPSHOT</value>
-        <updated>20131008195425</updated>
+        <updated>20131110123547</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
         <value>1.2.3-SNAPSHOT</value>
-        <updated>20131008195425</updated>
+        <updated>20131110123547</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
