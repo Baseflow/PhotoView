@@ -190,8 +190,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Sets custom double tap listener, to intercept default given functions.
-     * To reset behavior to default, you can just pass in "null" or public field of PhotoViewAttacher.defaultOnDoubleTapListener
+     * Sets custom double tap listener, to intercept default given functions. To reset behavior to
+     * default, you can just pass in "null" or public field of PhotoViewAttacher.defaultOnDoubleTapListener
      *
      * @param newOnDoubleTapListener custom OnDoubleTapListener to be set on ImageView
      */
@@ -208,11 +208,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Clean-up the resources attached to this object. This needs to be called
-     * when the ImageView is no longer used. A good example is from
-     * {@link android.view.View#onDetachedFromWindow()} or from
-     * {@link android.app.Activity#onDestroy()}. This is automatically called if
-     * you are using {@link uk.co.senab.photoview.PhotoView}.
+     * Clean-up the resources attached to this object. This needs to be called when the ImageView is
+     * no longer used. A good example is from {@link android.view.View#onDetachedFromWindow()} or
+     * from {@link android.app.Activity#onDestroy()}. This is automatically called if you are using
+     * {@link uk.co.senab.photoview.PhotoView}.
      */
     @SuppressWarnings("deprecation")
     public final void cleanup() {
@@ -368,13 +367,17 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * on, and the direction of the scroll (i.e. if we're pulling against
          * the edge, aka 'overscrolling', let the parent take over).
          */
+        ViewParent parent = imageView.getParent();
         if (mAllowParentInterceptOnEdge) {
             if (mScrollEdge == EDGE_BOTH
                     || (mScrollEdge == EDGE_LEFT && dx >= 1f)
                     || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
-                ViewParent parent = imageView.getParent();
                 if (null != parent)
                     parent.requestDisallowInterceptTouchEvent(false);
+            }
+        } else {
+            if (null != parent) {
+                parent.requestDisallowInterceptTouchEvent(true);
             }
         }
     }
@@ -475,14 +478,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     break;
             }
 
-            // Finally, try the Scale/Drag detector
+            // Try the Scale/Drag detector
             if (null != mScaleDragDetector
                     && mScaleDragDetector.onTouchEvent(ev)) {
                 handled = true;
-            }
-
-            if (!handled && null != parent && !mAllowParentInterceptOnEdge) {
-                parent.requestDisallowInterceptTouchEvent(false);
             }
 
             // Check to see if the user double tapped
@@ -888,16 +887,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Interface definition for a callback to be invoked when the internal
-     * Matrix has changed for this View.
+     * Interface definition for a callback to be invoked when the internal Matrix has changed for
+     * this View.
      *
      * @author Chris Banes
      */
     public static interface OnMatrixChangedListener {
         /**
-         * Callback for when the Matrix displaying the Drawable has changed.
-         * This could be because the View's bounds have changed, or the user has
-         * zoomed.
+         * Callback for when the Matrix displaying the Drawable has changed. This could be because
+         * the View's bounds have changed, or the user has zoomed.
          *
          * @param rect - Rectangle displaying the Drawable's new bounds.
          */
@@ -905,39 +903,37 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Interface definition for a callback to be invoked when the Photo is
-     * tapped with a single tap.
+     * Interface definition for a callback to be invoked when the Photo is tapped with a single
+     * tap.
      *
      * @author Chris Banes
      */
     public static interface OnPhotoTapListener {
 
         /**
-         * A callback to receive where the user taps on a photo. You will only
-         * receive a callback if the user taps on the actual photo, tapping on
-         * 'whitespace' will be ignored.
+         * A callback to receive where the user taps on a photo. You will only receive a callback if
+         * the user taps on the actual photo, tapping on 'whitespace' will be ignored.
          *
          * @param view - View the user tapped.
-         * @param x    - where the user tapped from the of the Drawable, as
-         *             percentage of the Drawable width.
-         * @param y    - where the user tapped from the top of the Drawable, as
-         *             percentage of the Drawable height.
+         * @param x    - where the user tapped from the of the Drawable, as percentage of the
+         *             Drawable width.
+         * @param y    - where the user tapped from the top of the Drawable, as percentage of the
+         *             Drawable height.
          */
         void onPhotoTap(View view, float x, float y);
     }
 
     /**
-     * Interface definition for a callback to be invoked when the ImageView is
-     * tapped with a single tap.
+     * Interface definition for a callback to be invoked when the ImageView is tapped with a single
+     * tap.
      *
      * @author Chris Banes
      */
     public static interface OnViewTapListener {
 
         /**
-         * A callback to receive where the user taps on a ImageView. You will
-         * receive a callback if the user taps anywhere on the view, tapping on
-         * 'whitespace' will not be ignored.
+         * A callback to receive where the user taps on a ImageView. You will receive a callback if
+         * the user taps anywhere on the view, tapping on 'whitespace' will not be ignored.
          *
          * @param view - View the user tapped.
          * @param x    - where the user tapped from the left of the View.
