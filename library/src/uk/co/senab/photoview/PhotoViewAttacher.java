@@ -117,7 +117,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * PhotoView sets it's own ScaleType to Matrix, then diverts all calls
          * setScaleType to this.setScaleType automatically.
          */
-        if (null != imageView && !(imageView instanceof PhotoView)) {
+        if (null != imageView && !(imageView instanceof IPhotoView)) {
             if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
                 imageView.setScaleType(ScaleType.MATRIX);
             }
@@ -432,20 +432,25 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 mIvLeft = left;
             }
         }
+        else {
+        	updateBaseMatrix(imageView.getDrawable());
+        }
     }
 
     public final void onScale(float scaleFactor, float focusX, float focusY) {
-        if (DEBUG) {
-            LogManager.getLogger().d(
-                    LOG_TAG,
-                    String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
-                            scaleFactor, focusX, focusY));
-        }
-
-        if (getScale() < mMaxScale || scaleFactor < 1f) {
-            mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-            checkAndDisplayMatrix();
-        }
+    	if (mZoomEnabled) {
+	        if (DEBUG) {
+	            LogManager.getLogger().d(
+	                    LOG_TAG,
+	                    String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
+	                            scaleFactor, focusX, focusY));
+	        }
+	
+	        if (getScale() < mMaxScale || scaleFactor < 1f) {
+	            mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+	            checkAndDisplayMatrix();
+	        }
+    	}
     }
 
     @Override
@@ -482,7 +487,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public final boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
 
-        if (mZoomEnabled && hasDrawable((ImageView) v)) {
+        if (hasDrawable((ImageView) v)) {
             ViewParent parent = v.getParent();
             switch (ev.getAction()) {
                 case ACTION_DOWN:
@@ -500,16 +505,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
                 case ACTION_CANCEL:
                 case ACTION_UP:
-                    // If the user has zoomed less than min scale, zoom back
-                    // to min scale
-                    if (getScale() < mMinScale) {
-                        RectF rect = getDisplayRect();
-                        if (null != rect) {
-                            v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
-                                    rect.centerX(), rect.centerY()));
-                            handled = true;
-                        }
-                    }
+                	if( mZoomEnabled ) {
+	                    // If the user has zoomed less than min scale, zoom back
+	                    // to min scale
+	                    if (getScale() < mMinScale) {
+	                        RectF rect = getDisplayRect();
+	                        if (null != rect) {
+	                            v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
+	                                    rect.centerX(), rect.centerY()));
+	                            handled = true;
+	                        }
+	                    }
+                	}
                     break;
             }
 
@@ -673,7 +680,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return new Matrix(mSuppMatrix);
     }
 
-    protected Matrix getDrawMatrix() {
+    public Matrix getDrawMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
         return mDrawMatrix;
@@ -702,7 +709,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * PhotoView's getScaleType() will just divert to this.getScaleType() so
          * only call if we're not attached to a PhotoView.
          */
-        if (null != imageView && !(imageView instanceof PhotoView)) {
+        if (null != imageView && !(imageView instanceof IPhotoView)) {
             if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
                 throw new IllegalStateException(
                         "The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
