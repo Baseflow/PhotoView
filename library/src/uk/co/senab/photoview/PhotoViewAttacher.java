@@ -432,6 +432,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 mIvLeft = left;
             }
         }
+        else {
+        	updateBaseMatrix(imageView.getDrawable());
+        }
     }
 
     public final void onScale(float scaleFactor, float focusX, float focusY) {
