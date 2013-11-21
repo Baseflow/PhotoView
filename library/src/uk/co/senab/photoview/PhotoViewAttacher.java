@@ -438,17 +438,19 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     public final void onScale(float scaleFactor, float focusX, float focusY) {
-        if (DEBUG) {
-            LogManager.getLogger().d(
-                    LOG_TAG,
-                    String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
-                            scaleFactor, focusX, focusY));
-        }
-
-        if (getScale() < mMaxScale || scaleFactor < 1f) {
-            mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-            checkAndDisplayMatrix();
-        }
+    	if (mZoomEnabled) {
+	        if (DEBUG) {
+	            LogManager.getLogger().d(
+	                    LOG_TAG,
+	                    String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
+	                            scaleFactor, focusX, focusY));
+	        }
+	
+	        if (getScale() < mMaxScale || scaleFactor < 1f) {
+	            mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+	            checkAndDisplayMatrix();
+	        }
+    	}
     }
 
     @Override
@@ -485,7 +487,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public final boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
 
-        if (mZoomEnabled && hasDrawable((ImageView) v)) {
+        if (hasDrawable((ImageView) v)) {
             ViewParent parent = v.getParent();
             switch (ev.getAction()) {
                 case ACTION_DOWN:
@@ -503,16 +505,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
                 case ACTION_CANCEL:
                 case ACTION_UP:
-                    // If the user has zoomed less than min scale, zoom back
-                    // to min scale
-                    if (getScale() < mMinScale) {
-                        RectF rect = getDisplayRect();
-                        if (null != rect) {
-                            v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
-                                    rect.centerX(), rect.centerY()));
-                            handled = true;
-                        }
-                    }
+                	if( mZoomEnabled ) {
+	                    // If the user has zoomed less than min scale, zoom back
+	                    // to min scale
+	                    if (getScale() < mMinScale) {
+	                        RectF rect = getDisplayRect();
+	                        if (null != rect) {
+	                            v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
+	                                    rect.centerX(), rect.centerY()));
+	                            handled = true;
+	                        }
+	                    }
+                	}
                     break;
             }
 
