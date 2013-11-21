@@ -23,15 +23,13 @@ before_install:
   - export PATH=$GRADLE_HOME/bin:$PATH
   # just to test gradle version, against our provided one
   - gradle -v
-  # newest android SDK 22.2.1
-  - wget http://dl.google.com/android/android-sdk_r22.2.1-linux.tgz
-  - tar -zxf android-sdk_r22.2.1-linux.tgz
+  # newest android SDK 22.3
+  - wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
+  - tar -zxf android-sdk_r22.3-linux.tgz
   - export ANDROID_HOME=`pwd`/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # manually set sdk.dir variable, according to local paths
   - echo "sdk.dir=$ANDROID_HOME" > local.properties
-  - echo yes | android update sdk -a -t tools,platform-tools,build-tools-18.1.1,extra-android-m2repository,android-18 --force --no-ui
-  # verify files exist in right paths
-  - find $ANDROID_HOME/build-tools
-  - file $ANDROID_HOME/build-tools/18.1.1/aapt
+  - echo yes | android update sdk -a -t tools,platform-tools,build-tools-19.0.0,extra-android-m2repository,android-19 --force --no-ui
+  # Compatibility for release cycle
   - mvn clean test install
