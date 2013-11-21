@@ -117,7 +117,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * PhotoView sets it's own ScaleType to Matrix, then diverts all calls
          * setScaleType to this.setScaleType automatically.
          */
-        if (null != imageView && !(imageView instanceof PhotoView)) {
+        if (null != imageView && !(imageView instanceof IPhotoView)) {
             if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
                 imageView.setScaleType(ScaleType.MATRIX);
             }
@@ -402,29 +402,33 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public final void onGlobalLayout() {
         ImageView imageView = getImageView();
 
-        if (null != imageView && mZoomEnabled) {
-            final int top = imageView.getTop();
-            final int right = imageView.getRight();
-            final int bottom = imageView.getBottom();
-            final int left = imageView.getLeft();
+        if (null != imageView) {
+            if (mZoomEnabled) {
+                final int top = imageView.getTop();
+                final int right = imageView.getRight();
+                final int bottom = imageView.getBottom();
+                final int left = imageView.getLeft();
 
-            /**
-             * We need to check whether the ImageView's bounds have changed.
-             * This would be easier if we targeted API 11+ as we could just use
-             * View.OnLayoutChangeListener. Instead we have to replicate the
-             * work, keeping track of the ImageView's bounds and then checking
-             * if the values change.
-             */
-            if (top != mIvTop || bottom != mIvBottom || left != mIvLeft
-                    || right != mIvRight) {
-                // Update our base matrix, as the bounds have changed
+                /**
+                 * We need to check whether the ImageView's bounds have changed.
+                 * This would be easier if we targeted API 11+ as we could just use
+                 * View.OnLayoutChangeListener. Instead we have to replicate the
+                 * work, keeping track of the ImageView's bounds and then checking
+                 * if the values change.
+                 */
+                if (top != mIvTop || bottom != mIvBottom || left != mIvLeft
+                        || right != mIvRight) {
+                    // Update our base matrix, as the bounds have changed
+                    updateBaseMatrix(imageView.getDrawable());
+
+                    // Update values as something has changed
+                    mIvTop = top;
+                    mIvRight = right;
+                    mIvBottom = bottom;
+                    mIvLeft = left;
+                }
+            } else {
                 updateBaseMatrix(imageView.getDrawable());
-
-                // Update values as something has changed
-                mIvTop = top;
-                mIvRight = right;
-                mIvBottom = bottom;
-                mIvLeft = left;
             }
         }
     }
@@ -644,7 +648,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return new Matrix(mSuppMatrix);
     }
 
-    protected Matrix getDrawMatrix() {
+    public Matrix getDrawMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
         return mDrawMatrix;
@@ -673,7 +677,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * PhotoView's getScaleType() will just divert to this.getScaleType() so
          * only call if we're not attached to a PhotoView.
          */
-        if (null != imageView && !(imageView instanceof PhotoView)) {
+        if (null != imageView && !(imageView instanceof IPhotoView)) {
             if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
                 throw new IllegalStateException(
                         "The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
