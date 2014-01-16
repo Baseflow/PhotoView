@@ -249,6 +249,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setZoomTransitionDuration(int milliseconds) {
+        mAttacher.setZoomTransitionDuration(milliseconds);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
         super.onDetachedFromWindow();

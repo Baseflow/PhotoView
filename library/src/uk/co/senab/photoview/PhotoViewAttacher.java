@@ -56,16 +56,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
 
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
-    static final int ZOOM_DURATION = 200;
+    int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
 
     static final int EDGE_NONE = -1;
     static final int EDGE_LEFT = 0;
     static final int EDGE_RIGHT = 1;
     static final int EDGE_BOTH = 2;
-
-    public static final float DEFAULT_MAX_SCALE = 3.0f;
-    public static final float DEFAULT_MID_SCALE = 1.75f;
-    public static final float DEFAULT_MIN_SCALE = 1.0f;
 
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
@@ -771,6 +767,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public Bitmap getVisibleRectangleBitmap() {
         ImageView imageView = getImageView();
         return imageView == null ? null : imageView.getDrawingCache();
+    }
+
+    @Override
+    public void setZoomTransitionDuration(int milliseconds) {
+        if (milliseconds < 0)
+            milliseconds = DEFAULT_ZOOM_DURATION;
+        this.ZOOM_DURATION = milliseconds;
     }
 
     /**
