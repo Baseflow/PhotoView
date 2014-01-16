@@ -14,6 +14,22 @@ PhotoView aims to help produce an easily usable implementation of a zooming Andr
 - Allows the application to be notified when the displayed Matrix has changed. Useful for when you need to update your UI based on the current zoom/scroll position.
 - Allows the application to be notified when the user taps on the Photo.
 
+##Download
+Download [the latest jar][1] or grab via Maven:
+
+```xml
+<dependency>
+    <groupId>com.github.chrisbanes.photoview</groupId>
+    <artifactId>library</artifactId>
+    <version>1.2.2</version>
+</dependency>
+```
+
+or Gradle:
+```groovy
+compile 'com.github.chrisbanes.photoview:library:1.2.2'
+```
+
 ## Sample Application
 The sample application (the source is in the repository) has been published onto Google Play for easy access:
 
@@ -45,7 +61,7 @@ public void onCreate(Bundle savedInstanceState) {
 
 
 // If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
-attacher.update();
+mAttacher.update();
 ```
 
 ## Changelog
@@ -66,3 +82,6 @@ Please see the new [Changelog](https://github.com/chrisbanes/PhotoView/wiki/Chan
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+    
+    
+[1]:http://search.maven.org/remotecontent?filepath=com/github/chrisbanes/photoview/library/1.2.2/library-1.2.2.jar
