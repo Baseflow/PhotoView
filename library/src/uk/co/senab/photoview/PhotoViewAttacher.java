@@ -199,7 +199,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final boolean canZoom() {
+    public boolean canZoom() {
         return mZoomEnabled;
     }
 
@@ -210,7 +210,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      * {@link uk.co.senab.photoview.PhotoView}.
      */
     @SuppressWarnings("deprecation")
-    public final void cleanup() {
+    public void cleanup() {
         if (null == mImageView) {
             return; // cleanup already done
         }
@@ -245,7 +245,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final RectF getDisplayRect() {
+    public RectF getDisplayRect() {
         checkMatrixBounds();
         return getDisplayRect(getDrawMatrix());
     }
@@ -279,7 +279,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         checkAndDisplayMatrix();
     }
 
-    public final ImageView getImageView() {
+    public ImageView getImageView() {
         ImageView imageView = null;
 
         if (null != mImageView) {
@@ -330,17 +330,17 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final float getScale() {
+    public float getScale() {
         return FloatMath.sqrt((float) Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X), 2) + (float) Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y), 2));
     }
 
     @Override
-    public final ScaleType getScaleType() {
+    public ScaleType getScaleType() {
         return mScaleType;
     }
 
     @Override
-    public final void onDrag(float dx, float dy) {
+    public void onDrag(float dx, float dy) {
         if (mScaleDragDetector.isScaling()) {
             return; // Do not drag if we are already scaling
         }
@@ -379,7 +379,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final void onFling(float startX, float startY, float velocityX,
+    public void onFling(float startX, float startY, float velocityX,
                               float velocityY) {
         if (DEBUG) {
             LogManager.getLogger().d(
@@ -395,7 +395,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final void onGlobalLayout() {
+    public void onGlobalLayout() {
         ImageView imageView = getImageView();
 
         if (null != imageView) {
@@ -429,7 +429,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
-    public final void onScale(float scaleFactor, float focusX, float focusY) {
+    @Override
+    public void onScale(float scaleFactor, float focusX, float focusY) {
         if (DEBUG) {
             LogManager.getLogger().d(
                     LOG_TAG,
@@ -444,7 +445,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final boolean onTouch(View v, MotionEvent ev) {
+    public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
 
         if (mZoomEnabled && hasDrawable((ImageView) v)) {
@@ -535,32 +536,32 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final void setOnLongClickListener(OnLongClickListener listener) {
+    public void setOnLongClickListener(OnLongClickListener listener) {
         mLongClickListener = listener;
     }
 
     @Override
-    public final void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
+    public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
         mMatrixChangeListener = listener;
     }
 
     @Override
-    public final void setOnPhotoTapListener(OnPhotoTapListener listener) {
+    public void setOnPhotoTapListener(OnPhotoTapListener listener) {
         mPhotoTapListener = listener;
     }
 
     @Override
-    public final OnPhotoTapListener getOnPhotoTapListener() {
+    public OnPhotoTapListener getOnPhotoTapListener() {
         return mPhotoTapListener;
     }
 
     @Override
-    public final void setOnViewTapListener(OnViewTapListener listener) {
+    public void setOnViewTapListener(OnViewTapListener listener) {
         mViewTapListener = listener;
     }
 
     @Override
-    public final OnViewTapListener getOnViewTapListener() {
+    public OnViewTapListener getOnViewTapListener() {
         return mViewTapListener;
     }
 
@@ -607,7 +608,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final void setScaleType(ScaleType scaleType) {
+    public void setScaleType(ScaleType scaleType) {
         if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
             mScaleType = scaleType;
 
@@ -617,12 +618,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final void setZoomable(boolean zoomable) {
+    public void setZoomable(boolean zoomable) {
         mZoomEnabled = zoomable;
         update();
     }
 
-    public final void update() {
+    public void update() {
         ImageView imageView = getImageView();
 
         if (null != imageView) {
