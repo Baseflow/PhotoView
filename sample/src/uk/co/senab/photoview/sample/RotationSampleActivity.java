@@ -27,7 +27,7 @@ public class RotationSampleActivity extends Activity {
 
     private PhotoView photo;
     private float currentRotation = 0;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private boolean rotating = false;
 
     @Override

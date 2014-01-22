@@ -39,7 +39,7 @@ public class ViewPagerActivity extends Activity {
 
 	static class SamplePagerAdapter extends PagerAdapter {
 
-		private static int[] sDrawables = { R.drawable.wallpaper, R.drawable.wallpaper, R.drawable.wallpaper,
+		private static final int[] sDrawables = { R.drawable.wallpaper, R.drawable.wallpaper, R.drawable.wallpaper,
 				R.drawable.wallpaper, R.drawable.wallpaper, R.drawable.wallpaper };
 
 		@Override

@@ -16,10 +16,14 @@
 package uk.co.senab.photoview.sample;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +32,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Random;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -144,6 +150,24 @@ public class SimpleSampleActivity extends Activity {
                 return true;
             case R.id.menu_matrix_capture:
                 mCurrentDisplayMatrix = mAttacher.getDisplayMatrix();
+                return true;
+            case R.id.extract_visible_bitmap:
+                try {
+                    Bitmap bmp = mAttacher.getVisibleRectangleBitmap();
+                    File tmpFile = File.createTempFile("photoview", ".png",
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+                    FileOutputStream out = new FileOutputStream(tmpFile);
+                    bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    out.close();
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("image/png");
+                    share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tmpFile));
+                    startActivity(share);
+                    Toast.makeText(this, String.format("Extracted into: %s", tmpFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
+                }
                 return true;
         }
 

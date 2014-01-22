@@ -1,19 +1,24 @@
 apply plugin: 'android'
 
 dependencies {
-  compile 'com.android.support:support-v4:18.0.+'
-  compile project(':library')
+    compile 'com.android.support:support-v4:19.0.+'
+    compile project(':library')
 }
 
 android {
-  compileSdkVersion 18
-  buildToolsVersion '18.0.1'
+    compileSdkVersion 19
+    buildToolsVersion '19.0.0'
 
-  sourceSets {
-    main {
-      manifest.srcFile 'AndroidManifest.xml'
-      java.srcDirs = ['src']
-      res.srcDirs = ['res']
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
     }
-  }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
 }
