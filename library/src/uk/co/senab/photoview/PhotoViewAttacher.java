@@ -479,7 +479,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final boolean onTouch(View v, MotionEvent ev) {
+    public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
 
         if (mZoomEnabled && hasDrawable((ImageView) v)) {
