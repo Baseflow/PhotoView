@@ -53,7 +53,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     /**
-     * @deprecated use {@link #setPhotoViewRotationTo(float)}
+     * @deprecated use {@link #setRotationTo(float)}
      */
     @Override
     public void setPhotoViewRotation(float rotationDegree) {
@@ -61,13 +61,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
     
     @Override
-    public void setPhotoViewRotationTo(float rotationDegree) {
-        mAttacher.setPhotoViewRotationTo(rotationDegree);
+    public void setRotationTo(float rotationDegree) {
+        mAttacher.setRotationTo(rotationDegree);
     }
 
     @Override
-    public void setPhotoViewRotationBy(float rotationDegree) {
-        mAttacher.setPhotoViewRotationBy(rotationDegree);
+    public void setRotationBy(float rotationDegree) {
+        mAttacher.setRotationBy(rotationDegree);
     }
 
     @Override

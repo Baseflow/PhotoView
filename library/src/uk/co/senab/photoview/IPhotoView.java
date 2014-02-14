@@ -181,6 +181,20 @@ public interface IPhotoView {
      * @param listener - Listener to be registered.
      */
     void setOnViewTapListener(PhotoViewAttacher.OnViewTapListener listener);
+    
+    /**
+     * Enables rotation via PhotoView internal functions.
+     *
+     * @param rotationDegree - Degree to rotate PhotoView to, should be in range 0 to 360
+     */
+    void setRotationTo(float rotationDegree);
+    
+    /**
+     * Enables rotation via PhotoView internal functions.
+     *
+     * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
+     */
+     void setRotationBy(float rotationDegree);
 
     /**
      * Changes the current scale to the specified value.
@@ -229,24 +243,8 @@ public interface IPhotoView {
      * Name is chosen so it won't collide with View.setRotation(float) in API since 11
      *
      * @param rotationDegree - Degree to rotate PhotoView to, should be in range 0 to 360
-     * @deprecated use {@link #setPhotoViewRotationTo(float)}
+     * @deprecated use {@link #setRotationTo(float)}
      */
     void setPhotoViewRotation(float rotationDegree);
-    
-    /**
-     * Enables rotation via PhotoView internal functions.
-     * Name is chosen so it won't collide with View.setRotation(float) in API since 11
-     *
-     * @param rotationDegree - Degree to rotate PhotoView to, should be in range 0 to 360
-     */
-    void setPhotoViewRotationTo(float rotationDegree);
-    
-    /**
-     * Enables rotation via PhotoView internal functions.
-     * Name is chosen so it won't collide with View.setRotation(float) in API since 11
-     *
-     * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
-     */
-    void setPhotoViewRotationBy(float rotationDegree);
 
 }
