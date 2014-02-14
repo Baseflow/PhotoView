@@ -228,8 +228,16 @@ public interface IPhotoView {
      * Enables rotation via PhotoView internal functions.
      * Name is chosen so it won't collide with View.setRotation(float) in API since 11
      *
-     * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
+     * @param rotationDegree - Degree to rotate PhotoView to, should be in range 0 to 360
      */
     void setPhotoViewRotation(float rotationDegree);
+    
+    /**
+     * Enables rotation via PhotoView internal functions.
+     * Name is chosen so it won't collide with View.setRotation(float) in API since 11
+     *
+     * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
+     */
+    void setPhotoViewRotationBy(float rotationDegree);
 
 }

@@ -259,13 +259,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return true;
     }
 
-    private float mLastRotation = 0;
-
     @Override
     public void setPhotoViewRotation(float degrees) {
-        degrees %= 360;
-        mSuppMatrix.postRotate(mLastRotation - degrees);
-        mLastRotation = degrees;
+        mSuppMatrix.setRotate(degrees % 360);
+        checkAndDisplayMatrix();
+    }
+
+    @Override
+    public void setPhotoViewRotationBy(float degrees) {
+        mSuppMatrix.postRotate(degrees % 360);
         checkAndDisplayMatrix();
     }
 

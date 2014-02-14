@@ -58,6 +58,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setPhotoViewRotationBy(float rotationDegree) {
+        mAttacher.setPhotoViewRotationBy(rotationDegree);
+    }
+
+    @Override
     public boolean canZoom() {
         return mAttacher.canZoom();
     }
