@@ -136,6 +136,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private final Matrix mSuppMatrix = new Matrix();
     private final RectF mDisplayRect = new RectF();
     private final float[] mMatrixValues = new float[9];
+    private float[] mSavedMatrixValues;
 
     // Listeners
     private OnMatrixChangedListener mMatrixChangeListener;
@@ -660,6 +661,22 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public final void setZoomable(boolean zoomable) {
         mZoomEnabled = zoomable;
         update();
+    }
+    
+    @Override
+    public final void save() {
+    	if (mSavedMatrixValues == null) {
+    		mSavedMatrixValues = new float[9];
+    	}
+    	mSuppMatrix.getValues(mSavedMatrixValues);
+    }
+    
+    @Override
+    public final void restore() {
+    	if (mSavedMatrixValues != null) {
+    		mSuppMatrix.setValues(mSavedMatrixValues);
+    		checkAndDisplayMatrix();
+    	}
     }
 
     public final void update() {

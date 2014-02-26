@@ -247,4 +247,17 @@ public interface IPhotoView {
      */
     void setPhotoViewRotation(float rotationDegree);
 
+    /**
+     * Saves the current draw matrix. Calling {@link #restore()} will return the photo zoom,
+     * scale, rotation and scroll position to the state it was the most recent time this method
+     * was called.
+     */
+    void save();
+    
+    /**
+     * If {@link #save()} has been called, this will restore the photo zoom,
+     * scale, rotation and scroll position to the state it was the most recent time it
+     * was called.
+     */
+    void restore();
 }
