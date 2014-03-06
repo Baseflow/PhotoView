@@ -7,7 +7,7 @@ dependencies {
 
 android {
   compileSdkVersion 18
-  buildToolsVersion '18.0.1'
+  buildToolsVersion '19.0.1'
 
   sourceSets {
     main {
@@ -16,4 +16,18 @@ android {
       res.srcDirs = ['res']
     }
   }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'http://mvn.getkeepsafe.com/artifactory/libs-release-local') {
+                authentication(userName: keepsafeUser, password: keepsafePassword)
+            }
+            pom.project {
+                artifactId 'library'
+                packaging 'aar'
+            }
+        }
+    }
 }

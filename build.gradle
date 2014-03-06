@@ -4,10 +4,12 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:0.6.+'
+    classpath 'com.android.tools.build:gradle:0.8.+'
     classpath 'com.github.dcendents:android-maven-plugin:1.0'
   }
 }
+
+apply plugin: 'maven'
 
 allprojects {
   group = 'uk.co.senab.photoview'
