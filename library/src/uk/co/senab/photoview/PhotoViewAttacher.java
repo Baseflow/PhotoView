@@ -758,6 +758,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             }
             mScrollEdge = EDGE_BOTH;
         } else if (rect.left > 0) {
+			assert (rect.left > -1);
             mScrollEdge = EDGE_LEFT;
             deltaX = -rect.left;
         } else if (rect.right < viewWidth) {
