@@ -434,7 +434,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
-    public final void onScale(float scaleFactor, float focusX, float focusY) {
+    @Override
+	public void onScale(float scaleFactor, float focusX, float focusY) {
         if (DEBUG) {
             LogManager.getLogger().d(
                     LOG_TAG,
