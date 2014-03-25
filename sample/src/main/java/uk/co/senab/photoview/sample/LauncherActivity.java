@@ -34,25 +34,25 @@ public class LauncherActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent;
+        Class c;
 
         switch (position) {
             default:
             case 0:
-                intent = new Intent(this, SimpleSampleActivity.class);
+                c = SimpleSampleActivity.class;
                 break;
             case 1:
-                intent = new Intent(this, ViewPagerActivity.class);
+                c = ViewPagerActivity.class;
                 break;
             case 2:
-                intent = new Intent(this, RotationSampleActivity.class);
+                c = RotationSampleActivity.class;
                 break;
             case 3:
-                intent = new Intent(this, AUILSampleActivity.class);
+                c = AUILSampleActivity.class;
                 break;
         }
 
-        startActivity(intent);
+        startActivity(new Intent(this, c));
     }
 
 }
