@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<version>9</version>
 	</parent>
 	<licenses>
 		<license>
@@ -44,7 +44,8 @@
 		<java.version>1.6</java.version>
 		<android.version>4.1.1.4</android.version>
 		<android.platform>19</android.platform>
-		<android-maven.version>3.8.0</android-maven.version>
+		<android-maven.version>3.8.2</android-maven.version>
+		<sourceCompatibility>1.6</sourceCompatibility>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -91,11 +92,12 @@
 						<undeployBeforeDeploy>true</undeployBeforeDeploy>
 						<source>${sourceCompatibility}</source>
 						<target>${sourceCompatibility}</target>
+						<androidManifestFile>${project.basedir}/src/main/AndroidManifest.xml</androidManifestFile>
+						<resourceDirectory>${project.basedir}/src/main/res</resourceDirectory>
 					</configuration>
 					<extensions>true</extensions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<sourceDirectory>src</sourceDirectory>
 	</build>
 </project>

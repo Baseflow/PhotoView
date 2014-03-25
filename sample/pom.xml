@@ -28,6 +28,11 @@
 			<artifactId>support-v4</artifactId>
 			<version>r7</version>
 		</dependency>
+		<dependency>
+			<groupId>com.nostra13.universalimageloader</groupId>
+			<artifactId>universal-image-loader</artifactId>
+			<version>1.9.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

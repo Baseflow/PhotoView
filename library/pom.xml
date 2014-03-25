@@ -18,4 +18,13 @@
 			<artifactId>android</artifactId>
 		</dependency>
 	</dependencies>
+
+	<build>
+                <plugins>
+                        <plugin>
+                                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                                <artifactId>android-maven-plugin</artifactId>
+                        </plugin>
+                </plugins>
+        </build>
 </project>
