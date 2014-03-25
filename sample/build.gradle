@@ -1,8 +1,8 @@
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.+'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
+    compile 'com.android.support:support-v4:+'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:+'
     compile project(':library')
 }
 

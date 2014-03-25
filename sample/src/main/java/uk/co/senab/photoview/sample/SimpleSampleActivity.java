@@ -42,7 +42,7 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
 public class SimpleSampleActivity extends Activity {
 
-    static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %%";
+    static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %% ID: %d";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
 
     private TextView mCurrMatrixTv;
@@ -181,7 +181,7 @@ public class SimpleSampleActivity extends Activity {
             float xPercentage = x * 100f;
             float yPercentage = y * 100f;
 
-            showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage));
+            showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage, view == null ? 0 : view.getId()));
         }
     }
 
