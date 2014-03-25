@@ -26,7 +26,6 @@ import uk.co.senab.photoview.PhotoView;
 public class RotationSampleActivity extends Activity {
 
     private PhotoView photo;
-    private float currentRotation = 0;
     private final Handler handler = new Handler();
     private boolean rotating = false;
 
@@ -60,31 +59,25 @@ public class RotationSampleActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 0:
-                currentRotation += 10;
-                photo.setPhotoViewRotation(currentRotation);
+                photo.setRotationBy(10);
                 return true;
             case 1:
-                currentRotation -= 10;
-                photo.setPhotoViewRotation(currentRotation);
+                photo.setRotationBy(-10);
                 return true;
             case 2:
                 toggleRotation();
                 return true;
             case 3:
-                currentRotation = 0;
-                photo.setPhotoViewRotation(currentRotation);
+                photo.setRotationTo(0);
                 return true;
             case 4:
-                currentRotation = 90;
-                photo.setPhotoViewRotation(currentRotation);
+                photo.setRotationTo(90);
                 return true;
             case 5:
-                currentRotation = 180;
-                photo.setPhotoViewRotation(currentRotation);
+                photo.setRotationTo(180);
                 return true;
             case 6:
-                currentRotation = 270;
-                photo.setPhotoViewRotation(currentRotation);
+                photo.setRotationTo(270);
                 return true;
         }
 
@@ -104,8 +97,7 @@ public class RotationSampleActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                currentRotation += 1;
-                photo.setPhotoViewRotation(currentRotation);
+                photo.setRotationBy(1);
                 rotateLoop();
             }
         }, 15);
