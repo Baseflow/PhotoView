@@ -18,6 +18,7 @@ package uk.co.senab.photoview;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.view.GestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -303,4 +304,12 @@ public interface IPhotoView {
      * @return IPhotoView implementation instance if available, null if not
      */
     IPhotoView getIPhotoViewImplementation();
+
+    /**
+     * Sets custom double tap listener, to intercept default given functions. To reset behavior to
+     * default, you can just pass in "null" or public field of PhotoViewAttacher.defaultOnDoubleTapListener
+     *
+     * @param newOnDoubleTapListener custom OnDoubleTapListener to be set on ImageView
+     */
+    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
 }

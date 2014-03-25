@@ -22,6 +22,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.widget.ImageView;
 
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
@@ -58,7 +59,7 @@ public class PhotoView extends ImageView implements IPhotoView {
      */
     @Override
     public void setPhotoViewRotation(float rotationDegree) {
-        mAttacher.setPhotoViewRotation(rotationDegree);
+        mAttacher.setRotationTo(rotationDegree);
     }
     
     @Override
@@ -269,6 +270,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     public IPhotoView getIPhotoViewImplementation() {
         return mAttacher;
+    }
+
+    @Override
+    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
+        mAttacher.setOnDoubleTapListener(newOnDoubleTapListener);
     }
 
     @Override
