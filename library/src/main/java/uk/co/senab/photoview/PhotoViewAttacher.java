@@ -788,6 +788,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         this.ZOOM_DURATION = milliseconds;
     }
 
+    @Override
+    public IPhotoView getIPhotoViewImplementation() {
+        return this;
+    }
+
     /**
      * Helper method that 'unpacks' a Matrix and returns the required value
      *
