@@ -17,19 +17,19 @@ before_install:
   # for gradle output style
   - export TERM=dumb
   # newer version of gradle
-  - wget http://services.gradle.org/distributions/gradle-1.9-bin.zip
-  - unzip -qq gradle-1.9-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-1.9
+  - wget http://services.gradle.org/distributions/gradle-1.10-bin.zip
+  - unzip -qq gradle-1.10-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-1.10
   - export PATH=$GRADLE_HOME/bin:$PATH
   # just to test gradle version, against our provided one
   - gradle -v
-  # newest android SDK 22.3
-  - wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
-  - tar -zxf android-sdk_r22.3-linux.tgz
+  # newest android SDK 22.6.1
+  - wget http://dl.google.com/android/android-sdk_r22.6.1-linux.tgz
+  - tar -zxf android-sdk_r22.6.1-linux.tgz
   - export ANDROID_HOME=`pwd`/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # manually set sdk.dir variable, according to local paths
   - echo "sdk.dir=$ANDROID_HOME" > local.properties
-  - echo yes | android update sdk -a -t tools,platform-tools,build-tools-19.0.0,extra-android-m2repository,android-19 --force --no-ui
+  - echo yes | android update sdk -a -t tools,platform-tools,extra-android-support,extra-android-m2repository,android-19,build-tools-19.0.3 --force --no-ui
   # Compatibility for release cycle
   - mvn clean test install
