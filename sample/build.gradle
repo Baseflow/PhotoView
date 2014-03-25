@@ -2,6 +2,7 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.+'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
     compile project(':library')
 }
 
@@ -12,13 +13,5 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 19
-    }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            res.srcDirs = ['res']
-        }
     }
 }

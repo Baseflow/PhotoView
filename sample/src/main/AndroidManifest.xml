@@ -4,10 +4,7 @@
     android:versionName="1.2.2-SNAPSHOT">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +21,7 @@
         <activity android:name=".SimpleSampleActivity" />
         <activity android:name=".ViewPagerActivity" />
         <activity android:name=".RotationSampleActivity" />
+        <activity android:name=".AUILSampleActivity" />
     </application>
 
 </manifest>
