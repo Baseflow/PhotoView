@@ -518,14 +518,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 handled = true;
             }
 
-            if (!handled && null != parent) {
-                parent.requestDisallowInterceptTouchEvent(false);
-            }
-
-            // Finally, try the Scale/Drag detector
+            // Try the Scale/Drag detector
             if (null != mScaleDragDetector
                     && mScaleDragDetector.onTouchEvent(ev)) {
                 handled = true;
+            }
+            
+            if (!handled && null != parent) {
+                parent.requestDisallowInterceptTouchEvent(false);
             }
         }
 
