@@ -88,7 +88,7 @@ public class SimpleSampleActivity extends Activity {
 
         MenuItem zoomLevelToggle = menu.findItem(R.id.menu_zoom_level_toggle);
         assert null != zoomLevelToggle;
-        zoomLevelToggle.setTitle(mAttacher.isMediumScaleDisabled() ? R.string.menu_medium_zoom_enable : R.string.menu_medium_zoom_disable);
+        zoomLevelToggle.setTitle(mAttacher.isMediumScaleEnabled() ? R.string.menu_medium_zoom_disable : R.string.menu_medium_zoom_enable );
         
         return super.onPrepareOptionsMenu(menu);
     }
@@ -151,7 +151,7 @@ public class SimpleSampleActivity extends Activity {
                 return true;
 
             case R.id.menu_zoom_level_toggle:
-                mAttacher.setMediumScaleDisable(!mAttacher.isMediumScaleDisabled());
+                mAttacher.setMediumScaleEnabled(!mAttacher.isMediumScaleEnabled());
                 return true;
                 
             case R.id.menu_bounce_0:

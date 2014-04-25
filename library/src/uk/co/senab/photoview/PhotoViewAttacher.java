@@ -75,7 +75,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private float mMaxScale = DEFAULT_MAX_SCALE;
     private float mBounce = DEFAULT_BOUNCE;
     
-    private boolean mMidScaleEnabled = false;
+    private boolean mMidScaleEnabled = true;
     
     private boolean mAllowParentInterceptOnEdge = true;
     
@@ -342,7 +342,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     		float x = ev.getX();
     		float y = ev.getY();
     		
-    		if (mMidScaleEnabled) {
+    		if (!mMidScaleEnabled) {
     			
     			/* If current scale is close to MaxScale, then set scale to MinScale*/
         		if (scale < mMaxScale*MAX_SCALE_THRESHOLD) {
