@@ -46,5 +46,14 @@
     <item
         android:id="@+id/menu_matrix_capture"
         android:title="@string/menu_matrix_capture" />
-
+    <item
+        android:id="@+id/menu_bounce_0"
+        android:title="@string/menu_bounce_0" />
+    <item
+        android:id="@+id/menu_bounce_15"
+        android:title="@string/menu_bounce_15" />
+    <item
+        android:id="@+id/menu_zoom_level_toggle"
+        android:title="@string/menu_medium_zoom_disable" />
+    
 </menu>
