@@ -22,7 +22,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
@@ -71,6 +70,16 @@ public class PhotoView extends ImageView implements IPhotoView {
     public Matrix getDisplayMatrix() {
         return mAttacher.getDrawMatrix();
     }
+    
+    @Override
+    public void setMediumScaleEnabled(boolean enable) {
+    	mAttacher.setMediumScaleEnabled(enable);
+    }
+
+	@Override
+	public boolean isMediumScaleEnabled() {
+		return mAttacher.isMediumScaleEnabled();
+	}
 
     @Override
     public boolean setDisplayMatrix(Matrix finalRectangle) {
@@ -237,5 +246,10 @@ public class PhotoView extends ImageView implements IPhotoView {
         mAttacher.cleanup();
         super.onDetachedFromWindow();
     }
+    
+	@Override
+	public void setBounce(float bounce) {
+		mAttacher.setBounce(bounce);
+	}
 
 }

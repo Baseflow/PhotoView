@@ -35,11 +35,12 @@ import android.widget.ImageView.ScaleType;
 
 import java.lang.ref.WeakReference;
 
+import javax.crypto.MacSpi;
+
 import uk.co.senab.photoview.gestures.OnGestureListener;
 import uk.co.senab.photoview.gestures.VersionedGestureDetector;
 import uk.co.senab.photoview.log.LogManager;
 import uk.co.senab.photoview.scrollerproxy.ScrollerProxy;
-
 import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
@@ -54,25 +55,30 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
     private static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
-
+    
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
     static final int ZOOM_DURATION = 200;
-
+    
     static final int EDGE_NONE = -1;
     static final int EDGE_LEFT = 0;
     static final int EDGE_RIGHT = 1;
     static final int EDGE_BOTH = 2;
-
+    
+    private static final float MAX_SCALE_THRESHOLD = 0.75f;
     public static final float DEFAULT_MAX_SCALE = 3.0f;
     public static final float DEFAULT_MID_SCALE = 1.75f;
     public static final float DEFAULT_MIN_SCALE = 1.0f;
-
+    public static final float DEFAULT_BOUNCE = 0.2f;
+    
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
     private float mMaxScale = DEFAULT_MAX_SCALE;
-
+    private float mBounce = DEFAULT_BOUNCE;
+    
+    private boolean mMidScaleEnabled = false;
+    
     private boolean mAllowParentInterceptOnEdge = true;
-
+    
     private static void checkZoomLevels(float minZoom, float midZoom,
                                         float maxZoom) {
         if (minZoom >= midZoom) {
@@ -328,26 +334,40 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public final ScaleType getScaleType() {
         return mScaleType;
     }
-
+    
     @Override
     public final boolean onDoubleTap(MotionEvent ev) {
-        try {
-            float scale = getScale();
-            float x = ev.getX();
-            float y = ev.getY();
+    	try {
+    		float scale = getScale();
+    		float x = ev.getX();
+    		float y = ev.getY();
+    		
+    		if (mMidScaleEnabled) {
+    			
+    			/* If current scale is close to MaxScale, then set scale to MinScale*/
+        		if (scale < mMaxScale*MAX_SCALE_THRESHOLD) {
+        			setScale(mMaxScale, x, y, true);
+        		} else {
+        			setScale(mMinScale, x, y, true);
+        		}
+        		
+    		} else {
+    			
+        		if (scale < mMidScale) {
+        			setScale(mMidScale, x, y, true);
+        		} else if (scale >= mMidScale && scale < mMaxScale) {
+        			setScale(mMaxScale, x, y, true);
+        		} else {
+        			setScale(mMinScale, x, y, true);
+        		}
+        		
+    		}
+    		
+    	} catch (ArrayIndexOutOfBoundsException e) {
+    		// Can sometimes happen when getX() and getY() is called
+    	}
 
-            if (scale < mMidScale) {
-                setScale(mMidScale, x, y, true);
-            } else if (scale >= mMidScale && scale < mMaxScale) {
-                setScale(mMaxScale, x, y, true);
-            } else {
-                setScale(mMinScale, x, y, true);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            // Can sometimes happen when getX() and getY() is called
-        }
-
-        return true;
+    	return true;
     }
 
     @Override
@@ -433,7 +453,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             }
         }
     }
-
+    
     public final void onScale(float scaleFactor, float focusX, float focusY) {
         if (DEBUG) {
             LogManager.getLogger().d(
@@ -441,11 +461,40 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
                             scaleFactor, focusX, focusY));
         }
-
-        if (getScale() < mMaxScale || scaleFactor < 1f) {
+        
+        float scale = getScale();
+        
+        float minScale = mMinScale*(1f-mBounce);
+        float maxScale = mMaxScale*(1f+mBounce);
+        
+        float newScale = scale * scaleFactor;
+        
+        boolean withInMin = minScale < newScale;
+        boolean withInMax = newScale < maxScale;
+        
+        boolean isUpscaling = scaleFactor > 1f;
+        boolean isDownscaling = scaleFactor < 1f;
+        
+        if ( (withInMin && withInMax) || (withInMax ? isUpscaling : isDownscaling) ) {
+        	
+        	// Scale based on user input
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
             checkAndDisplayMatrix();
+            
+        } else if (!withInMin && scale != minScale) {
+        	
+        	// Scale to minimum level (bounce included)
+            mSuppMatrix.setScale(minScale, minScale, focusX, focusY);
+            checkAndDisplayMatrix();
+            
+    	} else if (!withInMax && scale != maxScale) {
+    		
+        	// Scale to maximum level (bounce included)
+            mSuppMatrix.setScale(maxScale, maxScale, focusX, focusY);
+            checkAndDisplayMatrix();
+            
         }
+        
     }
 
     @Override
@@ -502,10 +551,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 case ACTION_UP:
                     // If the user has zoomed less than min scale, zoom back
                     // to min scale
-                    if (getScale() < mMinScale) {
+                	float scale = getScale();
+                    if (scale < mMinScale) {
                         RectF rect = getDisplayRect();
                         if (null != rect) {
                             v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
+                                    rect.centerX(), rect.centerY()));
+                            handled = true;
+                        }
+                    } else if (scale > mMaxScale) {
+                        RectF rect = getDisplayRect();
+                        if (null != rect) {
+                            v.post(new AnimatedZoomRunnable(getScale(), mMaxScale,
                                     rect.centerX(), rect.centerY()));
                             handled = true;
                         }
@@ -536,6 +593,23 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAllowParentInterceptOnEdge = allow;
     }
+
+	@Override
+	public void setBounce(float bounce) {
+		if (bounce < 0.0f) {
+            throw new IllegalArgumentException("Bounce must be >= 0.0");
+		}
+		mBounce = bounce;
+	}
+	
+    public void setMediumScaleEnabled(boolean enable) {
+    	mMidScaleEnabled = enable;
+    }
+    
+	@Override
+	public boolean isMediumScaleEnabled() {
+		return mMidScaleEnabled;
+	}
 
     @Override
     @Deprecated
@@ -1101,4 +1175,5 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             }
         }
     }
+
 }

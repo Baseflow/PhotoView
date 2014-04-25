@@ -60,7 +60,7 @@ public class SimpleSampleActivity extends Activity {
 
         // The MAGIC happens here!
         mAttacher = new PhotoViewAttacher(mImageView);
-
+        
         // Lets attach some listeners, not required though!
         mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
         mAttacher.setOnPhotoTapListener(new PhotoTapListener());
@@ -86,6 +86,10 @@ public class SimpleSampleActivity extends Activity {
         assert null != zoomToggle;
         zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
 
+        MenuItem zoomLevelToggle = menu.findItem(R.id.menu_zoom_level_toggle);
+        assert null != zoomLevelToggle;
+        zoomLevelToggle.setTitle(mAttacher.isMediumScaleDisabled() ? R.string.menu_medium_zoom_enable : R.string.menu_medium_zoom_disable);
+        
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -145,6 +149,19 @@ public class SimpleSampleActivity extends Activity {
             case R.id.menu_matrix_capture:
                 mCurrentDisplayMatrix = mAttacher.getDisplayMatrix();
                 return true;
+
+            case R.id.menu_zoom_level_toggle:
+                mAttacher.setMediumScaleDisable(!mAttacher.isMediumScaleDisabled());
+                return true;
+                
+            case R.id.menu_bounce_0:
+                mAttacher.setBounce(0.0f);
+                return true;
+
+            case R.id.menu_bounce_15:
+                mAttacher.setBounce(0.15f);
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);

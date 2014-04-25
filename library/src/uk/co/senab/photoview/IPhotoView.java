@@ -133,7 +133,7 @@ public interface IPhotoView {
     @Deprecated
     void setMidScale(float midScale);
 
-    /*
+    /**
      * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      */
     void setMediumScale(float mediumScale);
@@ -223,7 +223,7 @@ public interface IPhotoView {
      * @param zoomable - Whether the zoom functionality is enabled.
      */
     void setZoomable(boolean zoomable);
-
+    
     /**
      * Enables rotation via PhotoView internal functions.
      * Name is chosen so it won't collide with View.setRotation(float) in API since 11
@@ -231,5 +231,28 @@ public interface IPhotoView {
      * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
      */
     void setPhotoViewRotation(float rotationDegree);
-
+    
+    /**
+     * Allows you to enable/disable the medium scale step on the ImageView when
+     * double tapping.
+     * @param disable - Whether the medium scale is enabled
+     */
+    void setMediumScaleEnabled(boolean enable);
+    
+    /**
+     * Returns true if the double-tap action should use medium zoom level.
+     *
+     * @return true if the double-tap allows medium level zoom.
+     */
+    boolean isMediumScaleEnabled();
+    
+    /**
+     * Sets the bounce level on the ImageView.
+     * <p>Bounce is how much the ImageView is allowed to stretch beyond
+     * {@link #getMinimumScale()} and {@link #getMaximumScale()}. 
+     * Where 0.25 equals 25%
+     * @param bounce - A percentage, of the minimum and maximum scale
+     */
+    void setBounce(float bounce);
+    
 }
