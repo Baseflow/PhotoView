@@ -15,6 +15,16 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import static android.view.MotionEvent.ACTION_CANCEL;
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_UP;
+
+import java.lang.ref.WeakReference;
+
+import uk.co.senab.photoview.gestures.OnGestureListener;
+import uk.co.senab.photoview.gestures.VersionedGestureDetector;
+import uk.co.senab.photoview.log.LogManager;
+import uk.co.senab.photoview.scrollerproxy.ScrollerProxy;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
@@ -32,18 +42,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-
-import java.lang.ref.WeakReference;
-
-import javax.crypto.MacSpi;
-
-import uk.co.senab.photoview.gestures.OnGestureListener;
-import uk.co.senab.photoview.gestures.VersionedGestureDetector;
-import uk.co.senab.photoview.log.LogManager;
-import uk.co.senab.photoview.scrollerproxy.ScrollerProxy;
-import static android.view.MotionEvent.ACTION_CANCEL;
-import static android.view.MotionEvent.ACTION_DOWN;
-import static android.view.MotionEvent.ACTION_UP;
 
 public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,
@@ -481,22 +479,29 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
             checkAndDisplayMatrix();
             
-        } else if (!withInMin && scale != minScale) {
+        } else if (!withInMin) {
         	
         	// Scale to minimum level (bounce included)
-            mSuppMatrix.setScale(minScale, minScale, focusX, focusY);
-            checkAndDisplayMatrix();
+        	// Comparing with 0.9998 instead of 1f due to floating point precision
+        	float s = 1f-(scale-minScale);
+        	if (s<0.9998) { 
+                mSuppMatrix.postScale(s, s, focusX, focusY);
+                checkAndDisplayMatrix();
+        	}
             
-    	} else if (!withInMax && scale != maxScale) {
+    	} else if (!withInMax) {
     		
         	// Scale to maximum level (bounce included)
-            mSuppMatrix.setScale(maxScale, maxScale, focusX, focusY);
-            checkAndDisplayMatrix();
+        	float s = 1f+(maxScale-scale);
+        	if (s>1f) {
+                mSuppMatrix.postScale(s, s, focusX, focusY);
+                checkAndDisplayMatrix();
+        	}
             
         }
         
     }
-
+    
     @Override
     public final boolean onSingleTapConfirmed(MotionEvent e) {
         ImageView imageView = getImageView();
