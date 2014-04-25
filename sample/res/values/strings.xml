@@ -14,6 +14,10 @@
     <string name="menu_zoom_random">Set scale to random value</string>
     <string name="menu_matrix_restore">Restore Display Matrix</string>
     <string name="menu_matrix_capture">Capture Display Matrix</string>
+    <string name="menu_bounce_0">Bounce 0%</string>
+    <string name="menu_bounce_15">Bounce 15%</string>
+    <string name="menu_medium_zoom_disable">Disable medium zoom level</string>
+    <string name="menu_medium_zoom_enable">Enable medium zoom level</string>
     
     <string name="menu_lock">Lock</string>
     <string name="menu_unlock">Unlock</string>
