@@ -1,24 +1,23 @@
 buildscript {
-  repositories {
-    mavenCentral()
-  }
+    repositories {
+        mavenCentral()
+    }
 
-  dependencies {
-    classpath 'com.android.tools.build:gradle:+'
-  }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:+'
+    }
 }
 
 allprojects {
-  group = 'uk.co.senab.photoview'
-  version = '1.2.3-SHAPSHOT'
+    version = VERSION_NAME
+    group = GROUP
 
-  repositories {
-    mavenCentral()
-  }
+    repositories {
+        mavenCentral()
+    }
 
-  tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-    options.compilerArgs << "-Xlint:unchecked"
-  }
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xlint:unchecked"
+    }
 }
-
