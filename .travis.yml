@@ -21,6 +21,12 @@ before_install:
   - unzip -qq gradle-1.10-bin.zip
   - export GRADLE_HOME=$PWD/gradle-1.10
   - export PATH=$GRADLE_HOME/bin:$PATH
+  # specific version of Maven
+  - wget http://mirror.sdunix.com/apache/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.zip
+  - unzip -qq apache-maven-3.2.1-bin.zip
+  - export M2_HOME=apache-maven-3.2.1
+  - export M2=$M2_HOME/bin/
+  - export PATH=$M2:$PATH
   # just to test gradle version, against our provided one
   - gradle -v
   # newest android SDK 22.6.1
