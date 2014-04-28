@@ -8,8 +8,8 @@ jdk:
   - openjdk6
 before_install:
   # environment info
-  - mvn -version
   - gradle -v
+  - mvn --version
   - uname -a
   # required libs for android build tools
   - if [ `uname -m` = x86_64 ]; then sudo apt-get update; fi
@@ -29,6 +29,7 @@ before_install:
   - export PATH=$M2:$PATH
   # just to test gradle version, against our provided one
   - gradle -v
+  - mvn --version
   # newest android SDK 22.6.1
   - wget http://dl.google.com/android/android-sdk_r22.6.1-linux.tgz
   - tar -zxf android-sdk_r22.6.1-linux.tgz
