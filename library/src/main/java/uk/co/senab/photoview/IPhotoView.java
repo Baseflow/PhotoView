@@ -116,7 +116,6 @@ public interface IPhotoView {
 
     /**
      * Return the current scale type in use by the ImageView.
-     *      *
      *
      * @return current ImageView.ScaleType
      */
