@@ -15,5 +15,7 @@
     <string name="menu_matrix_restore">Restore Display Matrix</string>
     <string name="menu_matrix_capture">Capture Display Matrix</string>
     <string name="extract_visible_bitmap">Extract visible bitmap</string>
+    <string name="menu_lock">Lock</string>
+    <string name="menu_unlock">Unlock</string>
 
 </resources>
