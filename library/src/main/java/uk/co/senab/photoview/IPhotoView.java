@@ -49,6 +49,7 @@ public interface IPhotoView {
      * Sets the Display Matrix of the currently displayed Drawable. The Rectangle is considered
      * relative to this View and includes all scaling and translations.
      *
+     * @param finalMatrix target matrix to set PhotoView to
      * @return - true if rectangle was applied successfully
      */
     boolean setDisplayMatrix(Matrix finalMatrix);
@@ -115,21 +116,27 @@ public interface IPhotoView {
 
     /**
      * Return the current scale type in use by the ImageView.
+     *
+     * @return current ImageView.ScaleType
      */
     ImageView.ScaleType getScaleType();
 
     /**
      * Whether to allow the ImageView's parent to intercept the touch event when the photo is scroll
      * to it's horizontal edge.
+     *
+     * @param allow whether to allow intercepting by parent element or not
      */
     void setAllowParentInterceptOnEdge(boolean allow);
 
     /**
      * Use {@link #setMinimumScale(float minimumScale)} instead, this will be removed in future
      * release
-     * <p/>
+     * <p>&nbsp;</p>
      * Sets the minimum scale level. What this value represents depends on the current {@link
      * android.widget.ImageView.ScaleType}.
+     *
+     * @param minScale minimum allowed scale
      */
     @Deprecated
     void setMinScale(float minScale);
@@ -137,30 +144,38 @@ public interface IPhotoView {
     /**
      * Sets the minimum scale level. What this value represents depends on the current {@link
      * android.widget.ImageView.ScaleType}.
+     *
+     * @param minimumScale minimum allowed scale
      */
     void setMinimumScale(float minimumScale);
 
     /**
      * Use {@link #setMediumScale(float mediumScale)} instead, this will be removed in future
      * release
-     * <p/>
+     * <p>&nbsp;</p>
      * Sets the middle scale level. What this value represents depends on the current {@link
      * android.widget.ImageView.ScaleType}.
+     *
+     * @param midScale medium scale preset
      */
     @Deprecated
     void setMidScale(float midScale);
 
     /*
      * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     *
+     * @param mediumScale medium scale preset
      */
     void setMediumScale(float mediumScale);
 
     /**
      * Use {@link #setMaximumScale(float maximumScale)} instead, this will be removed in future
      * release
-     * <p/>
+     * <p>&nbsp;</p>
      * Sets the maximum scale level. What this value represents depends on the current {@link
      * android.widget.ImageView.ScaleType}.
+     *
+     * @param maxScale maximum allowed scale preset
      */
     @Deprecated
     void setMaxScale(float maxScale);
@@ -168,6 +183,8 @@ public interface IPhotoView {
     /**
      * Sets the maximum scale level. What this value represents depends on the current {@link
      * android.widget.ImageView.ScaleType}.
+     *
+     * @param maximumScale maximum allowed scale preset
      */
     void setMaximumScale(float maximumScale);
 

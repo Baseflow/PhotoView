@@ -17,9 +17,9 @@ before_install:
   # for gradle output style
   - export TERM=dumb
   # newer version of gradle
-  - wget http://services.gradle.org/distributions/gradle-1.10-bin.zip
-  - unzip -qq gradle-1.10-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-1.10
+  - wget http://services.gradle.org/distributions/gradle-1.11-bin.zip
+  - unzip -qq gradle-1.11-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-1.11
   - export PATH=$GRADLE_HOME/bin:$PATH
   # just to test gradle version, against our provided one
   - gradle -v
@@ -31,5 +31,3 @@ before_install:
   # manually set sdk.dir variable, according to local paths
   - echo "sdk.dir=$ANDROID_HOME" > local.properties
   - echo yes | android update sdk -a -t tools,platform-tools,extra-android-support,extra-android-m2repository,android-19,build-tools-19.0.3 --force --no-ui
-  # Compatibility for release cycle
-  - mvn clean test install
