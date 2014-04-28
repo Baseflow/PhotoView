@@ -17,9 +17,9 @@ before_install:
   # for gradle output style
   - export TERM=dumb
   # newer version of gradle
-  - wget http://services.gradle.org/distributions/gradle-1.10-bin.zip
-  - unzip -qq gradle-1.10-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-1.10
+  - wget http://services.gradle.org/distributions/gradle-1.11-bin.zip
+  - unzip -qq gradle-1.11-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-1.11
   - export PATH=$GRADLE_HOME/bin:$PATH
   # specific version of Maven
   - wget http://mirror.sdunix.com/apache/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.zip
@@ -40,3 +40,6 @@ before_install:
   - echo yes | android update sdk -a -t tools,platform-tools,extra-android-support,extra-android-m2repository,android-19,build-tools-19.0.3 --force --no-ui
   # Compatibility for release cycle
   - mvn clean test install
+  # not using Travis gradlew wrapper
+  - gradle assemble
+  - gradle check
