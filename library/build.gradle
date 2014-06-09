@@ -1,12 +1,12 @@
 apply plugin: 'android-library'
 
 dependencies {
-    compile "com.android.support:support-v4:19.+"
+    compile "com.android.support:support-v4:+"
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1'
 
     defaultConfig {
         minSdkVersion 4
@@ -14,4 +14,4 @@ android {
     }
 }
 
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+apply from: '../maven_push.gradle'

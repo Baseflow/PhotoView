@@ -17,9 +17,9 @@ before_install:
   # for gradle output style
   - export TERM=dumb
   # newer version of gradle
-  - wget http://services.gradle.org/distributions/gradle-1.11-bin.zip
-  - unzip -qq gradle-1.11-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-1.11
+  - wget http://services.gradle.org/distributions/gradle-1.12-bin.zip
+  - unzip -qq gradle-1.12-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-1.12
   - export PATH=$GRADLE_HOME/bin:$PATH
   # specific version of Maven
   - wget http://mirror.sdunix.com/apache/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.zip
@@ -32,14 +32,14 @@ before_install:
   - mvn --version
   - which gradle
   - which mvn
-  # newest android SDK 22.6.1
-  - wget http://dl.google.com/android/android-sdk_r22.6.1-linux.tgz
-  - tar -zxf android-sdk_r22.6.1-linux.tgz
+  # newest android SDK 22.6.2
+  - wget http://dl.google.com/android/android-sdk_r22.6.2-linux.tgz
+  - tar -zxf android-sdk_r22.6.2-linux.tgz
   - export ANDROID_HOME=`pwd`/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # manually set sdk.dir variable, according to local paths
   - echo "sdk.dir=$ANDROID_HOME" > local.properties
-  - echo yes | android update sdk -a -t tools,platform-tools,extra-android-support,extra-android-m2repository,android-19,build-tools-19.0.3 --force --no-ui
+  - echo yes | android update sdk -a -t 1,2,3,tools,platform-tools,extra-android-support,extra-android-m2repository,android-19,build-tools-19.1.0 --force --no-ui
   # not using Travis gradlew wrapper
   - gradle assemble
   - gradle check
