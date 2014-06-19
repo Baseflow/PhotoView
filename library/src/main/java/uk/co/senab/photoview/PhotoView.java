@@ -84,7 +84,7 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     @Override
     public Matrix getDisplayMatrix() {
-        return mAttacher.getDrawMatrix();
+        return mAttacher.getDisplayMatrix();
     }
 
     @Override
