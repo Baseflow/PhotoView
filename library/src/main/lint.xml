@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="NewApi">
+        <ignore path="java/uk/co/senab/photoview/Compat.java" />
+    </issue>
+</lint>
