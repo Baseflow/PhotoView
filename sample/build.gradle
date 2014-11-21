@@ -1,17 +1,16 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:support-v4:+'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:+'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile project(':library')
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.1'
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 19
+        targetSdkVersion 21
     }
 }
