@@ -1,45 +1,16 @@
+language: android
+jdk: openjdk7
+android:
+  components:
+    - build-tools-21.1.1
+    - extra-android-support
+    - extra-android-m2repository
+    - android-21
+  licenses:
+    - '.+'
+script:
+  - ./gradlew clean assemble check
 branches:
   only:
-    - dev
     - master
-language:
-  - java
-jdk:
-  - openjdk6
-before_install:
-  # environment info
-  - gradle -v
-  - mvn --version
-  - uname -a
-  # required libs for android build tools
-  - if [ `uname -m` = x86_64 ]; then sudo apt-get update; fi
-  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch; fi
-  # for gradle output style
-  - export TERM=dumb
-  # newer version of gradle
-  - wget http://services.gradle.org/distributions/gradle-1.12-bin.zip
-  - unzip -qq gradle-1.12-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-1.12
-  - export PATH=$GRADLE_HOME/bin:$PATH
-  # specific version of Maven
-  - wget http://mirror.sdunix.com/apache/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.zip
-  - unzip -qq apache-maven-3.2.1-bin.zip
-  - export M2_HOME=apache-maven-3.2.1
-  - export M2=$M2_HOME/bin/
-  - export PATH=$M2:$PATH
-  # just to test gradle version, against our provided one
-  - gradle -v
-  - mvn --version
-  - which gradle
-  - which mvn
-  # newest android SDK 22.6.2
-  - wget http://dl.google.com/android/android-sdk_r22.6.2-linux.tgz
-  - tar -zxf android-sdk_r22.6.2-linux.tgz
-  - export ANDROID_HOME=`pwd`/android-sdk-linux
-  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  # manually set sdk.dir variable, according to local paths
-  - echo "sdk.dir=$ANDROID_HOME" > local.properties
-  - echo yes | android update sdk -a -t 1,2,3,tools,platform-tools,extra-android-support,extra-android-m2repository,android-19,build-tools-19.1.0 --force --no-ui
-  # not using Travis gradlew wrapper
-  - gradle assemble
-  - gradle check
+    - dev
