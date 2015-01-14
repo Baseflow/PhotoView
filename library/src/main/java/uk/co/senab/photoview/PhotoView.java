@@ -31,7 +31,7 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
 
-    private final PhotoViewAttacher mAttacher;
+    private PhotoViewAttacher mAttacher;
 
     private ScaleType mPendingScaleType;
 
@@ -46,6 +46,10 @@ public class PhotoView extends ImageView implements IPhotoView {
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
         super.setScaleType(ScaleType.MATRIX);
+        init();
+    }
+
+    protected void init() {
         mAttacher = new PhotoViewAttacher(this);
 
         if (null != mPendingScaleType) {
@@ -61,7 +65,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setPhotoViewRotation(float rotationDegree) {
         mAttacher.setRotationTo(rotationDegree);
     }
-    
+
     @Override
     public void setRotationTo(float rotationDegree) {
         mAttacher.setRotationTo(rotationDegree);
@@ -283,4 +287,9 @@ public class PhotoView extends ImageView implements IPhotoView {
         super.onDetachedFromWindow();
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        init();
+        super.onAttachedToWindow();
+    }
 }
