@@ -190,6 +190,16 @@ public interface IPhotoView {
     void setMaximumScale(float maximumScale);
 
     /**
+     * Allows to set all three scale levels at once, so you don't run into problem with setting
+     * medium/minimum scale before the maximum one
+     *
+     * @param minimumScale minimum allowed scale
+     * @param mediumScale  medium allowed scale
+     * @param maximumScale maximum allowed scale preset
+     */
+    void setScaleLevels(float minimumScale, float mediumScale, float maximumScale);
+
+    /**
      * Register a callback to be invoked when the Photo displayed by this view is long-pressed.
      *
      * @param listener - Listener to be registered.

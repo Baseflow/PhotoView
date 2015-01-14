@@ -178,6 +178,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
+        mAttacher.setScaleLevels(minimumScale, mediumScale, maximumScale);
+    }
+
+    @Override
     // setImageBitmap calls through to this method
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);

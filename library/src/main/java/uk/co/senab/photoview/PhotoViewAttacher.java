@@ -554,6 +554,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
+    public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
+        checkZoomLevels(minimumScale, mediumScale, maximumScale);
+        mMinScale = minimumScale;
+        mMidScale = mediumScale;
+        mMaxScale = maximumScale;
+    }
+
+    @Override
     public void setOnLongClickListener(OnLongClickListener listener) {
         mLongClickListener = listener;
     }
