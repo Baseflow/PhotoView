@@ -48,6 +48,10 @@ public void onCreate(Bundle savedInstanceState) {
 attacher.update();
 ```
 
+## Pull Requests / Contribution
+Development happens in **dev** branch of this repository, and Pull Requests should be filled against that branch.
+Any Pull Request against **master** will be rejected
+
 ## Changelog
 Please see the new [Changelog](https://github.com/chrisbanes/PhotoView/wiki/Changelog) page to see what's recently changed.
 
