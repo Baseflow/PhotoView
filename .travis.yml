@@ -2,7 +2,7 @@ language: android
 jdk: openjdk7
 android:
   components:
-    - build-tools-21.1.1
+    - build-tools-21.1.2
     - extra-android-support
     - extra-android-m2repository
     - android-21
