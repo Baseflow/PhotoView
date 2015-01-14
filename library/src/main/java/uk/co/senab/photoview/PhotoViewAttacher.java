@@ -149,6 +149,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     public PhotoViewAttacher(ImageView imageView) {
+        this(imageView, true);
+    }
+
+    public PhotoViewAttacher(ImageView imageView, boolean zoomable) {
         mImageView = new WeakReference<>(imageView);
 
         imageView.setDrawingCacheEnabled(true);
@@ -183,7 +187,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
 
         // Finally, update the UI so that we're zoomable
-        setZoomable(true);
+        setZoomable(zoomable);
     }
 
     @Override
