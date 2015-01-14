@@ -116,7 +116,8 @@ public interface IPhotoView {
 
     /**
      * Return the current scale type in use by the ImageView.
-     *
+     *      *
+     *
      * @return current ImageView.ScaleType
      */
     ImageView.ScaleType getScaleType();
@@ -328,5 +329,12 @@ public interface IPhotoView {
      *
      * @param newOnDoubleTapListener custom OnDoubleTapListener to be set on ImageView
      */
-    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
+    void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
+
+    /**
+     * Will report back about scale changes
+     *
+     * @param onScaleChangeListener OnScaleChangeListener instance
+     */
+    void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener);
 }

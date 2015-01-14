@@ -139,6 +139,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private OnPhotoTapListener mPhotoTapListener;
     private OnViewTapListener mViewTapListener;
     private OnLongClickListener mLongClickListener;
+    private OnScaleChangeListener mScaleChangeListener;
 
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
@@ -187,10 +188,16 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
-        if (newOnDoubleTapListener != null)
+        if (newOnDoubleTapListener != null) {
             this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener);
-        else
+        } else {
             this.mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
+        }
+    }
+
+    @Override
+    public void setOnScaleChangeListener(OnScaleChangeListener onScaleChangeListener) {
+        this.mScaleChangeListener = onScaleChangeListener;
     }
 
     @Override
@@ -386,7 +393,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void onFling(float startX, float startY, float velocityX,
-                              float velocityY) {
+                        float velocityY) {
         if (DEBUG) {
             LogManager.getLogger().d(
                     LOG_TAG,
@@ -442,6 +449,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     LOG_TAG,
                     String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
                             scaleFactor, focusX, focusY));
+        }
+
+        if (null != mScaleChangeListener) {
+            mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
         }
 
         if (getScale() < mMaxScale || scaleFactor < 1f) {
@@ -920,6 +931,22 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * @param rect - Rectangle displaying the Drawable's new bounds.
          */
         void onMatrixChanged(RectF rect);
+    }
+
+    /**
+     * Interface definition for callback to be invoked when attached ImageView scale changes
+     *
+     * @author Marek Sebera
+     */
+    public static interface OnScaleChangeListener {
+        /**
+         * Callback for when the scale changes
+         *
+         * @param previousScale original scale before change
+         * @param focusX        focal point X position
+         * @param focusY        focal point Y position
+         */
+        void onScaleChange(float previousScale, float focusX, float focusY);
     }
 
     /**

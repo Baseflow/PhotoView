@@ -282,6 +282,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener) {
+        mAttacher.setOnScaleChangeListener(onScaleChangeListener);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
         super.onDetachedFromWindow();
