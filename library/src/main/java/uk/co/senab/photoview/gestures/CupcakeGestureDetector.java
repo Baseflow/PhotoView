@@ -58,6 +58,10 @@ public class CupcakeGestureDetector implements GestureDetector {
         return false;
     }
 
+    public boolean isDragging() {
+        return mIsDragging;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
