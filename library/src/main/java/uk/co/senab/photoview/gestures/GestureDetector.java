@@ -23,6 +23,8 @@ public interface GestureDetector {
 
     public boolean isScaling();
 
+    public boolean isDragging();
+
     public void setOnGestureListener(OnGestureListener listener);
 
 }

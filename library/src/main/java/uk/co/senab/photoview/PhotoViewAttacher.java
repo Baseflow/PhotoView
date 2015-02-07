@@ -69,6 +69,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private float mMaxScale = DEFAULT_MAX_SCALE;
 
     private boolean mAllowParentInterceptOnEdge = true;
+    private boolean mBlockParentIntercept = false;
 
     private static void checkZoomLevels(float minZoom, float midZoom,
                                         float maxZoom) {
@@ -381,7 +382,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * the edge, aka 'overscrolling', let the parent take over).
          */
         ViewParent parent = imageView.getParent();
-        if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling()) {
+        if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
             if (mScrollEdge == EDGE_BOTH
                     || (mScrollEdge == EDGE_LEFT && dx >= 1f)
                     || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
@@ -502,15 +503,23 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             }
 
             // Try the Scale/Drag detector
-            if (null != mScaleDragDetector
-                    && mScaleDragDetector.onTouchEvent(ev)) {
-                handled = true;
+            if (null != mScaleDragDetector) {
+                boolean wasScaling = mScaleDragDetector.isScaling();
+                boolean wasDragging = mScaleDragDetector.isDragging();
+
+                handled = mScaleDragDetector.onTouchEvent(ev);
+
+                boolean didntScale = !wasScaling && !mScaleDragDetector.isScaling();
+                boolean didntDrag = !wasDragging && !mScaleDragDetector.isDragging();
+
+                mBlockParentIntercept = didntScale && didntDrag;
             }
 
             // Check to see if the user double tapped
             if (null != mGestureDetector && mGestureDetector.onTouchEvent(ev)) {
                 handled = true;
             }
+
         }
 
         return handled;
