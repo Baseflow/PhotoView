@@ -47,7 +47,13 @@ public void onCreate(Bundle savedInstanceState) {
 // If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
 attacher.update();
 ```
-
+##Gradle
+Add this code in your gradle building dependencies
+```gradle
+dependencies{
+	compile 'com.github.chrisbanes.photoview:library:1.2.3'
+}
+```
 ## Changelog
 Please see the new [Changelog](https://github.com/chrisbanes/PhotoView/wiki/Changelog) page to see what's recently changed.
 
