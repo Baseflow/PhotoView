@@ -456,11 +456,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                             scaleFactor, focusX, focusY));
         }
 
-        if (null != mScaleChangeListener) {
-            mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
-        }
-
         if (getScale() < mMaxScale || scaleFactor < 1f) {
+            if (null != mScaleChangeListener) {
+                mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
+            }
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
             checkAndDisplayMatrix();
         }
@@ -963,11 +962,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         /**
          * Callback for when the scale changes
          *
-         * @param previousScale original scale before change
+         * @param scaleFactor   the scale factor (<1 for zoom out, >1 for zoom in)
          * @param focusX        focal point X position
          * @param focusY        focal point Y position
          */
-        void onScaleChange(float previousScale, float focusX, float focusY);
+        void onScaleChange(float scaleFactor, float focusX, float focusY);
     }
 
     /**
@@ -1036,8 +1035,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             float scale = mZoomStart + t * (mZoomEnd - mZoomStart);
             float deltaScale = scale / getScale();
 
-            mSuppMatrix.postScale(deltaScale, deltaScale, mFocalX, mFocalY);
-            checkAndDisplayMatrix();
+            onScale(deltaScale, mFocalX, mFocalY);
 
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
