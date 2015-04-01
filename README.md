@@ -51,6 +51,10 @@ attacher.update();
 ## Changelog
 Please see the new [Changelog](https://github.com/chrisbanes/PhotoView/wiki/Changelog) page to see what's recently changed.
 
+## Maven Gradle
+```gradle
+compile 'com.mcxiaoke.photoview:library:1.2.3'
+```
 ## License
 
     Copyright 2011, 2012 Chris Banes
