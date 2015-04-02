@@ -19,11 +19,24 @@ The sample application (the source is in the repository) has been published onto
 
 [![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_small.png)](http://play.google.com/store/apps/details?id=uk.co.senab.photoview.sample)
 
+## Gradle integration
+
+Minimum code for Gradle integration, place code in your `build.gradle`
+
+```gradle
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'com.github.chrisbanes.photoview:library:1.2.4'
+}
+```
 
 ## Sample Usage
 There is a [sample](https://github.com/chrisbanes/PhotoView/tree/master/sample) provided which shows how to use the library in a more advanced way, but for completeness here is all that is required to get PhotoView working:
 
-``` java
+```java
 ImageView mImageView;
 PhotoViewAttacher mAttacher;
 
