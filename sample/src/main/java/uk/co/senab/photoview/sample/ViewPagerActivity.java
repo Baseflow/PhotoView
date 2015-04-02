@@ -18,6 +18,7 @@ package uk.co.senab.photoview.sample;
 import uk.co.senab.photoview.PhotoView;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -134,7 +135,7 @@ public class ViewPagerActivity extends Activity {
     }
     
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		if (isViewPagerActive()) {
 			outState.putBoolean(ISLOCKED_ARG, ((HackyViewPager) mViewPager).isLocked());
     	}
