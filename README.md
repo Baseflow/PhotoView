@@ -1,5 +1,15 @@
 # PhotoView
+***
 
+## Deprecation notice
+
+Library has currently no active maintainers, if you're interested, contact Chris Banes (repository owner)
+
+If you have project built on top of this library, you can still submit pull-requests with fixes, for others to see, but you shall expect no response from former maintainers or Chris himself
+
+Version **1.2.4** is the last version officially released (as of 2nd April 2015)
+
+***
 Branch **Dev**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=dev)](https://travis-ci.org/chrisbanes/PhotoView)  
 Branch **Master**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=master)](https://travis-ci.org/chrisbanes/PhotoView)
 
