@@ -50,7 +50,9 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     protected void init() {
-        mAttacher = new PhotoViewAttacher(this);
+        if (null == mAttacher || null == mAttacher.getImageView()) {
+            mAttacher = new PhotoViewAttacher(this);
+        }
 
         if (null != mPendingScaleType) {
             setScaleType(mPendingScaleType);
