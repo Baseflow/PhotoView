@@ -22,7 +22,6 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -307,7 +306,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         // If we don't have an ImageView, call cleanup()
         if (null == imageView) {
             cleanup();
-            Log.i(LOG_TAG,
+            LogManager.getLogger().i(LOG_TAG,
                     "ImageView no longer exists. You should not use this PhotoViewAttacher any more.");
         }
 
@@ -349,7 +348,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public float getScale() {
-        return FloatMath.sqrt((float) Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X), 2) + (float) Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y), 2));
+        return (float) Math.sqrt((float) Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X), 2) + (float) Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y), 2));
     }
 
     @Override
@@ -476,10 +475,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 case ACTION_DOWN:
                     // First, disable the Parent from intercepting the touch
                     // event
-                    if (null != parent)
+                    if (null != parent) {
                         parent.requestDisallowInterceptTouchEvent(true);
-                    else
-                        Log.i(LOG_TAG, "onTouch getParent() returned null");
+                    } else {
+                        LogManager.getLogger().i(LOG_TAG, "onTouch getParent() returned null");
+                    }
 
                     // If we're flinging, and the user presses down, cancel
                     // fling
@@ -962,9 +962,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         /**
          * Callback for when the scale changes
          *
-         * @param scaleFactor   the scale factor (<1 for zoom out, >1 for zoom in)
-         * @param focusX        focal point X position
-         * @param focusY        focal point Y position
+         * @param scaleFactor the scale factor (<1 for zoom out, >1 for zoom in)
+         * @param focusX      focal point X position
+         * @param focusY      focal point Y position
          */
         void onScaleChange(float scaleFactor, float focusX, float focusY);
     }
