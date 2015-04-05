@@ -68,7 +68,7 @@ public void onCreate(Bundle savedInstanceState) {
 
 
 // If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
-attacher.update();
+mAttacher.update();
 ```
 
 ## Pull Requests / Contribution
