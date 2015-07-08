@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+	    android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <uk.co.senab.photoview.PhotoView
+            style="@style/CropTypeImage"
+            app:scaleType="TopLeftCrop"
+	        app:initZoomAtMax="true"/>
+
+        <uk.co.senab.photoview.PhotoView
+	        style="@style/CropTypeImage"
+            app:scaleType="TopCenterCrop"
+	        app:initZoomAtMax="true"/>
+
+        <uk.co.senab.photoview.PhotoView
+	        style="@style/CropTypeImage"
+            app:scaleType="TopRightCrop"
+	        app:initZoomAtMax="true"/>
+
+    </LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"
+		android:orientation="horizontal">
+
+        <uk.co.senab.photoview.PhotoView
+	        style="@style/CropTypeImage"
+            app:scaleType="CenterLeftCrop"
+	        app:initZoomAtMax="true"/>
+
+        <uk.co.senab.photoview.PhotoView
+	        style="@style/CropTypeImage"
+            android:scaleType="centerCrop"
+	        app:initZoomAtMax="true"/>
+
+        <uk.co.senab.photoview.PhotoView
+	        style="@style/CropTypeImage"
+            app:scaleType="CenterRightCrop"
+	        app:initZoomAtMax="true"/>
+
+    </LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"
+		android:orientation="horizontal">
+
+		<uk.co.senab.photoview.PhotoView
+			style="@style/CropTypeImage"
+			app:scaleType="BottomLeftCrop"
+			app:initZoomAtMax="true"/>
+
+		<uk.co.senab.photoview.PhotoView
+			style="@style/CropTypeImage"
+			app:scaleType="BottomCenterCrop"
+			app:initZoomAtMax="true"/>
+
+		<uk.co.senab.photoview.PhotoView
+			style="@style/CropTypeImage"
+			app:scaleType="BottomRightCrop"
+			app:initZoomAtMax="true"/>
+
+	</LinearLayout>
+
+</LinearLayout>
