@@ -962,7 +962,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         /**
          * Callback for when the scale changes
          *
-         * @param scaleFactor the scale factor (<1 for zoom out, >1 for zoom in)
+         * @param scaleFactor the scale factor (&lt;1 for zoom out, &gt;1 for zoom in)
          * @param focusX      focal point X position
          * @param focusY      focal point Y position
          */
