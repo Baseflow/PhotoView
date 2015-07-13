@@ -50,7 +50,9 @@ public class PhotoView extends ImageView implements IPhotoView {
         BOTTOM_CENTER_CROP,
         BOTTOM_RIGHT_CROP,
         CENTER_LEFT_CROP,
-        CENTER_RIGHT_CROP;
+        CENTER_RIGHT_CROP,
+        MATCH_WIDTH,
+        MATCH_HEIGHT;
 
 	    public ScaleType toScaleType() {
 		    switch (this) {
@@ -140,6 +142,12 @@ public class PhotoView extends ImageView implements IPhotoView {
 			case 107:
 				customScaleType = CustomScaleType.CENTER_RIGHT_CROP;
 				break;
+            case 108:
+                customScaleType = CustomScaleType.MATCH_WIDTH;
+                break;
+            case 109:
+                customScaleType = CustomScaleType.MATCH_HEIGHT;
+                break;
 			default: {
 				switch (getScaleType()) {
 					case CENTER:

@@ -9,6 +9,8 @@
             <enum name="BottomRightCrop" value="105"/>
             <enum name="CenterLeftCrop" value="106"/>
             <enum name="CenterRightCrop" value="107"/>
+            <enum name="MatchWidth" value="108"/>
+            <enum name="MatchHeight" value="109"/>
         </attr>
         <attr name="initZoomAtMax" format="boolean"/>
 	</declare-styleable>

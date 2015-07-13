@@ -929,6 +929,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 	        mBaseMatrix.postTranslate(getTranslateX(viewWidth, drawableWidth, scale),
 			                            getTranslateY(viewHeight, drawableHeight, scale));
 
+        } else if (mScaleType == PhotoView.CustomScaleType.MATCH_WIDTH) {
+	        mBaseMatrix.postScale(widthScale, widthScale);
+
+        } else if (mScaleType == PhotoView.CustomScaleType.MATCH_HEIGHT) {
+	        mBaseMatrix.postScale(heightScale, heightScale);
+
         } else {
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
