@@ -1,7 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="uk.co.senab.photoview.sample"
-          android:versionCode="124"
-          android:versionName="1.2.4">
+          package="uk.co.senab.photoview.sample">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>

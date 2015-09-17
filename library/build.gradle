@@ -1,8 +1,5 @@
 apply plugin: 'com.android.library'
-
-dependencies {
-    compile "com.android.support:support-v4:23.0.1"
-}
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 23
@@ -11,7 +8,22 @@ android {
     defaultConfig {
         minSdkVersion 4
         targetSdkVersion 23
+        versionCode 124
+        versionName "1.2.4"
     }
 }
 
-apply from: '../maven_push.gradle'
+dependencies {
+    compile "com.android.support:support-v4:23.0.1"
+}
+
+publish {
+    userOrg = 'commit451'
+    groupId = 'com.commit451'
+    artifactId = 'PhotoView'
+    version = '1.2.4'
+    description = 'Implementation of ImageView for Android that supports zooming, by various touch gestures.'
+    website = 'https://github.com/chrisbanes/PhotoView'
+    issueTracker = "https://github.com/chrisbanes/PhotoView/issues"
+    repository = "https://github.com/chrisbanes/PhotoView.git"
+}
