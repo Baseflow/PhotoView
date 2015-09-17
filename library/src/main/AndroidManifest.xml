@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.co.senab.photoview"
-    android:versionCode="122"
-    android:versionName="1.2.2-SHAPSHOT" >
+<manifest package="uk.co.senab.photoview" >
 
 </manifest>
