@@ -17,6 +17,7 @@ dependencies {
     compile "com.android.support:support-v4:23.0.1"
 }
 
+//./gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
 publish {
     userOrg = 'commit451'
     groupId = 'com.commit451'
