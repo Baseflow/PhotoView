@@ -1,16 +1,19 @@
 language: android
-jdk: openjdk7
 android:
   components:
+    - platform-tools
+    - tools
+
+    # The BuildTools version used by your project
     - build-tools-23.0.1
-    - extra-android-support
-    - extra-android-m2repository
+
+    # The SDK version used to compile your project
     - android-23
-  licenses:
-    - '.+'
-script:
-  - ./gradlew clean assemble check
-branches:
-  only:
-    - master
-    - dev
+
+    # Additional components
+    - extra-android-m2repository
+
+before_script:
+    - chmod +x gradlew
+
+script: "./gradlew build"

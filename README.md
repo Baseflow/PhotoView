@@ -1,11 +1,11 @@
 # PhotoView
 
-Branch **Dev**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=dev)](https://travis-ci.org/chrisbanes/PhotoView)  
+Branch **Develop**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=develop)](https://travis-ci.org/chrisbanes/PhotoView)
 Branch **Master**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=master)](https://travis-ci.org/chrisbanes/PhotoView)
 
 ![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/header_graphic.png)
 
-PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView. It is currently being used in [photup](https://play.google.com/store/apps/details?id=uk.co.senab.photup).
+PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
 
 ## Features
 - Out of the box zooming, using multi-touch and double-tap.
@@ -58,7 +58,7 @@ mAttacher.update();
 ```
 
 ## Pull Requests / Contribution
-Development happens in **dev** branch of this repository, and Pull Requests should be filled against that branch.
+Development happens in **develop** branch of this repository, and Pull Requests should be filled against that branch.
 Any Pull Request against **master** will be rejected
 
 
