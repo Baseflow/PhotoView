@@ -1,15 +1,5 @@
 # PhotoView
-***
 
-## Deprecation notice
-
-Library has currently no active maintainers, if you're interested, contact Chris Banes (repository owner)
-
-If you have project built on top of this library, you can still submit pull-requests with fixes, for others to see, but you shall expect no response from former maintainers or Chris himself
-
-Version **1.2.4** is the last version officially released (as of 2nd April 2015)
-
-***
 Branch **Dev**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=dev)](https://travis-ci.org/chrisbanes/PhotoView)  
 Branch **Master**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=master)](https://travis-ci.org/chrisbanes/PhotoView)
 
@@ -34,12 +24,8 @@ The sample application (the source is in the repository) has been published onto
 Minimum code for Gradle integration, place code in your `build.gradle`
 
 ```gradle
-repositories {
-  mavenCentral()
-}
-
 dependencies {
-  compile 'com.github.chrisbanes.photoview:library:1.2.4'
+  compile 'com.commit451:PhotoView:1.2.4'
 }
 ```
 
@@ -75,8 +61,6 @@ mAttacher.update();
 Development happens in **dev** branch of this repository, and Pull Requests should be filled against that branch.
 Any Pull Request against **master** will be rejected
 
-## Changelog
-Please see the new [Changelog](https://github.com/chrisbanes/PhotoView/wiki/Changelog) page to see what's recently changed.
 
 ## License
 
