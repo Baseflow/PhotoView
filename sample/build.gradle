@@ -2,16 +2,18 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
-    compile 'com.intellij:annotations:12.0'
     compile project(':library')
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
+        applicationId "uk.co.senab.photoview.sample"
         minSdkVersion 8
-        targetSdkVersion 22
+        targetSdkVersion 23
+        versionCode 124
+        versionName "1.2.4"
     }
 }
