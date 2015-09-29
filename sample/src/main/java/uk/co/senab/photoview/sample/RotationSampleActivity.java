@@ -15,15 +15,15 @@
  *******************************************************************************/
 package uk.co.senab.photoview.sample;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import uk.co.senab.photoview.PhotoView;
 
-public class RotationSampleActivity extends Activity {
+public class RotationSampleActivity extends AppCompatActivity {
 
     private PhotoView photo;
     private final Handler handler = new Handler();
