@@ -48,7 +48,7 @@ public class LauncherActivity extends ListActivity {
                 c = RotationSampleActivity.class;
                 break;
             case 3:
-                c = AUILSampleActivity.class;
+                c = PicassoSampleActivity.class;
                 break;
         }
 

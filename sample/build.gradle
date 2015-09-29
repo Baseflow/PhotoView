@@ -11,6 +11,9 @@ android {
         versionCode 124
         versionName "1.2.4"
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

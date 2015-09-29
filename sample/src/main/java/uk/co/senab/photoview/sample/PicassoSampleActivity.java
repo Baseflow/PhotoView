@@ -7,7 +7,7 @@ import com.squareup.picasso.Picasso;
 
 import uk.co.senab.photoview.PhotoView;
 
-public class AUILSampleActivity extends AppCompatActivity {
+public class PicassoSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
