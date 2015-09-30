@@ -25,7 +25,7 @@ Minimum code for Gradle integration, place code in your `build.gradle`
 
 ```gradle
 dependencies {
-  compile 'com.commit451:PhotoView:1.2.4'
+  compile 'com.github.chrisbanes.photoview:library:+'
 }
 ```
 
