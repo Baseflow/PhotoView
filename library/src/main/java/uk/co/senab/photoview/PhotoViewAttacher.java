@@ -145,7 +145,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
 
-    private boolean mZoomEnabled;
+    private boolean mZoomEnabled, mBoundsEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     public PhotoViewAttacher(ImageView imageView) {
@@ -661,6 +661,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         update();
     }
 
+    @Override
+    public void setBounded(boolean bounded) {
+        mBoundsEnabled = bounded;
+    }
+
     public void update() {
         ImageView imageView = getImageView();
 
@@ -778,7 +783,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         // Finally actually translate the matrix
-        mSuppMatrix.postTranslate(deltaX, deltaY);
+        if (mBoundsEnabled)
+            mSuppMatrix.postTranslate(deltaX, deltaY);
+
         return true;
     }
 
