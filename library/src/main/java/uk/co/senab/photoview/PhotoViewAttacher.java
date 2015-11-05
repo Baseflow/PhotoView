@@ -22,6 +22,7 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -62,6 +63,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     static final int EDGE_LEFT = 0;
     static final int EDGE_RIGHT = 1;
     static final int EDGE_BOTH = 2;
+
+    static int SINGLE_TOUCH = 1;
 
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
@@ -140,6 +143,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private OnViewTapListener mViewTapListener;
     private OnLongClickListener mLongClickListener;
     private OnScaleChangeListener mScaleChangeListener;
+    private OnSingleFlingListener mSingleFlingListener;
 
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
@@ -182,6 +186,24 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                             mLongClickListener.onLongClick(getImageView());
                         }
                     }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2,
+                                           float velocityX, float velocityY) {
+                        if (mSingleFlingListener != null) {
+                            if (getScale() > DEFAULT_MIN_SCALE) {
+                                return false;
+                            }
+
+                            if (MotionEventCompat.getPointerCount(e1) > SINGLE_TOUCH
+                                    || MotionEventCompat.getPointerCount(e2) > SINGLE_TOUCH) {
+                                return false;
+                            }
+
+                            return mSingleFlingListener.onFling(e1, e2, velocityX, velocityY);
+                        }
+                        return false;
+                    }
                 });
 
         mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
@@ -202,6 +224,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void setOnScaleChangeListener(OnScaleChangeListener onScaleChangeListener) {
         this.mScaleChangeListener = onScaleChangeListener;
+    }
+
+    @Override
+    public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
+        this.mSingleFlingListener = onSingleFlingListener;
     }
 
     @Override
@@ -1007,6 +1034,26 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * @param y    - where the user tapped from the top of the View.
          */
         void onViewTap(View view, float x, float y);
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when the ImageView is fling with a single
+     * touch
+     *
+     * @author tonyjs
+     */
+    public static interface OnSingleFlingListener {
+
+        /**
+         * A callback to receive where the user flings on a ImageView. You will receive a callback if
+         * the user flings anywhere on the view.
+         *
+         * @param e1        - MotionEvent the user first touch.
+         * @param e2        - MotionEvent the user last touch.
+         * @param velocityX - distance of user's horizontal fling.
+         * @param velocityY - distance of user's vertical fling.
+         */
+        boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY);
     }
 
     private class AnimatedZoomRunnable implements Runnable {

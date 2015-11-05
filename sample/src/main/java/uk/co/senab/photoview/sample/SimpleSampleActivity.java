@@ -23,9 +23,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -44,6 +46,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
 
     static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %% ID: %d";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
+    static final String FLING_LOG_STRING = "Fling velocityX: %.2f, velocityY: %.2f";
 
     private TextView mCurrMatrixTv;
 
@@ -70,6 +73,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
         // Lets attach some listeners, not required though!
         mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
         mAttacher.setOnPhotoTapListener(new PhotoTapListener());
+        mAttacher.setOnSingleFlingListener(new SingleFlingListener());
     }
 
     @Override
@@ -202,4 +206,14 @@ public class SimpleSampleActivity extends AppCompatActivity {
         }
     }
 
+    private class SingleFlingListener implements PhotoViewAttacher.OnSingleFlingListener {
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (BuildConfig.DEBUG) {
+                Log.d("PhotoView", String.format(FLING_LOG_STRING, velocityX, velocityY));
+            }
+            return true;
+        }
+    }
 }
