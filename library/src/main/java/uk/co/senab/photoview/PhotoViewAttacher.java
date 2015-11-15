@@ -144,6 +144,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
+    private float mBaseRotation;
 
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
@@ -185,6 +186,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 });
 
         mGestureDetector.setOnDoubleTapListener(new DefaultOnDoubleTapListener(this));
+        mBaseRotation = 0.0f;
 
         // Finally, update the UI so that we're zoomable
         setZoomable(zoomable);
@@ -273,6 +275,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         checkMatrixBounds();
 
         return true;
+    }
+
+    public void setBaseRotation(final float degrees) {
+        mBaseRotation = degrees % 360;
+        update();
+        setRotationBy(mBaseRotation);
+        checkAndDisplayMatrix();
     }
 
     /**
@@ -837,6 +846,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      */
     private void resetMatrix() {
         mSuppMatrix.reset();
+        setRotationBy(mBaseRotation);
         setImageViewMatrix(getDrawMatrix());
         checkMatrixBounds();
     }
@@ -898,6 +908,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         } else {
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
             RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
+
+            if ((int) mBaseRotation % 180 != 0) {
+                mTempSrc = new RectF(0, 0, drawableHeight, drawableWidth);
+            }
 
             switch (mScaleType) {
                 case FIT_CENTER:
