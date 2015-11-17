@@ -183,6 +183,11 @@ public class SimpleSampleActivity extends AppCompatActivity {
 
             showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage, view == null ? 0 : view.getId()));
         }
+
+        @Override
+        public void onBesidePhotoTap() {
+            showToast("You have a tap event on the place where out of the photo.");
+        }
     }
 
     private void showToast(CharSequence text) {

@@ -988,6 +988,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          *             Drawable height.
          */
         void onPhotoTap(View view, float x, float y);
+
+        /**
+         * A simple callback where out of photo happened;
+         * */
+        void onBesidePhotoTap();
     }
 
     /**
