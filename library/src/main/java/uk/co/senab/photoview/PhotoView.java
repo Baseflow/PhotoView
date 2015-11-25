@@ -35,6 +35,8 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     private ScaleType mPendingScaleType;
 
+	private boolean mTopCrop=false;
+	
     public PhotoView(Context context) {
         this(context, null);
     }
@@ -77,6 +79,17 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setRotationBy(float rotationDegree) {
         mAttacher.setRotationBy(rotationDegree);
     }
+	
+	public void setTopCrop(boolean topCrop){
+		mTopCrop=topCrop;
+		if(topCrop&&mAttacher!=null){
+			mAttacher.setTopCrop(true);
+		}
+	}
+	
+	public boolean isTopCrop(){
+		return mTopCrop;
+	}
 
     @Override
     public boolean canZoom() {

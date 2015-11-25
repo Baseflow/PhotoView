@@ -147,7 +147,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
-
+	private boolean mTopCrop = false;
+	
     public PhotoViewAttacher(ImageView imageView) {
         this(imageView, true);
     }
@@ -208,6 +209,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public boolean canZoom() {
         return mZoomEnabled;
     }
+	
 
     /**
      * Clean-up the resources attached to this object. This needs to be called when the ImageView is
@@ -356,6 +358,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return mScaleType;
     }
 
+	public boolean isTopCrop(){
+		return mTopCrop;
+	}
+	
     @Override
     public void onDrag(float dx, float dy) {
         if (mScaleDragDetector.isScaling()) {
@@ -455,7 +461,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                             scaleFactor, focusX, focusY));
         }
 
-        if ((getScale() < mMaxScale || scaleFactor < 1f) && (getScale() > mMinScale || scaleFactor > 1f)) {
+        if (getScale() < mMaxScale || scaleFactor < 1f) {
             if (null != mScaleChangeListener) {
                 mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
             }
@@ -660,6 +666,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mZoomEnabled = zoomable;
         update();
     }
+	
+	public void setTopCrop(boolean topCrop){
+		mTopCrop=topCrop;
+		if(mTopCrop){
+				mZoomEnabled=true;
+		}
+		update();
+	}
 
     public void update() {
         ImageView imageView = getImageView();
@@ -878,8 +892,31 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         final float widthScale = viewWidth / drawableWidth;
         final float heightScale = viewHeight / drawableHeight;
+		
+		if(mTopCrop){
+			//Code from http://stackoverflow.com/questions/6330084/imageview-scaling-top-crop
+            if (d != null) {
+				RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
+				RectF mTempDst = new RectF(0, 0, viewWidth, viewHeight);
 
-        if (mScaleType == ScaleType.CENTER) {
+                float floatLeft = (float) imageView.getLeft();
+                float floatRight = (float) imageView.getRight();
+                int bottom = imageView.getBottom();
+                int top = imageView.getTop();
+
+                int frameHeight = bottom - top;
+
+                if (drawableWidth != -1) {
+                    float scaleFactor = (floatRight - floatLeft) / drawableWidth;
+                    if (scaleFactor * drawableHeight < frameHeight) {
+        				mBaseMatrix
+                            .setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+                    } else {
+                        mBaseMatrix.setScale(scaleFactor, scaleFactor);
+                    }
+                }
+            }
+		} else if (mScaleType == ScaleType.CENTER) {
             mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
                     (viewHeight - drawableHeight) / 2F);
 
