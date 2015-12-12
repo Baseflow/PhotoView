@@ -58,9 +58,17 @@ public interface IPhotoView {
      * Gets the Display Matrix of the currently displayed Drawable. The Rectangle is considered
      * relative to this View and includes all scaling and translations.
      *
-     * @return - true if rectangle was applied successfully
+     * @return copy of current Display Matrix
      */
     Matrix getDisplayMatrix();
+
+    /**
+     * Copies the Display Matrix of the currently displayed Drawable. The Rectangle is considered
+     * relative to this View and includes all scaling and translations.
+     *
+     * @param matrix target matrix to copy to
+     */
+    void getDisplayMatrix(Matrix matrix);
 
     /**
      * Use {@link #getMinimumScale()} instead, this will be removed in future release

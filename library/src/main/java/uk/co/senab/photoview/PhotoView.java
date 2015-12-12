@@ -94,6 +94,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void getDisplayMatrix(Matrix matrix) {
+        mAttacher.getDisplayMatrix(matrix);
+    }
+
+    @Override
     public boolean setDisplayMatrix(Matrix finalRectangle) {
         return mAttacher.setDisplayMatrix(finalRectangle);
     }
