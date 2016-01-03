@@ -17,6 +17,7 @@ package uk.co.senab.photoview;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -24,6 +25,7 @@ import android.graphics.Matrix.ScaleToFit;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -475,6 +477,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private boolean tracking = false;
     private float startY;
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
@@ -556,6 +559,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return handled;
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void animateSwipeView(View swipeView, int parentHeight) {
         int quarterHeight = parentHeight / 4;
         float currentPosition = swipeView.getTranslationY();
