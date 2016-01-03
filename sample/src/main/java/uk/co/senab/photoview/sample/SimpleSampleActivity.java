@@ -74,9 +74,9 @@ public class SimpleSampleActivity extends AppCompatActivity {
             @Override
             public void onDismiss(float currentPosition) {
                 if (currentPosition != 0.0f) {
-                    if (currentPosition >= 200.0f) { // Swipe Down
+                    if (currentPosition >= 250.0f) { // Swipe Down
                         finish();
-                    } else if (currentPosition < -200.0f) { // Swipe Up
+                    } else if (currentPosition < -250.0f) { // Swipe Up
                         finish();
                     }
                 } else {

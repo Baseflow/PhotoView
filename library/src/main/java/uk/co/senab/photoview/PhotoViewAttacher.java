@@ -492,12 +492,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                         LogManager.getLogger().i(LOG_TAG, "onTouch getParent() returned null");
                     }
 
-                    Rect hitRect = new Rect();
-                    v.getHitRect(hitRect);
-                    if (hitRect.contains((int) ev.getX(), (int) ev.getY())) {
-                        tracking = true;
+                    if (mDismissConditionListener != null) {
+                        Rect hitRect = new Rect();
+                        v.getHitRect(hitRect);
+                        if (hitRect.contains((int) ev.getX(), (int) ev.getY())) {
+                            tracking = true;
+                        }
+                        startY = ev.getY();
                     }
-                    startY = ev.getY();
 
                     // If we're flinging, and the user presses down, cancel
                     // fling
@@ -517,12 +519,16 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                         }
                     }
 
-                    tracking = false;
-                    animateSwipeView(v, v.getHeight());
+                    if (mDismissConditionListener != null) {
+                        tracking = false;
+                        animateSwipeView(v, v.getHeight());
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (tracking) {
-                        v.setTranslationY(ev.getY() - startY);
+                    if (mDismissConditionListener != null) {
+                        if (tracking) {
+                            v.setTranslationY(ev.getY() - startY);
+                        }
                     }
                     return true;
             }
@@ -563,7 +569,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                 .setDuration(200)
                 .start();
 
-        mDismissConditionListener.onDismiss(currentPosition);
+        if (mDismissConditionListener != null) {
+            mDismissConditionListener.onDismiss(currentPosition);
+        }
     }
 
     @Override
