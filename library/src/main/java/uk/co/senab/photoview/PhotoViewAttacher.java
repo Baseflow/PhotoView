@@ -15,11 +15,13 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -140,6 +142,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private OnViewTapListener mViewTapListener;
     private OnLongClickListener mLongClickListener;
     private OnScaleChangeListener mScaleChangeListener;
+    private OnDismissConditionListener mDismissConditionListener;
 
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
@@ -202,6 +205,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void setOnScaleChangeListener(OnScaleChangeListener onScaleChangeListener) {
         this.mScaleChangeListener = onScaleChangeListener;
+    }
+
+    @Override
+    public void setOnDismissConditionListener(OnDismissConditionListener onDismissConditionListener) {
+        this.mDismissConditionListener = onDismissConditionListener;
     }
 
     @Override
@@ -464,6 +472,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    private boolean tracking = false;
+    private float startY;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
@@ -480,6 +491,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     } else {
                         LogManager.getLogger().i(LOG_TAG, "onTouch getParent() returned null");
                     }
+
+                    Rect hitRect = new Rect();
+                    v.getHitRect(hitRect);
+                    if (hitRect.contains((int) ev.getX(), (int) ev.getY())) {
+                        tracking = true;
+                    }
+                    startY = ev.getY();
 
                     // If we're flinging, and the user presses down, cancel
                     // fling
@@ -498,7 +516,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                             handled = true;
                         }
                     }
+
+                    tracking = false;
+                    animateSwipeView(v, v.getHeight());
                     break;
+                case MotionEvent.ACTION_MOVE:
+                    if (tracking) {
+                        v.setTranslationY(ev.getY() - startY);
+                    }
+                    return true;
             }
 
             // Try the Scale/Drag detector
@@ -522,6 +548,22 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         return handled;
+    }
+
+    private void animateSwipeView(View swipeView, int parentHeight) {
+        int quarterHeight = parentHeight / 4;
+        float currentPosition = swipeView.getTranslationY();
+        float animateTo = 0.0f;
+        if (currentPosition < -quarterHeight) {
+            animateTo = -parentHeight;
+        } else if (currentPosition > quarterHeight) {
+            animateTo = parentHeight;
+        }
+        ObjectAnimator.ofFloat(swipeView, "translationY", currentPosition, animateTo)
+                .setDuration(200)
+                .start();
+
+        mDismissConditionListener.onDismiss(currentPosition);
     }
 
     @Override
@@ -1007,6 +1049,23 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * @param y    - where the user tapped from the top of the View.
          */
         void onViewTap(View view, float x, float y);
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when the ImageView is swiped Up or Down.
+     * (It support API 15 or above)
+     *
+     * @author WindSekirun
+     */
+    public static interface OnDismissConditionListener {
+
+        /**
+         * A callback to receive where the user swipe up or down on a ImageView. You will receive a callback
+         * if the user swipe up or down anywhere on the view, swiping on 'whitespace' will not be ignored.
+         *
+         * @param currentPosition - Swiped View's Calculated TranslationY Value.
+         */
+        void onDismiss(float currentPosition);
     }
 
     private class AnimatedZoomRunnable implements Runnable {

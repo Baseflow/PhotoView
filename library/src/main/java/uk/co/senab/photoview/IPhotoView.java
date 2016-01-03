@@ -346,4 +346,11 @@ public interface IPhotoView {
      * @param onScaleChangeListener OnScaleChangeListener instance
      */
     void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener);
+
+    /**
+     * Will callback about View's TranslationY values changes.
+     *
+     * @param onDismissConditionListener OnDismissConditionListener instance
+     */
+    void setOnDismissConditionListener(PhotoViewAttacher.OnDismissConditionListener onDismissConditionListener);
 }
