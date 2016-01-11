@@ -685,7 +685,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void getDisplayMatrix(Matrix matrix) {
-        matrix.set(getDisplayMatrix());
+        matrix.set(getDrawMatrix());
     }
 
     public Matrix getDrawMatrix() {
