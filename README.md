@@ -5,6 +5,8 @@ Branch **Master**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.p
 
 ![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/header_graphic.png)
 
+[![Badge](http://www.libtastic.com/static/osbadges/78.png)](http://www.libtastic.com/technology/78/)
+
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
 
 ## Features
