@@ -24,12 +24,12 @@ import android.widget.ListView;
 
 public class LauncherActivity extends ListActivity {
 
-    public static final String[] options = {"Simple Sample", "ViewPager Sample", "Rotation Sample", "Android Universal Image Loader"};
+    public static final String[] options = {"Simple Sample", "ViewPager Sample", "Rotation Sample", "Picasso Sample"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options));
+        setListAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, options));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class LauncherActivity extends ListActivity {
                 c = RotationSampleActivity.class;
                 break;
             case 3:
-                c = AUILSampleActivity.class;
+                c = PicassoSampleActivity.class;
                 break;
         }
 
