@@ -70,6 +70,20 @@ public class SimpleSampleActivity extends AppCompatActivity {
         // Lets attach some listeners, not required though!
         mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
         mAttacher.setOnPhotoTapListener(new PhotoTapListener());
+        mAttacher.setOnDismissConditionListener(new PhotoViewAttacher.OnDismissConditionListener() {
+            @Override
+            public void onDismiss(float currentPosition) {
+                if (currentPosition != 0.0f) {
+                    if (currentPosition >= 250.0f) { // Swipe Down
+                        finish();
+                    } else if (currentPosition < -250.0f) { // Swipe Up
+                        finish();
+                    }
+                } else {
+                    // Just tapping ImageView
+                }
+            }
+        });
     }
 
     @Override

@@ -299,6 +299,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setOnDismissConditionListener(PhotoViewAttacher.OnDismissConditionListener onDismissConditionListener) {
+        mAttacher.setOnDismissConditionListener(onDismissConditionListener);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
         super.onDetachedFromWindow();
