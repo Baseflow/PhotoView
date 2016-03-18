@@ -56,7 +56,7 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
                     photoViewAttacher.getOnPhotoTapListener().onPhotoTap(imageView, xResult, yResult);
                     return true;
                 }else{
-                    photoViewAttacher.getOnPhotoTapListener().onBesidePhotoTap();
+                    photoViewAttacher.getOnPhotoTapListener().onOutsidePhotoTap();
                 }
             }
         }

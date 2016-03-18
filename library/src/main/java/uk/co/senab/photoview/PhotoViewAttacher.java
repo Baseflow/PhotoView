@@ -1038,7 +1038,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         /**
          * A simple callback where out of photo happened;
          * */
-        void onBesidePhotoTap();
+        void onOutsidePhotoTap();
     }
 
     /**
@@ -1047,7 +1047,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      *
      * @author Chris Banes
      */
-    public static interface OnViewTapListener {
+    public interface OnViewTapListener {
 
         /**
          * A callback to receive where the user taps on a ImageView. You will receive a callback if

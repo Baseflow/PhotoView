@@ -189,7 +189,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBesidePhotoTap() {
+        public void onOutsidePhotoTap() {
             showToast("You have a tap event on the place where out of the photo.");
         }
     }
