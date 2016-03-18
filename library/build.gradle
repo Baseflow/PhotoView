@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 4
         targetSdkVersion 23
-        versionCode 124
-        versionName "1.2.4"
+        versionCode 125
+        versionName "1.2.5"
     }
 }
 
@@ -22,7 +22,7 @@ publish {
     userOrg = 'commit451'
     groupId = 'com.commit451'
     artifactId = 'PhotoView'
-    version = '1.2.4'
+    version = '1.2.5'
     description = 'Implementation of ImageView for Android that supports zooming, by various touch gestures.'
     website = 'https://github.com/chrisbanes/PhotoView'
     issueTracker = "https://github.com/chrisbanes/PhotoView/issues"
