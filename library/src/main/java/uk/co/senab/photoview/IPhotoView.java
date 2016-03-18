@@ -354,4 +354,11 @@ public interface IPhotoView {
      * @param onScaleChangeListener OnScaleChangeListener instance
      */
     void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener);
+
+    /**
+     * Will report back about fling(single touch)
+     *
+     * @param onSingleFlingListener OnSingleFlingListener instance
+     */
+    void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener);
 }

@@ -299,6 +299,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener) {
+        mAttacher.setOnSingleFlingListener(onSingleFlingListener);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
         super.onDetachedFromWindow();
