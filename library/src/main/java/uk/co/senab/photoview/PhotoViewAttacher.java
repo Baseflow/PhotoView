@@ -146,7 +146,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private int mScrollEdge = EDGE_BOTH;
 
     private boolean mZoomEnabled;
-    private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private PhotoView.CustomScaleType mScaleType = PhotoView.CustomScaleType.FIT_CENTER;
 
     public PhotoViewAttacher(ImageView imageView) {
         this(imageView, true);
@@ -353,7 +353,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public ScaleType getScaleType() {
-        return mScaleType;
+        return mScaleType.toScaleType();
     }
 
     @Override
@@ -647,13 +647,28 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void setScaleType(ScaleType scaleType) {
-        if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
-            mScaleType = scaleType;
+	    if (isSupportedScaleType(scaleType) && scaleType != mScaleType.toScaleType()) {
+	        switch (scaleType) {
+		        case CENTER: mScaleType = PhotoView.CustomScaleType.CENTER;
+		        case CENTER_CROP: mScaleType = PhotoView.CustomScaleType.CENTER_CROP;
+		        case CENTER_INSIDE: mScaleType = PhotoView.CustomScaleType.CENTER_INSIDE;
+		        case FIT_CENTER: mScaleType = PhotoView.CustomScaleType.FIT_CENTER;
+		        case FIT_END: mScaleType = PhotoView.CustomScaleType.FIT_END;
+		        case FIT_START: mScaleType = PhotoView.CustomScaleType.FIT_START;
+		        case FIT_XY: mScaleType = PhotoView.CustomScaleType.FIT_XY;
+		        case MATRIX: mScaleType = PhotoView.CustomScaleType.MATRIX;
+	        }
 
             // Finally update
             update();
         }
     }
+
+	public void setCustomScaleType(PhotoView.CustomScaleType scaleType) {
+		mScaleType = scaleType;
+
+		update();
+	}
 
     @Override
     public void setZoomable(boolean zoomable) {
@@ -876,24 +891,49 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         mBaseMatrix.reset();
 
+	    boolean initZoomAtMax = false;
+	    if(imageView instanceof PhotoView)
+		    initZoomAtMax = ((PhotoView)imageView).initZoomAtMax();
+
         final float widthScale = viewWidth / drawableWidth;
         final float heightScale = viewHeight / drawableHeight;
 
-        if (mScaleType == ScaleType.CENTER) {
+        if (mScaleType == PhotoView.CustomScaleType.CENTER) {
             mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
                     (viewHeight - drawableHeight) / 2F);
 
-        } else if (mScaleType == ScaleType.CENTER_CROP) {
-            float scale = Math.max(widthScale, heightScale);
+        } else if (mScaleType == PhotoView.CustomScaleType.CENTER_CROP) {
+	        float scale = getScale(initZoomAtMax, widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                     (viewHeight - drawableHeight * scale) / 2F);
 
-        } else if (mScaleType == ScaleType.CENTER_INSIDE) {
-            float scale = Math.min(1.0f, Math.min(widthScale, heightScale));
+        } else if (mScaleType == PhotoView.CustomScaleType.CENTER_INSIDE) {
+	        float scale = mMaxScale;
+	        if(!initZoomAtMax)
+		        scale = Math.min(1.0f, Math.min(widthScale, heightScale));
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                     (viewHeight - drawableHeight * scale) / 2F);
+
+        } else if ( mScaleType == PhotoView.CustomScaleType.TOP_LEFT_CROP ||
+		            mScaleType == PhotoView.CustomScaleType.TOP_CENTER_CROP ||
+		            mScaleType == PhotoView.CustomScaleType.TOP_RIGHT_CROP ||
+		            mScaleType == PhotoView.CustomScaleType.BOTTOM_LEFT_CROP ||
+		            mScaleType == PhotoView.CustomScaleType.BOTTOM_CENTER_CROP ||
+		            mScaleType == PhotoView.CustomScaleType.BOTTOM_RIGHT_CROP ||
+			        mScaleType == PhotoView.CustomScaleType.CENTER_LEFT_CROP ||
+			        mScaleType == PhotoView.CustomScaleType.CENTER_RIGHT_CROP) {
+	        float scale = getScale(initZoomAtMax, widthScale, heightScale);
+	        mBaseMatrix.postScale(scale, scale);
+	        mBaseMatrix.postTranslate(getTranslateX(viewWidth, drawableWidth, scale),
+			                            getTranslateY(viewHeight, drawableHeight, scale));
+
+        } else if (mScaleType == PhotoView.CustomScaleType.MATCH_WIDTH) {
+	        mBaseMatrix.postScale(widthScale, widthScale);
+
+        } else if (mScaleType == PhotoView.CustomScaleType.MATCH_HEIGHT) {
+	        mBaseMatrix.postScale(heightScale, heightScale);
 
         } else {
             RectF mTempSrc = new RectF(0, 0, drawableWidth, drawableHeight);
@@ -901,8 +941,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
             switch (mScaleType) {
                 case FIT_CENTER:
-                    mBaseMatrix
-                            .setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
                     break;
 
                 case FIT_START:
@@ -925,7 +964,53 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         resetMatrix();
     }
 
-    private int getImageViewWidth(ImageView imageView) {
+	private float getTranslateY(float viewHeight, int drawableHeight, float scale) {
+		switch (mScaleType) {
+			case TOP_LEFT_CROP:
+			case TOP_RIGHT_CROP:
+			case TOP_CENTER_CROP:
+				return 0;
+			case BOTTOM_LEFT_CROP:
+			case BOTTOM_RIGHT_CROP:
+			case BOTTOM_CENTER_CROP:
+				return viewHeight - drawableHeight * scale;
+			case CENTER_LEFT_CROP:
+			case CENTER_RIGHT_CROP:
+				return (viewHeight - drawableHeight * scale) / 2F;
+		}
+
+		Log.e(LOG_TAG, "getTranslateX should only by called for custom scale types");
+		return 0;
+	}
+
+	private float getTranslateX(float viewWidth, int drawableWidth, float scale) {
+		switch (mScaleType) {
+			case TOP_LEFT_CROP:
+			case CENTER_LEFT_CROP:
+			case BOTTOM_LEFT_CROP:
+				return 0;
+			case TOP_RIGHT_CROP:
+			case CENTER_RIGHT_CROP:
+			case BOTTOM_RIGHT_CROP:
+				return viewWidth - drawableWidth * scale;
+			case TOP_CENTER_CROP:
+			case BOTTOM_CENTER_CROP:
+				return viewWidth - drawableWidth * scale / 2F;
+
+		}
+
+		Log.e(LOG_TAG, "getTranslateX should only by called for custom scale types");
+		return 0;
+	}
+
+	private float getScale(boolean initZoomAtMax, float widthScale, float heightScale) {
+		float scale = mMaxScale;
+		if(!initZoomAtMax)
+	        scale = Math.max(widthScale, heightScale);
+		return scale;
+	}
+
+	private int getImageViewWidth(ImageView imageView) {
         if (null == imageView)
             return 0;
         return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();

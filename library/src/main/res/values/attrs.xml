@@ -1,0 +1,17 @@
+<resources>
+	<declare-styleable name="PhotoView">
+        <attr name="scaleType" format="enum">
+            <enum name="TopLeftCrop" value="100"/>
+            <enum name="TopCenterCrop" value="101"/>
+            <enum name="TopRightCrop" value="102"/>
+            <enum name="BottomLeftCrop" value="103"/>
+            <enum name="BottomCenterCrop" value="104"/>
+            <enum name="BottomRightCrop" value="105"/>
+            <enum name="CenterLeftCrop" value="106"/>
+            <enum name="CenterRightCrop" value="107"/>
+            <enum name="MatchWidth" value="108"/>
+            <enum name="MatchHeight" value="109"/>
+        </attr>
+        <attr name="initZoomAtMax" format="boolean"/>
+	</declare-styleable>
+</resources>
