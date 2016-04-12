@@ -299,8 +299,18 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public PhotoViewAttacher.OnScaleChangeListener getOnScaleChangeListener() {
+        return mAttacher.getOnScaleChangeListener();
+    }
+
+    @Override
     public void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener) {
         mAttacher.setOnSingleFlingListener(onSingleFlingListener);
+    }
+
+    @Override
+    public PhotoViewAttacher.OnSingleFlingListener getOnSingleFlingListener() {
+        return mAttacher.getOnSingleFlingListener();
     }
 
     @Override
