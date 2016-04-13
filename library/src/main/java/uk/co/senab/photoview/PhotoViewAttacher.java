@@ -625,6 +625,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
+    @Deprecated
     public OnPhotoTapListener getOnPhotoTapListener() {
         return mPhotoTapListener;
     }
@@ -635,6 +636,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
+    @Deprecated
     public OnViewTapListener getOnViewTapListener() {
         return mViewTapListener;
     }

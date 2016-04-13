@@ -230,6 +230,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    @Deprecated
     public OnPhotoTapListener getOnPhotoTapListener() {
         return mAttacher.getOnPhotoTapListener();
     }
@@ -240,6 +241,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    @Deprecated
     public OnViewTapListener getOnViewTapListener() {
         return mAttacher.getOnViewTapListener();
     }
