@@ -54,10 +54,12 @@ public class CupcakeGestureDetector implements GestureDetector {
         return ev.getY();
     }
 
+    @Override
     public boolean isScaling() {
         return false;
     }
 
+    @Override
     public boolean isDragging() {
         return mIsDragging;
     }
