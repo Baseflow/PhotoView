@@ -14,7 +14,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:23.2.1"
+    compile "com.android.support:support-v4:23.3.0"
 }
 
 //./gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false

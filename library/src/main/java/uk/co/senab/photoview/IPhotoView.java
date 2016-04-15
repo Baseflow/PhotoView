@@ -25,10 +25,10 @@ import android.widget.ImageView;
 
 public interface IPhotoView {
 
-    public static final float DEFAULT_MAX_SCALE = 3.0f;
-    public static final float DEFAULT_MID_SCALE = 1.75f;
-    public static final float DEFAULT_MIN_SCALE = 1.0f;
-    public static final int DEFAULT_ZOOM_DURATION = 200;
+    float DEFAULT_MAX_SCALE = 3.0f;
+    float DEFAULT_MID_SCALE = 1.75f;
+    float DEFAULT_MIN_SCALE = 1.0f;
+    int DEFAULT_ZOOM_DURATION = 200;
 
     /**
      * Returns true if the PhotoView is set to allow zooming of Photos.
@@ -169,7 +169,7 @@ public interface IPhotoView {
     @Deprecated
     void setMidScale(float midScale);
 
-    /*
+    /**
      * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      *
      * @param mediumScale medium scale preset
@@ -230,11 +230,15 @@ public interface IPhotoView {
     void setOnPhotoTapListener(PhotoViewAttacher.OnPhotoTapListener listener);
 
     /**
+     * PhotoViewAttacher.OnPhotoTapListener reference should be stored in a variable instead, this
+     * will be removed in future release.
+     * <p>&nbsp;</p>
      * Returns a listener to be invoked when the Photo displayed by this View is tapped with a
      * single tap.
      *
      * @return PhotoViewAttacher.OnPhotoTapListener currently set, may be null
      */
+    @Deprecated
     PhotoViewAttacher.OnPhotoTapListener getOnPhotoTapListener();
 
     /**
@@ -259,10 +263,14 @@ public interface IPhotoView {
     void setRotationBy(float rotationDegree);
 
     /**
+     * PhotoViewAttacher.OnViewTapListener reference should be stored in a variable instead, this
+     * will be removed in future release.
+     * <p>&nbsp;</p>
      * Returns a callback listener to be invoked when the View is tapped with a single tap.
      *
      * @return PhotoViewAttacher.OnViewTapListener currently set, may be null
      */
+    @Deprecated
     PhotoViewAttacher.OnViewTapListener getOnViewTapListener();
 
     /**
