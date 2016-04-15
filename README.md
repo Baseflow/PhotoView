@@ -21,13 +21,23 @@ The sample application (the source is in the repository) has been published onto
 
 [![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_small.png)](http://play.google.com/store/apps/details?id=uk.co.senab.photoview.sample)
 
-## Gradle integration
+# Gradle Dependency
 
-Minimum code for Gradle integration, place code in your `build.gradle`
+Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
 
 ```gradle
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+```
+
+Then, add the library to your project `build.gradle`
+```gradle
 dependencies {
-  compile 'com.commit451:PhotoView:1.2.5'
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
 }
 ```
 
