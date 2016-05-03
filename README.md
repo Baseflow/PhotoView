@@ -1,13 +1,10 @@
 # PhotoView
+PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
 
 Branch **Develop**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=develop)](https://travis-ci.org/chrisbanes/PhotoView)
 Branch **Master**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.png?branch=master)](https://travis-ci.org/chrisbanes/PhotoView)
 
-![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/header_graphic.png)
-
-[![Badge](http://www.libtastic.com/static/osbadges/78.png)](http://www.libtastic.com/technology/78/)
-
-PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
+![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/art/header_graphic.png)
 
 ## Features
 - Out of the box zooming, using multi-touch and double-tap.
@@ -19,7 +16,7 @@ PhotoView aims to help produce an easily usable implementation of a zooming Andr
 ## Sample Application
 The sample application (the source is in the repository) has been published onto Google Play for easy access:
 
-[![Get it on Google Play](http://www.android.com/images/brand/get_it_on_play_logo_small.png)](http://play.google.com/store/apps/details?id=uk.co.senab.photoview.sample)
+[![Get it on Google Play](https://raw.github.com/chrisbanes/PhotoView/master/art/google-play-badge-small.png)](http://play.google.com/store/apps/details?id=uk.co.senab.photoview.sample)
 
 # Gradle Dependency
 
@@ -52,10 +49,10 @@ PhotoViewAttacher mAttacher;
 public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_main);
-	
+
 	// Any implementation of ImageView can be used!
 	mImageView = (ImageView) findViewById(R.id.iv_photo);
-	
+
 	// Set the Drawable displayed
 	Drawable bitmap = getResources().getDrawable(R.drawable.wallpaper);
 	mImageView.setImageDrawable(bitmap);
@@ -63,7 +60,6 @@ public void onCreate(Bundle savedInstanceState) {
 	// Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
 	mAttacher = new PhotoViewAttacher(mImageView);
 }
-
 
 // If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
 mAttacher.update();
@@ -83,7 +79,8 @@ public class HackyProblematicViewGroup extends ProblematicViewGroup {
         try {
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+						//uncomment if you really want to see these errors
+            //e.printStackTrace();
             return false;
         }
     }
