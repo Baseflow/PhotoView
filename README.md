@@ -91,6 +91,9 @@ public class HackyProblematicViewGroup extends ProblematicViewGroup {
 ## Usage with Fresco
 Due to the complex nature of Fresco, this library does not currently support Fresco. See [this project](https://github.com/ongakuer/PhotoDraweeView) as an alternative solution.
 
+## Subsampling Support
+This library aims to keep the zooming implementation simple. If you are looking for an implementation that supports subsampling, check out [this project](https://github.com/davemorrissey/subsampling-scale-image-view)
+
 ## Pull Requests / Contribution
 Development happens in **develop** branch of this repository, and Pull Requests should be filled against that branch.
 Any Pull Request against **master** will be rejected

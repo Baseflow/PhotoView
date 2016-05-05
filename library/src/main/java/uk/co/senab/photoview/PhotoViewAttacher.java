@@ -77,15 +77,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                                         float maxZoom) {
         if (minZoom >= midZoom) {
             throw new IllegalArgumentException(
-                    "MinZoom has to be less than MidZoom");
+                    "Minimum zoom has to be less than Medium zoom. Call setMinimumZoom() with a more appropriate value");
         } else if (midZoom >= maxZoom) {
             throw new IllegalArgumentException(
-                    "MidZoom has to be less than MaxZoom");
+                    "Medium zoom has to be less than Maximum zoom. Call setMaximumZoom() with a more appropriate value");
         }
     }
 
     /**
-     * @return true if the ImageView exists, and it's Drawable existss
+     * @return true if the ImageView exists, and it's Drawable exists
      */
     private static boolean hasDrawable(ImageView imageView) {
         return null != imageView && null != imageView.getDrawable();
@@ -287,15 +287,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public boolean setDisplayMatrix(Matrix finalMatrix) {
-        if (finalMatrix == null)
+        if (finalMatrix == null) {
             throw new IllegalArgumentException("Matrix cannot be null");
+        }
 
         ImageView imageView = getImageView();
-        if (null == imageView)
+        if (null == imageView) {
             return false;
+        }
 
-        if (null == imageView.getDrawable())
+        if (null == imageView.getDrawable()) {
             return false;
+        }
 
         mSuppMatrix.set(finalMatrix);
         setImageViewMatrix(getDrawMatrix());
@@ -421,8 +424,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             if (mScrollEdge == EDGE_BOTH
                     || (mScrollEdge == EDGE_LEFT && dx >= 1f)
                     || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
-                if (null != parent)
+                if (null != parent) {
                     parent.requestDisallowInterceptTouchEvent(false);
+                }
             }
         } else {
             if (null != parent) {
@@ -724,16 +728,36 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * Use {@link #getDisplayMatrix(Matrix)}
+     */
+    @Deprecated
     @Override
     public Matrix getDisplayMatrix() {
         return new Matrix(getDrawMatrix());
     }
 
+    /**
+     * Like {@link #getDisplayMatrix()}, but allows the user to provide a matrix to copy the values into to reduce object allocation
+     * @param matrix target matrix to copy to
+     */
     @Override
     public void getDisplayMatrix(Matrix matrix) {
         matrix.set(getDrawMatrix());
     }
 
+    /**
+     * Get the current support matrix
+     */
+    public void getSuppMatrix(Matrix matrix) {
+        matrix.set(mSuppMatrix);
+    }
+
+    @Deprecated
+    /**
+     * Method should be private
+     * Use {@link #getDisplayMatrix(Matrix)}
+     */
     public Matrix getDrawMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
