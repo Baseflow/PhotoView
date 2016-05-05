@@ -56,7 +56,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     // release builds
     private static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
 
-    static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
+    private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
 
     static final int EDGE_NONE = -1;
@@ -683,6 +683,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    /**
+     * Set the zoom interpolator
+     * @param interpolator the zoom interpolator
+     */
+    public void setZoomInterpolator(Interpolator interpolator) {
+        mInterpolator = interpolator;
+    }
+
     @Override
     public void setScaleType(ScaleType scaleType) {
         if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
@@ -1119,7 +1127,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         private float interpolate() {
             float t = 1f * (System.currentTimeMillis() - mStartTime) / ZOOM_DURATION;
             t = Math.min(1f, t);
-            t = sInterpolator.getInterpolation(t);
+            t = mInterpolator.getInterpolation(t);
             return t;
         }
     }
