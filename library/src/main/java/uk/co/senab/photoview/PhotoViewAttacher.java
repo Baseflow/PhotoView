@@ -353,31 +353,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    @Deprecated
-    public float getMinScale() {
-        return getMinimumScale();
-    }
-
-    @Override
     public float getMinimumScale() {
         return mMinScale;
     }
 
     @Override
-    @Deprecated
-    public float getMidScale() {
-        return getMediumScale();
-    }
-
-    @Override
     public float getMediumScale() {
         return mMidScale;
-    }
-
-    @Override
-    @Deprecated
-    public float getMaxScale() {
-        return getMaximumScale();
     }
 
     @Override
@@ -570,33 +552,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    @Deprecated
-    public void setMinScale(float minScale) {
-        setMinimumScale(minScale);
-    }
-
-    @Override
     public void setMinimumScale(float minimumScale) {
         checkZoomLevels(minimumScale, mMidScale, mMaxScale);
         mMinScale = minimumScale;
     }
 
     @Override
-    @Deprecated
-    public void setMidScale(float midScale) {
-        setMediumScale(midScale);
-    }
-
-    @Override
     public void setMediumScale(float mediumScale) {
         checkZoomLevels(mMinScale, mediumScale, mMaxScale);
         mMidScale = mediumScale;
-    }
-
-    @Override
-    @Deprecated
-    public void setMaxScale(float maxScale) {
-        setMaximumScale(maxScale);
     }
 
     @Override
@@ -629,7 +593,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    @Deprecated
     public OnPhotoTapListener getOnPhotoTapListener() {
         return mPhotoTapListener;
     }
@@ -640,7 +603,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    @Deprecated
     public OnViewTapListener getOnViewTapListener() {
         return mViewTapListener;
     }
@@ -729,15 +691,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Use {@link #getDisplayMatrix(Matrix)}
-     */
-    @Deprecated
-    @Override
-    public Matrix getDisplayMatrix() {
-        return new Matrix(getDrawMatrix());
-    }
-
-    /**
      * Like {@link #getDisplayMatrix()}, but allows the user to provide a matrix to copy the values into to reduce object allocation
      * @param matrix target matrix to copy to
      */
@@ -753,12 +706,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         matrix.set(mSuppMatrix);
     }
 
-    @Deprecated
-    /**
-     * Method should be private
-     * Use {@link #getDisplayMatrix(Matrix)}
-     */
-    public Matrix getDrawMatrix() {
+    private Matrix getDrawMatrix() {
         mDrawMatrix.set(mBaseMatrix);
         mDrawMatrix.postConcat(mSuppMatrix);
         return mDrawMatrix;
