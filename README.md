@@ -58,6 +58,7 @@ public void onCreate(Bundle savedInstanceState) {
 	mImageView.setImageDrawable(bitmap);
 
 	// Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
+	// (not needed unless you are going to change the drawable later)
 	mAttacher = new PhotoViewAttacher(mImageView);
 }
 
@@ -86,6 +87,9 @@ public class HackyProblematicViewGroup extends ProblematicViewGroup {
     }
 }
 ```
+
+## Usage with Fresco
+Due to the complex nature of Fresco, this library does not currently support Fresco. See [this project](https://github.com/ongakuer/PhotoDraweeView) as an alternative solution.
 
 ## Pull Requests / Contribution
 Development happens in **develop** branch of this repository, and Pull Requests should be filled against that branch.
