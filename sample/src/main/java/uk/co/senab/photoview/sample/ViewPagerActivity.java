@@ -29,20 +29,9 @@ import android.view.ViewGroup.LayoutParams;
 
 import uk.co.senab.photoview.PhotoView;
 
-/**
- * Lock/Unlock button is added to the ActionBar.
- * Use it to temporarily disable ViewPager navigation in order to correctly interact with ImageView by gestures.
- * Lock/Unlock state of ViewPager is saved and restored on configuration changes.
- * 
- * Julia Zudikova
- */
-
 public class ViewPagerActivity extends AppCompatActivity {
-
-	private static final String ISLOCKED_ARG = "isLocked";
 	
 	private ViewPager mViewPager;
-	private MenuItem menuLockItem;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,11 +41,6 @@ public class ViewPagerActivity extends AppCompatActivity {
 		setContentView(mViewPager);
 
 		mViewPager.setAdapter(new SamplePagerAdapter());
-		
-		if (savedInstanceState != null) {
-			boolean isLocked = savedInstanceState.getBoolean(ISLOCKED_ARG, false);
-			((HackyViewPager) mViewPager).setLocked(isLocked);
-		}
 	}
 
 	static class SamplePagerAdapter extends PagerAdapter {
@@ -91,56 +75,4 @@ public class ViewPagerActivity extends AppCompatActivity {
 		}
 
 	}
-
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.viewpager_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-    
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menuLockItem = menu.findItem(R.id.menu_lock);
-        toggleLockBtnTitle();
-        menuLockItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				toggleViewPagerScrolling();
-				toggleLockBtnTitle();
-				return true;
-			}
-		});
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-    
-    private void toggleViewPagerScrolling() {
-    	if (isViewPagerActive()) {
-    		((HackyViewPager) mViewPager).toggleLock();
-    	}
-    }
-    
-    private void toggleLockBtnTitle() {
-    	boolean isLocked = false;
-    	if (isViewPagerActive()) {
-    		isLocked = ((HackyViewPager) mViewPager).isLocked();
-    	}
-    	String title = (isLocked) ? getString(R.string.menu_unlock) : getString(R.string.menu_lock);
-    	if (menuLockItem != null) {
-    		menuLockItem.setTitle(title);
-    	}
-    }
-
-    private boolean isViewPagerActive() {
-    	return (mViewPager != null && mViewPager instanceof HackyViewPager);
-    }
-    
-	@Override
-	protected void onSaveInstanceState(@NonNull Bundle outState) {
-		if (isViewPagerActive()) {
-			outState.putBoolean(ISLOCKED_ARG, ((HackyViewPager) mViewPager).isLocked());
-    	}
-		super.onSaveInstanceState(outState);
-	}
-    
 }
