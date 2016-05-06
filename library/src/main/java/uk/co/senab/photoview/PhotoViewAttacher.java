@@ -22,6 +22,7 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -592,8 +593,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mPhotoTapListener = listener;
     }
 
-    @Override
-    public OnPhotoTapListener getOnPhotoTapListener() {
+    @Nullable
+    OnPhotoTapListener getOnPhotoTapListener() {
         return mPhotoTapListener;
     }
 
@@ -602,8 +603,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         mViewTapListener = listener;
     }
 
-    @Override
-    public OnViewTapListener getOnViewTapListener() {
+    @Nullable
+    OnViewTapListener getOnViewTapListener() {
         return mViewTapListener;
     }
 
