@@ -159,17 +159,6 @@ public interface IPhotoView {
     void setOnPhotoTapListener(PhotoViewAttacher.OnPhotoTapListener listener);
 
     /**
-     * PhotoViewAttacher.OnPhotoTapListener reference should be stored in a variable instead, this
-     * will be removed in future release.
-     * <p>&nbsp;</p>
-     * Returns a listener to be invoked when the Photo displayed by this View is tapped with a
-     * single tap.
-     *
-     * @return PhotoViewAttacher.OnPhotoTapListener currently set, may be null
-     */
-    PhotoViewAttacher.OnPhotoTapListener getOnPhotoTapListener();
-
-    /**
      * Register a callback to be invoked when the View is tapped with a single tap.
      *
      * @param listener - Listener to be registered.
@@ -189,16 +178,6 @@ public interface IPhotoView {
      * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
      */
     void setRotationBy(float rotationDegree);
-
-    /**
-     * PhotoViewAttacher.OnViewTapListener reference should be stored in a variable instead, this
-     * will be removed in future release.
-     * <p>&nbsp;</p>
-     * Returns a callback listener to be invoked when the View is tapped with a single tap.
-     *
-     * @return PhotoViewAttacher.OnViewTapListener currently set, may be null
-     */
-    PhotoViewAttacher.OnViewTapListener getOnViewTapListener();
 
     /**
      * Changes the current scale to the specified value.
