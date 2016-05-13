@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -64,7 +65,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
         ImageView mImageView = (ImageView) findViewById(R.id.iv_photo);
         mCurrMatrixTv = (TextView) findViewById(R.id.tv_current_matrix);
 
-        Drawable bitmap = getResources().getDrawable(R.drawable.wallpaper);
+        Drawable bitmap = ContextCompat.getDrawable(this, R.drawable.wallpaper);
         mImageView.setImageDrawable(bitmap);
 
         // The MAGIC happens here!
