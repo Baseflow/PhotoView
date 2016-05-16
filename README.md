@@ -9,7 +9,7 @@ Branch **Master**: [![Build Status](https://travis-ci.org/chrisbanes/PhotoView.p
 ## Features
 - Out of the box zooming, using multi-touch and double-tap.
 - Scrolling, with smooth scrolling fling.
-- Works perfectly when using used in a scrolling parent (such as ViewPager).
+- Works perfectly when used in a scrolling parent (such as ViewPager).
 - Allows the application to be notified when the displayed Matrix has changed. Useful for when you need to update your UI based on the current zoom/scroll position.
 - Allows the application to be notified when the user taps on the Photo.
 
