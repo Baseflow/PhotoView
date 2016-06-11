@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         minSdkVersion 4
@@ -13,7 +13,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:23.3.0"
+    compile "com.android.support:support-v4:23.2.1"
 }
 
 apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'
