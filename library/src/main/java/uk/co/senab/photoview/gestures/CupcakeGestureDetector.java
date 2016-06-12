@@ -25,7 +25,7 @@ import uk.co.senab.photoview.log.LogManager;
 public class CupcakeGestureDetector implements GestureDetector {
 
     protected OnGestureListener mListener;
-    private static final String LOG_TAG = "CupcakeGestureDetector";
+    public static final String LOG_TAG = "CupcakeGestureDetector";
     float mLastTouchX;
     float mLastTouchY;
     final float mTouchSlop;

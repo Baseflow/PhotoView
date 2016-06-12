@@ -8,8 +8,10 @@ android {
         applicationId "uk.co.senab.photoview.sample"
         minSdkVersion 8
         targetSdkVersion 23
-        versionCode 124
-        versionName "1.2.4"
+		
+		// use values from gradle.properties
+        versionCode=Long.valueOf(VERSION_CODE)
+        versionName=VERSION_NAME
     }
     lintOptions {
         abortOnError false
