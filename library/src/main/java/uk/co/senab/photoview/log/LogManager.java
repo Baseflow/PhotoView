@@ -21,15 +21,25 @@ import android.util.Log;
  * class that holds the {@link Logger} for this library, defaults to {@link LoggerDefault} to send logs to android {@link Log}
  */
 public final class LogManager {
-
+    private static boolean sDebugEnabled = false;
     private static Logger logger = new LoggerDefault();
+    private static Logger loggerDebug = new LoggerAndroidFull();
+
+    public static void enableDebug(boolean debugEnabled)
+    {
+        sDebugEnabled = debugEnabled;
+    }
 
     public static void setLogger(Logger newLogger) {
+        if (sDebugEnabled) {
         logger = newLogger;
+        } else {
+            loggerDebug = newLogger;
+        }
     }
 
     public static Logger getLogger() {
-        return logger;
+        return (sDebugEnabled) ? loggerDebug : logger;
     }
 
 }

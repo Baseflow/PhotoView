@@ -7,8 +7,9 @@ android {
     defaultConfig {
         minSdkVersion 4
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+		// use values from gradle.properties
+        versionCode=Long.valueOf(VERSION_CODE)
+        versionName=VERSION_NAME
     }
 }
 

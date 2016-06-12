@@ -18,39 +18,38 @@ package uk.co.senab.photoview.log;
 import android.util.Log;
 
 /**
- * Helper class to redirect {@link LogManager#logger} to android {@link Log} for log info (if enabled) warnm, error
+ * Helper class to redirect {@link LogManager#logger} to android {@link Log} for all log levels
  */
-public class LoggerDefault implements Logger {
+public class LoggerAndroidFull implements Logger {
 
-    private static boolean logInfo = false;
     @Override
     public int v(String tag, String msg) {
-        return 0;
+        return Log.v(tag, msg);
     }
 
     @Override
     public int v(String tag, String msg, Throwable tr) {
-        return 0;
+        return Log.v(tag, msg, tr);
     }
 
     @Override
     public int d(String tag, String msg) {
-        return 0;
+        return Log.d(tag, msg);
     }
 
     @Override
     public int d(String tag, String msg, Throwable tr) {
-        return 0;
+        return Log.d(tag, msg, tr);
     }
 
     @Override
     public int i(String tag, String msg) {
-        return (!logInfo) ? 0 : Log.i(tag, msg);
+        return Log.i(tag, msg);
     }
 
     @Override
     public int i(String tag, String msg, Throwable tr) {
-        return (!logInfo) ? 0 : Log.i(tag, msg, tr);
+        return Log.i(tag, msg, tr);
     }
 
     @Override
