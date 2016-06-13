@@ -42,6 +42,7 @@ import java.util.Random;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import uk.co.senab.photoview.log.LogManager;
 
 public class SimpleSampleActivity extends AppCompatActivity {
 
@@ -78,12 +79,6 @@ public class SimpleSampleActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
 
@@ -92,10 +87,19 @@ public class SimpleSampleActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
         assert null != zoomToggle;
         zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
+
+        MenuItem debug = menu.findItem(R.id.logging_enabled);
+        debug.setChecked(LogManager.isDebugEnabled());
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -174,6 +178,10 @@ public class SimpleSampleActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
                 }
                 return true;
+            case R.id.logging_enabled: {
+                LogManager.setDebugEnabled(!LogManager.isDebugEnabled());
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);

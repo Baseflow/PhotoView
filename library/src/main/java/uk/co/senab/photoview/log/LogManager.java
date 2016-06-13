@@ -25,14 +25,19 @@ public final class LogManager {
     private static Logger logger = new LoggerDefault();
     private static Logger loggerDebug = new LoggerAndroidFull();
 
-    public static void enableDebug(boolean debugEnabled)
+    public static void setDebugEnabled(boolean debugEnabled)
     {
         sDebugEnabled = debugEnabled;
     }
 
+    public static boolean isDebugEnabled()
+    {
+        return sDebugEnabled;
+    }
+
     public static void setLogger(Logger newLogger) {
         if (sDebugEnabled) {
-        logger = newLogger;
+            logger = newLogger;
         } else {
             loggerDebug = newLogger;
         }

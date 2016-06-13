@@ -18,29 +18,43 @@ package uk.co.senab.photoview.log;
 import android.util.Log;
 
 /**
- * Helper class to redirect {@link LogManager#logger} to android {@link Log} for log info (if enabled) warnm, error
+ * Helper class to redirect {@link LogManager#logger} to android {@link Log}
+ * for loglevel warnm, error.
+ * Additionally info is logged if enabled via {@Ling LoggerDefault#setLogInfo(boolean)} .
  */
 public class LoggerDefault implements Logger {
 
+    /** true: loglevel info is also logged */
     private static boolean logInfo = false;
+
+    /** true: loglevel info is also logged */
+    public static boolean isLogInfo() {
+        return logInfo;
+    }
+
+    /** true: loglevel info is also logged */
+    public static void setLogInfo(boolean logInfo) {
+        LoggerDefault.logInfo = logInfo;
+    }
+
     @Override
     public int v(String tag, String msg) {
-        return 0;
+        return 0; // no logging at this level
     }
 
     @Override
     public int v(String tag, String msg, Throwable tr) {
-        return 0;
+        return 0; // no logging at this level
     }
 
     @Override
     public int d(String tag, String msg) {
-        return 0;
+        return 0; // no logging at this level
     }
 
     @Override
     public int d(String tag, String msg, Throwable tr) {
-        return 0;
+        return 0; // no logging at this level
     }
 
     @Override
@@ -72,6 +86,4 @@ public class LoggerDefault implements Logger {
     public int e(String tag, String msg, Throwable tr) {
         return Log.e(tag, msg, tr);
     }
-
-
 }

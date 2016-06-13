@@ -25,6 +25,7 @@ public class HugeImageLoader {
 
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
+    // contoll logging via LogManager.setDebugEnabled(boolean enabled);
     public static boolean DEBUG = true; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
 
     @TargetApi(Build.VERSION_CODES.FROYO)
