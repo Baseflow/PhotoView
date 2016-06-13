@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 
 /**
- * Provided default implementation of GestureDetector.OnDoubleTapListener, to be overriden with custom behavior, if needed
+ * Provided default implementation of GestureDetector.OnDoubleTapListener, to be overridden with custom behavior, if needed
  * <p>&nbsp;</p>
  * To be used via {@link uk.co.senab.photoview.PhotoViewAttacher#setOnDoubleTapListener(android.view.GestureDetector.OnDoubleTapListener)}
  */

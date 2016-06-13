@@ -23,7 +23,6 @@ import android.widget.OverScroller;
 public class GingerScroller extends ScrollerProxy {
 
     protected final OverScroller mScroller;
-    private boolean mFirstScroll = false;
 
     public GingerScroller(Context context) {
         mScroller = new OverScroller(context);
@@ -31,12 +30,6 @@ public class GingerScroller extends ScrollerProxy {
 
     @Override
     public boolean computeScrollOffset() {
-        // Workaround for first scroll returning 0 for the direction of the edge it hits.
-        // Simply recompute values.
-        if (mFirstScroll) {
-            mScroller.computeScrollOffset();
-            mFirstScroll = false;
-        }
         return mScroller.computeScrollOffset();
     }
 

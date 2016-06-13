@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".PhotoViewSampleApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme"
@@ -20,6 +21,7 @@
         <activity android:name=".ViewPagerActivity"/>
         <activity android:name=".RotationSampleActivity"/>
         <activity android:name=".PicassoSampleActivity"/>
+        <activity android:name=".ViewPagerActivityFromMediaDB"/>
     </application>
 
 </manifest>

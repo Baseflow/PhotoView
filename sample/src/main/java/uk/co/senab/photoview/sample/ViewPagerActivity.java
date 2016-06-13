@@ -16,28 +16,23 @@
 package uk.co.senab.photoview.sample;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 
 import uk.co.senab.photoview.PhotoView;
 
+/** simple activity demonstrating swipable ViewPager with static content */
 public class ViewPagerActivity extends AppCompatActivity {
-	
-	private ViewPager mViewPager;
-	
-    @Override
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-        mViewPager = (HackyViewPager) findViewById(R.id.view_pager);
+		ViewPager mViewPager = (HackyViewPager) findViewById(R.id.view_pager);
 		setContentView(mViewPager);
 
 		mViewPager.setAdapter(new SamplePagerAdapter());

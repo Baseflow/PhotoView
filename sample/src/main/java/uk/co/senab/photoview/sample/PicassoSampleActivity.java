@@ -25,7 +25,7 @@ public class PicassoSampleActivity extends AppCompatActivity {
                 .into(photoView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        attacher.update();
+                        attacher.update("Picasso-onSuccess()");
                     }
 
                     @Override

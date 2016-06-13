@@ -25,11 +25,17 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.widget.ImageView;
 
+import java.io.File;
+
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
+
+    // for debug purposes
+    private static int lastDebugId = 1;
+    private final String mDebugId;
 
     private PhotoViewAttacher mAttacher;
 
@@ -45,8 +51,17 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
+        // for debug purposes
+        this.mDebugId = "PhotoView#" + (++lastDebugId);
+
         super.setScaleType(ScaleType.MATRIX);
         init();
+    }
+
+    // for debug purposes
+    @Override
+    public String toString() {
+        return mDebugId;
     }
 
     protected void init() {
@@ -89,11 +104,6 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public Matrix getDisplayMatrix() {
-        return mAttacher.getDisplayMatrix();
-    }
-
-    @Override
     public void getDisplayMatrix(Matrix matrix) {
         mAttacher.getDisplayMatrix(matrix);
     }
@@ -104,31 +114,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    @Deprecated
-    public float getMinScale() {
-        return getMinimumScale();
-    }
-
-    @Override
     public float getMinimumScale() {
         return mAttacher.getMinimumScale();
     }
 
     @Override
-    @Deprecated
-    public float getMidScale() {
-        return getMediumScale();
-    }
-
-    @Override
     public float getMediumScale() {
         return mAttacher.getMediumScale();
-    }
-
-    @Override
-    @Deprecated
-    public float getMaxScale() {
-        return getMaximumScale();
     }
 
     @Override
@@ -152,31 +144,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    @Deprecated
-    public void setMinScale(float minScale) {
-        setMinimumScale(minScale);
-    }
-
-    @Override
     public void setMinimumScale(float minimumScale) {
         mAttacher.setMinimumScale(minimumScale);
     }
 
     @Override
-    @Deprecated
-    public void setMidScale(float midScale) {
-        setMediumScale(midScale);
-    }
-
-    @Override
     public void setMediumScale(float mediumScale) {
         mAttacher.setMediumScale(mediumScale);
-    }
-
-    @Override
-    @Deprecated
-    public void setMaxScale(float maxScale) {
-        setMaximumScale(maxScale);
     }
 
     @Override
@@ -194,7 +168,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         if (null != mAttacher) {
-            mAttacher.update();
+            mAttacher.update("setImageDrawable");
         }
     }
 
@@ -202,7 +176,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageResource(int resId) {
         super.setImageResource(resId);
         if (null != mAttacher) {
-            mAttacher.update();
+            mAttacher.update("setImageResource");
         }
     }
 
@@ -210,7 +184,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
         if (null != mAttacher) {
-            mAttacher.update();
+            mAttacher.update("setImageURI");
         }
     }
 
@@ -230,20 +204,8 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    @Deprecated
-    public OnPhotoTapListener getOnPhotoTapListener() {
-        return mAttacher.getOnPhotoTapListener();
-    }
-
-    @Override
     public void setOnViewTapListener(OnViewTapListener listener) {
         mAttacher.setOnViewTapListener(listener);
-    }
-
-    @Override
-    @Deprecated
-    public OnViewTapListener getOnViewTapListener() {
-        return mAttacher.getOnViewTapListener();
     }
 
     @Override
@@ -308,6 +270,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
+        mAttacher = null; // else memory leak
         super.onDetachedFromWindow();
     }
 
@@ -315,5 +278,10 @@ public class PhotoView extends ImageView implements IPhotoView {
     protected void onAttachedToWindow() {
         init();
         super.onAttachedToWindow();
+    }
+
+    /** k3b 20150913 #10: Faster initial loading: initially the view is loaded with low res image. on first zoom it is reloaded with this uri */
+    public void setImageReloadFile(File file) {
+        mAttacher.setImageReloadFile(file);
     }
 }

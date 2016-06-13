@@ -2,14 +2,16 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId "uk.co.senab.photoview.sample"
         minSdkVersion 8
         targetSdkVersion 23
-        versionCode 124
-        versionName "1.2.4"
+		
+		// use values from gradle.properties
+        versionCode=Long.valueOf(VERSION_CODE)
+        versionName=VERSION_NAME
     }
     lintOptions {
         abortOnError false
@@ -18,7 +20,7 @@ android {
 
 dependencies {
     compile project(':library')
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
 }

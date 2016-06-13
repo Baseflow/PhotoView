@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-      xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
       tools:ignore="UnusedAttribute">
 
     <item
@@ -8,39 +8,30 @@
         android:title="@string/menu_zoom_disable"/>
     <item
         android:id="@+id/menu_scale_fit_center"
-        android:showAsAction="never"
         android:title="@string/menu_scale_fit_center"/>
     <item
         android:id="@+id/menu_scale_fit_start"
-        android:showAsAction="never"
         android:title="@string/menu_scale_fit_start"/>
     <item
         android:id="@+id/menu_scale_fit_end"
-        android:showAsAction="never"
         android:title="@string/menu_scale_fit_end"/>
     <item
         android:id="@+id/menu_scale_fit_xy"
-        android:showAsAction="never"
         android:title="@string/menu_scale_fit_xy"/>
     <item
         android:id="@+id/menu_scale_scale_center"
-        android:showAsAction="never"
         android:title="@string/menu_scale_center"/>
     <item
         android:id="@+id/menu_scale_scale_center_crop"
-        android:showAsAction="never"
         android:title="@string/menu_scale_center_crop"/>
     <item
         android:id="@+id/menu_scale_scale_center_inside"
-        android:showAsAction="never"
         android:title="@string/menu_scale_center_inside"/>
     <item
         android:id="@+id/menu_scale_random_animate"
-        android:showAsAction="never"
         android:title="@string/menu_zoom_random_animate"/>
     <item
         android:id="@+id/menu_scale_random"
-        android:showAsAction="never"
         android:title="@string/menu_zoom_random"/>
     <item
         android:id="@+id/menu_matrix_restore"
@@ -51,5 +42,10 @@
     <item
         android:id="@+id/extract_visible_bitmap"
         android:title="@string/extract_visible_bitmap"/>
+    <item
+        android:id="@+id/logging_enabled"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/logging_enabled"/>
 
 </menu>
