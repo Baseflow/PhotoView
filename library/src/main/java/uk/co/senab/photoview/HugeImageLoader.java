@@ -21,11 +21,13 @@ import uk.co.senab.photoview.log.LogManager;
  * Created by k3b on 14.09.2015.
  */
 public class HugeImageLoader {
+    // public to allow crash-report to filter logcat for this
     public static final String LOG_TAG = "HugeImageLoader";
 
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
     // contoll logging via LogManager.setDebugEnabled(boolean enabled);
+    // public to allow customer settings-activity to change this
     public static boolean DEBUG = true; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
 
     @TargetApi(Build.VERSION_CODES.FROYO)

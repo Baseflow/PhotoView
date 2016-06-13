@@ -55,12 +55,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         OnGestureListener,
         ViewTreeObserver.OnGlobalLayoutListener {
 
+    // public to allow crash-report to filter logcat for this
     public static final String LOG_TAG = "PhotoViewAttacher";
 
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
     // contoll logging via LogManager.setDebugEnabled(boolean enabled);
-    private static final boolean DEBUG = true; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
+    // public to allow customer settings-activity to change this
+    public static boolean DEBUG = true; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
 
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
 
