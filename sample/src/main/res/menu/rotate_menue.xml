@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_Rotate_10_Right" android:title="Rotate 10° Right"/>
+    <item android:id="@+id/menu_Rotate_10_Left" android:title="Rotate 10° Left"/>
+    <item android:id="@+id/menu_Toggle_automatic_rotation" android:title="Toggle automatic rotation"/>
+    <item android:id="@+id/menu_Reset_to_0" android:title="Reset to 0"/>
+    <item android:id="@+id/menu_Reset_to_90" android:title="Reset to 90"/>
+    <item android:id="@+id/menu_Reset_to_180" android:title="Reset to 180"/>
+    <item android:id="@+id/menu_Reset_to_270" android:title="Reset to 270"/>
+    <item
+        android:id="@+id/logging_enabled"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/logging_enabled"/>
+
+</menu>
