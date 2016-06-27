@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +38,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
 
+import uk.co.senab.photoview.ExtendedScaleType;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
@@ -107,32 +107,44 @@ public class SimpleSampleActivity extends AppCompatActivity {
                 mAttacher.setZoomable(!mAttacher.canZoom());
                 return true;
 
+            case R.id.menu_scale_top_center:
+                mAttacher.setExtendedScaleType(ExtendedScaleType.TOP_CENTER);
+                return true;
+
+            case R.id.menu_scale_top_center_crop:
+                mAttacher.setExtendedScaleType(ExtendedScaleType.TOP_CENTER_CROP);
+                return true;
+
+            case R.id.menu_scale_top_center_inside:
+                mAttacher.setExtendedScaleType(ExtendedScaleType.TOP_CENTER_INSIDE);
+                return true;
+
             case R.id.menu_scale_fit_center:
-                mAttacher.setScaleType(ScaleType.FIT_CENTER);
+                mAttacher.setExtendedScaleType(ExtendedScaleType.FIT_CENTER);
                 return true;
 
             case R.id.menu_scale_fit_start:
-                mAttacher.setScaleType(ScaleType.FIT_START);
+                mAttacher.setExtendedScaleType(ExtendedScaleType.FIT_START);
                 return true;
 
             case R.id.menu_scale_fit_end:
-                mAttacher.setScaleType(ScaleType.FIT_END);
+                mAttacher.setExtendedScaleType(ExtendedScaleType.FIT_END);
                 return true;
 
             case R.id.menu_scale_fit_xy:
-                mAttacher.setScaleType(ScaleType.FIT_XY);
+                mAttacher.setExtendedScaleType(ExtendedScaleType.FIT_XY);
                 return true;
 
             case R.id.menu_scale_scale_center:
-                mAttacher.setScaleType(ScaleType.CENTER);
+                mAttacher.setExtendedScaleType(ExtendedScaleType.CENTER);
                 return true;
 
             case R.id.menu_scale_scale_center_crop:
-                mAttacher.setScaleType(ScaleType.CENTER_CROP);
+                mAttacher.setExtendedScaleType(ExtendedScaleType.CENTER_CROP);
                 return true;
 
             case R.id.menu_scale_scale_center_inside:
-                mAttacher.setScaleType(ScaleType.CENTER_INSIDE);
+                mAttacher.setExtendedScaleType(ExtendedScaleType.CENTER_INSIDE);
                 return true;
 
             case R.id.menu_scale_random_animate:

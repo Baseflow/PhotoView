@@ -93,24 +93,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * @return true if the ScaleType is supported.
-     */
-    private static boolean isSupportedScaleType(final ScaleType scaleType) {
-        if (null == scaleType) {
-            return false;
-        }
-
-        switch (scaleType) {
-            case MATRIX:
-                throw new IllegalArgumentException(scaleType.name()
-                        + " is not supported in PhotoView");
-
-            default:
-                return true;
-        }
-    }
-
-    /**
      * Set's the ImageView's ScaleType to Matrix.
      */
     private static void setImageViewScaleTypeMatrix(ImageView imageView) {
@@ -152,7 +134,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private float mBaseRotation;
 
     private boolean mZoomEnabled;
-    private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private ExtendedScaleType mScaleType = ExtendedScaleType.FIT_CENTER;
 
     public PhotoViewAttacher(ImageView imageView) {
         this(imageView, true);
@@ -374,7 +356,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public ScaleType getScaleType() {
+    public ExtendedScaleType getExtendedScaleType() {
         return mScaleType;
     }
 
@@ -659,8 +641,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public void setScaleType(ScaleType scaleType) {
-        if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
+    public void setExtendedScaleType(ExtendedScaleType scaleType) {
+        if (null != scaleType && scaleType != mScaleType) {
             mScaleType = scaleType;
 
             // Finally update
@@ -904,17 +886,30 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         final float widthScale = viewWidth / drawableWidth;
         final float heightScale = viewHeight / drawableHeight;
 
-        if (mScaleType == ScaleType.CENTER) {
+        if (mScaleType == ExtendedScaleType.TOP_CENTER) {
+            mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F, 0);
+
+        } else if (mScaleType == ExtendedScaleType.TOP_CENTER_CROP) {
+            float scale = Math.max(widthScale, heightScale);
+            mBaseMatrix.postScale(scale, scale);
+            mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F, 0);
+
+        } else if (mScaleType == ExtendedScaleType.TOP_CENTER_INSIDE) {
+            float scale = Math.min(1.0f, widthScale);
+            mBaseMatrix.postScale(scale, scale);
+            mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F, 0);
+
+        } else if (mScaleType == ExtendedScaleType.CENTER) {
             mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2F,
                     (viewHeight - drawableHeight) / 2F);
 
-        } else if (mScaleType == ScaleType.CENTER_CROP) {
+        } else if (mScaleType == ExtendedScaleType.CENTER_CROP) {
             float scale = Math.max(widthScale, heightScale);
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,
                     (viewHeight - drawableHeight * scale) / 2F);
 
-        } else if (mScaleType == ScaleType.CENTER_INSIDE) {
+        } else if (mScaleType == ExtendedScaleType.CENTER_INSIDE) {
             float scale = Math.min(1.0f, Math.min(widthScale, heightScale));
             mBaseMatrix.postScale(scale, scale);
             mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2F,

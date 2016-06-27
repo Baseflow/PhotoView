@@ -33,7 +33,7 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     private PhotoViewAttacher mAttacher;
 
-    private ScaleType mPendingScaleType;
+    private ExtendedScaleType mPendingScaleType;
 
     public PhotoView(Context context) {
         this(context, null);
@@ -55,7 +55,7 @@ public class PhotoView extends ImageView implements IPhotoView {
         }
 
         if (null != mPendingScaleType) {
-            setScaleType(mPendingScaleType);
+            setExtendedScaleType(mPendingScaleType);
             mPendingScaleType = null;
         }
     }
@@ -119,8 +119,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public ExtendedScaleType getExtendedScaleType() {
+        return mAttacher.getExtendedScaleType();
+    }
+
+    @Override
     public ScaleType getScaleType() {
-        return mAttacher.getScaleType();
+        return getExtendedScaleType().toImageScaleType();
     }
 
     @Override
@@ -209,12 +214,17 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public void setScaleType(ScaleType scaleType) {
+    public void setExtendedScaleType(ExtendedScaleType scaleType) {
         if (null != mAttacher) {
-            mAttacher.setScaleType(scaleType);
+            mAttacher.setExtendedScaleType(scaleType);
         } else {
             mPendingScaleType = scaleType;
         }
+    }
+
+    @Override
+    public void setScaleType(ScaleType scaleType) {
+        setExtendedScaleType(ExtendedScaleType.fromImageScaleType(scaleType));
     }
 
     @Override

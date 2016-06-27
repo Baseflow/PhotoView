@@ -7,6 +7,15 @@
         android:id="@+id/menu_zoom_toggle"
         android:title="@string/menu_zoom_disable"/>
     <item
+        android:id="@+id/menu_scale_top_center"
+        android:title="@string/menu_scale_top_center"/>
+    <item
+        android:id="@+id/menu_scale_top_center_crop"
+        android:title="@string/menu_scale_top_center_crop"/>
+    <item
+        android:id="@+id/menu_scale_top_center_inside"
+        android:title="@string/menu_scale_top_center_inside"/>
+    <item
         android:id="@+id/menu_scale_fit_center"
         android:title="@string/menu_scale_fit_center"/>
     <item

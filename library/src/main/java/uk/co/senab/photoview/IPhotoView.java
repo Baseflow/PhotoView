@@ -20,7 +20,6 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.View;
-import android.widget.ImageView;
 
 
 public interface IPhotoView {
@@ -64,19 +63,19 @@ public interface IPhotoView {
 
     /**
      * @return The current minimum scale level. What this value represents depends on the current
-     * {@link android.widget.ImageView.ScaleType}.
+     * {@link ExtendedScaleType}.
      */
     float getMinimumScale();
 
     /**
      * @return The current medium scale level. What this value represents depends on the current
-     * {@link android.widget.ImageView.ScaleType}.
+     * {@link ExtendedScaleType}.
      */
     float getMediumScale();
 
     /**
      * @return The current maximum scale level. What this value represents depends on the current
-     * {@link android.widget.ImageView.ScaleType}.
+     * {@link ExtendedScaleType}.
      */
     float getMaximumScale();
 
@@ -90,9 +89,9 @@ public interface IPhotoView {
     /**
      * Return the current scale type in use by the ImageView.
      *
-     * @return current ImageView.ScaleType
+     * @return current ExtendedScaleType
      */
-    ImageView.ScaleType getScaleType();
+    ExtendedScaleType getExtendedScaleType();
 
     /**
      * Whether to allow the ImageView's parent to intercept the touch event when the photo is scroll
@@ -104,14 +103,15 @@ public interface IPhotoView {
 
     /**
      * Sets the minimum scale level. What this value represents depends on the current {@link
-     * android.widget.ImageView.ScaleType}.
+     * ExtendedScaleType}.
      *
      * @param minimumScale minimum allowed scale
      */
     void setMinimumScale(float minimumScale);
 
     /**
-     * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
+     * Sets the medium scale level. What this value represents depends on the current {@link
+     * ExtendedScaleType}.
      *
      * @param mediumScale medium scale preset
      */
@@ -119,7 +119,7 @@ public interface IPhotoView {
 
     /**
      * Sets the maximum scale level. What this value represents depends on the current {@link
-     * android.widget.ImageView.ScaleType}.
+     * ExtendedScaleType}.
      *
      * @param maximumScale maximum allowed scale preset
      */
@@ -207,11 +207,11 @@ public interface IPhotoView {
     /**
      * Controls how the image should be resized or moved to match the size of the ImageView. Any
      * scaling or panning will happen within the confines of this {@link
-     * android.widget.ImageView.ScaleType}.
+     * ExtendedScaleType}.
      *
      * @param scaleType - The desired scaling mode.
      */
-    void setScaleType(ImageView.ScaleType scaleType);
+    void setExtendedScaleType(ExtendedScaleType scaleType);
 
     /**
      * Allows you to enable/disable the zoom functionality on the ImageView. When disable the
