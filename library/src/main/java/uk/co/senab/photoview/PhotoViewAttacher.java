@@ -62,7 +62,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     // release builds
     // contoll logging via LogManager.setDebugEnabled(boolean enabled);
     // public to allow customer settings-activity to change this
-    public static boolean DEBUG = true; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
+    public static boolean DEBUG = false; // Log.isLoggable(LOG_TAG, Log.DEBUG);
 
     static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
 

@@ -1,11 +1,17 @@
 package uk.co.senab.photoview;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.io.File;
 
@@ -28,7 +34,7 @@ public class HugeImageLoader {
     // release builds
     // contoll logging via LogManager.setDebugEnabled(boolean enabled);
     // public to allow customer settings-activity to change this
-    public static boolean DEBUG = true; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
+    public static boolean DEBUG = false; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
 
     @TargetApi(Build.VERSION_CODES.FROYO)
     public static int getMaxTextureSize() {
@@ -43,6 +49,31 @@ public class HugeImageLoader {
 
         }
         return 4096;
+    }
+
+    public static Bitmap loadImage(File file, Context context) {
+        WindowManager windowManager = (WindowManager)context.getSystemService(Activity.WINDOW_SERVICE);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+            loadImageOld(file,  windowManager);
+        }
+        return loadImageHoneycombMr2(file, windowManager);
+    }
+
+    private static Bitmap loadImageOld(File file, WindowManager windowManager) {
+        Point outSize = new Point();
+        final Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        display.getMetrics(displaymetrics);
+        return loadImage(file, displaymetrics.widthPixels,displaymetrics.heightPixels);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private static Bitmap loadImageHoneycombMr2(File file, WindowManager windowManager) {
+        Point outSize = new Point();
+        final Display display = windowManager.getDefaultDisplay();
+        display.getSize(outSize);
+        return loadImage(file, outSize.x, outSize.y);
     }
 
     public static Bitmap loadImage(File file, int maxWidth, int maxHeight) {
