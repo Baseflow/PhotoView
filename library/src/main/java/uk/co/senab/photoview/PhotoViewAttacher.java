@@ -51,7 +51,7 @@ import static android.view.MotionEvent.ACTION_CANCEL;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
 
-public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
+public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnTouchListener,
         OnGestureListener,
         ViewTreeObserver.OnGlobalLayoutListener {
 
@@ -60,14 +60,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
-    // contoll logging via LogManager.setDebugEnabled(boolean enabled);
+    // controll logging via LogManager.setDebugEnabled(boolean enabled);
     // public to allow customer settings-activity to change this
     public static boolean DEBUG = false; // Log.isLoggable(LOG_TAG, Log.DEBUG);
-
-    static final Interpolator sInterpolator = new AccelerateDecelerateInterpolator();
-
-    /** my android 4.4 cannot process images bigger than 4096*4096. -1 means must be calculated from openGL  */
-    private static int MAX_IMAGE_DIMENSION = -1; // will be set to 4096
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
@@ -86,8 +81,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
 
-    /** k3b 20150913 #10: Faster initial loading: initially the view is loaded with low res image. on first zoom it is reloaded with this uri */
-    private File mImageReloadFile = null;
+    /** k3b needed to restore focus when layout changes (rotation, hide NavigationDrawer,...) */
     private double mLastFocusX = Double.NaN;
     private double mLastFocusY = Double.NaN;
 
@@ -506,40 +500,14 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                             scaleFactor, focusX, focusY));
         }
 
-        /** k3b 20150913 #10: Faster initial loading: initially the view is loaded with low res image. on first zoom it is reloaded with this uri */
-        if (mImageReloadFile != null) {
-            ImageView imageView = getImageView();
-            if (imageView != null) {
-                if (DEBUG) {
-                    // !!!
-                    LogManager.getLogger().d(
-                            LOG_TAG,
-                            "onScale: Reloading image from " + mImageReloadFile);
-                }
-                try {
-                    if (MAX_IMAGE_DIMENSION < 0) {
-                        MAX_IMAGE_DIMENSION = (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) ? 4096 : HugeImageLoader.getMaxTextureSize();
-                    }
-                    imageView.setImageBitmap(HugeImageLoader.loadImage(mImageReloadFile.getAbsoluteFile(), MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION));
-                } catch (OutOfMemoryError e) {
-                    String errorMessage = imageView.getContext().getString(R.string.err_low_memory, mImageReloadFile);
-                    Toast.makeText(imageView.getContext(), errorMessage, Toast.LENGTH_LONG).show();
-
-                    LogManager.getLogger().e(
-                            LOG_TAG,
-                            "onScale: Not enought memory to reloading image from " + mImageReloadFile + " failed: " + e.getMessage());
-                }
-
-                mImageReloadFile = null; // either success or error: do not try it again
-            }
-        }
-
-        if (getScale() < mMaxScale || scaleFactor < 1f) {
+        if ((getScale() < mMaxScale || scaleFactor < 1f) && (getScale() > mMinScale || scaleFactor > 1f)) {
             if (null != mScaleChangeListener) {
                 mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
             }
+            /** k3b neccessary to restore focus when layout changes (rotation, hide NavigationDrawer,...) */
             mLastFocusX=focusX;
             mLastFocusY=focusY;
+
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
             checkAndDisplayMatrix("onScale");
         }
@@ -1029,12 +997,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (null == imageView)
             return 0;
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
-    }
-
-    /** k3b 20150913 #10: Faster initial loading: initially the view is loaded with low res image. on first zoom it is reloaded with this uri
-     * @param imageReloadURI*/
-    public void setImageReloadFile(File imageReloadURI) {
-        this.mImageReloadFile = imageReloadURI;
     }
 
     /**

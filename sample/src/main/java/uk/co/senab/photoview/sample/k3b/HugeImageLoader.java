@@ -1,4 +1,4 @@
-package uk.co.senab.photoview;
+package uk.co.senab.photoview.sample.k3b;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

@@ -26,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import uk.co.senab.photoview.sample.k3b.ViewPagerActivityFromMediaDB;
+
 public class LauncherActivity extends AppCompatActivity {
 
     public static final String[] options = {"Simple Sample", "ViewPager Sample (static)", "ViewPager from media-db", "Rotation Sample", "Picasso Sample"};

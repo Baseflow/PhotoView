@@ -1,4 +1,4 @@
-package uk.co.senab.photoview.sample;
+package uk.co.senab.photoview.sample.k3b;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -16,7 +16,8 @@ import android.view.ViewGroup;
 
 import java.io.File;
 
-import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.sample.HackyViewPager;
+import uk.co.senab.photoview.sample.R;
 
 /** activity demonstrating swipable ViewPager from media-db.
  *
@@ -39,14 +40,14 @@ public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
         Cursor cursor = MediaStore.Images.Media.query(getContentResolver(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI,new String[] {}
                 , null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC");
 
-        final SamplePagerAdapter adapter = new SamplePagerAdapter(this, cursor);
+        final SampleCursorBasedPagerAdapter adapter = new SampleCursorBasedPagerAdapter(this, cursor);
         mViewPager.setAdapter(adapter);
     }
 
-    static class SamplePagerAdapter extends PagerAdapter {
+    static class SampleCursorBasedPagerAdapter extends PagerAdapter {
         private final Activity mActivity;
         private Cursor mCursor = null; // the content of the page
-        SamplePagerAdapter(Activity activity, Cursor cursor) {
+        SampleCursorBasedPagerAdapter(Activity activity, Cursor cursor) {
             mActivity = activity;
             mCursor = cursor;
         }
@@ -83,7 +84,7 @@ public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
-            PhotoView photoView = new PhotoView(container.getContext());
+            PhotoViewEx photoView = new PhotoViewEx(container.getContext());
 
             // Now just add PhotoView to ViewPager and return it
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

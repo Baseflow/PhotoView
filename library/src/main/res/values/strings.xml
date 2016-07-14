@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="err_low_memory">Not enough memory available to load "%1$s".</string>
-</resources>
