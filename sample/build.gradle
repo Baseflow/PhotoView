@@ -9,7 +9,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 23
 		
-		// use values from gradle.properties
+		// version values from ../gradle.properties
         versionCode=Long.valueOf(VERSION_CODE)
         versionName=VERSION_NAME
     }
