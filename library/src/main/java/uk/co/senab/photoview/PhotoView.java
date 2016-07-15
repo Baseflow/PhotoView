@@ -31,7 +31,17 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
 
-    private PhotoViewAttacher mAttacher;
+    public interface IPhotoViewAttacher extends IPhotoView {
+        ImageView getImageView();
+        void update(String why);
+        void cleanup();
+    }
+
+    // for debug purposes
+    private static int lastDebugId = 1;
+    private final String mDebugId;
+
+    private IPhotoViewAttacher mAttacher;
 
     private ScaleType mPendingScaleType;
 
@@ -45,19 +55,33 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
+        // for debug purposes
+        this.mDebugId = getClass().getSimpleName() + "#" + (++lastDebugId);
+
         super.setScaleType(ScaleType.MATRIX);
         init();
     }
 
+    // for debug purposes
+    @Override
+    public String toString() {
+        return mDebugId + "-" + mAttacher;
+    }
+
     protected void init() {
         if (null == mAttacher || null == mAttacher.getImageView()) {
-            mAttacher = new PhotoViewAttacher(this);
+            mAttacher = onCreatePhotoViewAttacher(this);
         }
 
         if (null != mPendingScaleType) {
             setScaleType(mPendingScaleType);
             mPendingScaleType = null;
         }
+    }
+
+    /** can be overwritten if you need an extended attacher */
+    protected IPhotoViewAttacher onCreatePhotoViewAttacher(PhotoView photoView) {
+        return new PhotoViewAttacher(photoView);
     }
 
     /**
@@ -153,7 +177,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         if (null != mAttacher) {
-            mAttacher.update();
+            mAttacher.update("setImageDrawable");
         }
     }
 
@@ -161,7 +185,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageResource(int resId) {
         super.setImageResource(resId);
         if (null != mAttacher) {
-            mAttacher.update();
+            mAttacher.update("setImageResource(" + resId + ")");
         }
     }
 
@@ -169,7 +193,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
         if (null != mAttacher) {
-            mAttacher.update();
+            mAttacher.update("setImageURI(" + uri +")");
         }
     }
 
@@ -255,6 +279,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     protected void onDetachedFromWindow() {
         mAttacher.cleanup();
+        mAttacher = null; // else memory leak
         super.onDetachedFromWindow();
     }
 

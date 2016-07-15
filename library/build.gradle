@@ -2,13 +2,15 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         minSdkVersion 4
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+		
+		// version values from ../gradle.properties
+        versionCode=Long.valueOf(VERSION_CODE)
+        versionName=VERSION_NAME
     }
 }
 
@@ -16,4 +18,5 @@ dependencies {
     compile "com.android.support:support-v4:23.3.0"
 }
 
+// this dos not work for gradle-2.14 jitpack.io does not work with 214. 
 apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'

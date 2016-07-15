@@ -15,5 +15,6 @@
     <string name="menu_matrix_restore">Restore Display Matrix</string>
     <string name="menu_matrix_capture">Capture Display Matrix</string>
     <string name="extract_visible_bitmap">Extract visible bitmap</string>
-
+    <string name="logging_enabled">Logging enabled</string>
+    <string name="logging_detailed_enabled">Detailed logging enabled</string>
 </resources>

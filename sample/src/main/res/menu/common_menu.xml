@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/logging_enabled"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/logging_enabled"/>
+    <item
+        android:id="@+id/logging_detailed_enabled"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/logging_detailed_enabled"/>
+</menu>
