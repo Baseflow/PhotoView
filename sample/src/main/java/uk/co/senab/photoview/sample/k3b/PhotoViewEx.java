@@ -78,9 +78,6 @@ public class PhotoViewEx extends PhotoView {
                         }
                         imageView.setImageBitmap(HugeImageLoader.loadImage(mImageReloadFile.getAbsoluteFile(), MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION));
                     } catch (OutOfMemoryError e) {
-                        String errorMessage = imageView.getContext().getString(uk.co.senab.photoview.R.string.err_low_memory, mImageReloadFile);
-                        Toast.makeText(imageView.getContext(), errorMessage, Toast.LENGTH_LONG).show();
-
                         LogManager.getLogger().e(
                                 LOG_TAG,
                                 "onScale: Not enought memory to reloading image from " + mImageReloadFile + " failed: " + e.getMessage());
