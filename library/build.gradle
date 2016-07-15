@@ -17,4 +17,5 @@ dependencies {
     compile "com.android.support:support-v4:23.3.0"
 }
 
-apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'
+// this dos not work for gradle-2.14 
+// apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'
