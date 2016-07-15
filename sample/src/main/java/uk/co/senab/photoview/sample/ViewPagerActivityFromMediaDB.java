@@ -1,25 +1,24 @@
-package uk.co.senab.photoview.sample.k3b;
+package uk.co.senab.photoview.sample;
 
-import android.app.Activity;
-import android.content.ContentResolver;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.File;
 
-import uk.co.senab.photoview.sample.HackyViewPager;
-import uk.co.senab.photoview.sample.R;
+import uk.co.senab.photoview.PhotoView;
 
-/** activity demonstrating swipable ViewPager from media-db.
+/** activity demonstrating swipable ViewPager where images come from media-db.
  *
  * Simplified version of de.k3b.android.androFotoFinder.imagedetail.ImagePagerAdapterFromCursor
  * from https://github.com/k3b/APhotoManager/
@@ -28,7 +27,7 @@ import uk.co.senab.photoview.sample.R;
  */
 public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
     public static final String LOG_TAG = "ViewPagerAct-MediaDB";
-
+    private Cursor cursor = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,19 +35,49 @@ public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
         ViewPager mViewPager = (HackyViewPager) findViewById(R.id.view_pager);
         setContentView(mViewPager);
 
-        // this is a demo. todo use try catch for error handling. do in seperate non-gui thread
-        Cursor cursor = MediaStore.Images.Media.query(getContentResolver(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI,new String[] {}
+        // This is a demo. TODO: use try catch for error handling. do in seperate non-gui thread
+        cursor = MediaStore.Images.Media.query(getContentResolver(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI,new String[] {}
                 , null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC");
 
-        final SampleCursorBasedPagerAdapter adapter = new SampleCursorBasedPagerAdapter(this, cursor);
+        Log.d(LOG_TAG, "created cursor " + cursor);
+
+        final SampleCursorBasedPagerAdapter adapter = new SampleCursorBasedPagerAdapter(cursor);
         mViewPager.setAdapter(adapter);
     }
 
-    static class SampleCursorBasedPagerAdapter extends PagerAdapter {
-        private final Activity mActivity;
+    @Override
+    protected void onDestroy() {
+        Log.d(LOG_TAG, "destroying cursor " + cursor);
+        cursor.close();
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.common_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        PhotoViewSampleApp.onPrepareOptionsMenu(menu);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (PhotoViewSampleApp.onOptionsItemSelected(item)) return true;
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /** Class providing a cursor based adapter to populate pages inside of a {@link ViewPager}. */
+    class SampleCursorBasedPagerAdapter extends PagerAdapter {
         private Cursor mCursor = null; // the content of the page
-        SampleCursorBasedPagerAdapter(Activity activity, Cursor cursor) {
-            mActivity = activity;
+        SampleCursorBasedPagerAdapter(Cursor cursor) {
             mCursor = cursor;
         }
 
@@ -65,7 +94,6 @@ public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
 
             return result;
         }
-
 
         /**
          * Implementation for PagerAdapter:
@@ -84,40 +112,17 @@ public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
-            PhotoViewEx photoView = new PhotoViewEx(container.getContext());
-
-            // Now just add PhotoView to ViewPager and return it
-            container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-            int resolutionKind = MediaStore.Images.Thumbnails.MINI_KIND;
-
-
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            final ContentResolver contentResolver = photoView.getContext().getContentResolver();
-
             // this is a demo. todo use try catch for error handling
             this.mCursor.moveToPosition(position);
 
             long imageID = mCursor.getLong(mCursor.getColumnIndex(MediaStore.Images.Media._ID));
             String imageFilePathFullResolution = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA));
 
-            Log.d(LOG_TAG, "loading " + imageID +
-                    ":" + imageFilePathFullResolution +
-                    "");
-            // first display with low resolution which is much faster for swiping
-            Bitmap thumbnail = MediaStore.Images.Thumbnails.getThumbnail(
-                contentResolver,
-                imageID,
-                resolutionKind,
-                options);
+            PhotoView photoView = createAndLoadPhotoView(imageID, imageFilePathFullResolution);
 
-            photoView.setImageBitmap(thumbnail);
             photoView.setMaximumScale(20);
             photoView.setMediumScale(5);
-
-            // this image will be loaded when zooming starts
-            photoView.setImageReloadFile(new File(imageFilePathFullResolution));
-
+            container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             return photoView;
         }
 
@@ -137,7 +142,7 @@ public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
             this.mCursor.moveToPosition(position);
 
             String imageFilePathFullResolution = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            mActivity.setTitle(imageFilePathFullResolution);
+            ViewPagerActivityFromMediaDB.this.setTitle(imageFilePathFullResolution);
         }
 
 
@@ -155,8 +160,24 @@ public class ViewPagerActivityFromMediaDB extends AppCompatActivity {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
+            Log.d(LOG_TAG, "destroyed Item " + object);
         }
 
 
+    }
+
+    /** This code should normally be part of the adapter.
+     * {@link uk.co.senab.photoview.sample.ViewPagerActivityFromMediaDB.SampleCursorBasedPagerAdapter}.
+     * It has been moved to the activity so it can be modified  through Activity inheritance
+     * as demonstrated in {@link uk.co.senab.photoview.sample.k3b.ViewPagerActivityFromMediaDBEx} . */
+    @NonNull
+    protected PhotoView createAndLoadPhotoView(long imageID, String imageFilePathFullResolution) {
+        PhotoView photoView = new PhotoView(this);
+
+        photoView.setImageURI(Uri.fromFile(new File(imageFilePathFullResolution)));
+        Log.d(LOG_TAG, "loaded " + imageID +
+                ":" + imageFilePathFullResolution +
+                " into " + photoView);
+        return photoView;
     }
 }

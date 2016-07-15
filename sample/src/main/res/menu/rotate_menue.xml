@@ -7,10 +7,4 @@
     <item android:id="@+id/menu_Reset_to_90" android:title="Reset to 90"/>
     <item android:id="@+id/menu_Reset_to_180" android:title="Reset to 180"/>
     <item android:id="@+id/menu_Reset_to_270" android:title="Reset to 270"/>
-    <item
-        android:id="@+id/logging_enabled"
-        android:checkable="true"
-        android:checked="true"
-        android:title="@string/logging_enabled"/>
-
 </menu>

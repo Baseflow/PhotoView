@@ -56,7 +56,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
         // for debug purposes
-        this.mDebugId = "PhotoView#" + (++lastDebugId);
+        this.mDebugId = getClass().getSimpleName() + "#" + (++lastDebugId);
 
         super.setScaleType(ScaleType.MATRIX);
         init();
@@ -65,7 +65,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     // for debug purposes
     @Override
     public String toString() {
-        return mDebugId;
+        return mDebugId + "-" + mAttacher;
     }
 
     protected void init() {
@@ -185,7 +185,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageResource(int resId) {
         super.setImageResource(resId);
         if (null != mAttacher) {
-            mAttacher.update("setImageResource");
+            mAttacher.update("setImageResource(" + resId + ")");
         }
     }
 
@@ -193,7 +193,7 @@ public class PhotoView extends ImageView implements IPhotoView {
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
         if (null != mAttacher) {
-            mAttacher.update("setImageURI");
+            mAttacher.update("setImageURI(" + uri +")");
         }
     }
 

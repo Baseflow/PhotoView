@@ -21,7 +21,8 @@
         <activity android:name=".ViewPagerActivity"/>
         <activity android:name=".RotationSampleActivity"/>
         <activity android:name=".PicassoSampleActivity"/>
-        <activity android:name=".k3b.ViewPagerActivityFromMediaDB"/>
+        <activity android:name=".ViewPagerActivityFromMediaDB"/>
+        <activity android:name=".k3b.ViewPagerActivityFromMediaDBEx"/>
     </application>
 
 </manifest>

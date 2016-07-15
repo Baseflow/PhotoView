@@ -24,9 +24,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
-import android.util.Log;
-
-import android.os.Build;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,9 +34,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.Toast;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 
 import uk.co.senab.photoview.gestures.OnGestureListener;
@@ -63,6 +58,10 @@ public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnT
     // controll logging via LogManager.setDebugEnabled(boolean enabled);
     // public to allow customer settings-activity to change this
     public static boolean DEBUG = false; // Log.isLoggable(LOG_TAG, Log.DEBUG);
+
+    // for debug purposes
+    private static int lastDebugId = 1;
+    private final String mDebugId;
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
@@ -170,6 +169,12 @@ public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnT
     }
 
     public PhotoViewAttacher(ImageView imageView, boolean zoomable) {
+        this.mDebugId = getClass().getSimpleName() + "#" + (++lastDebugId);
+
+        if (DEBUG) {
+            LogManager.getLogger().d(LOG_TAG,"creating " + this + " for " + imageView);
+        }
+
         mImageView = new WeakReference<>(imageView);
 
         imageView.setDrawingCacheEnabled(true);
@@ -263,7 +268,7 @@ public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnT
         }
 
         if (DEBUG) {
-            LogManager.getLogger().d(LOG_TAG,"cleanup");
+            LogManager.getLogger().d(LOG_TAG,"cleanup of " + this);
         }
 
         final ImageView imageView = mImageView.get();
@@ -327,7 +332,7 @@ public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnT
         mBaseRotation = degrees % 360;
         update("setBaseRotation");
         setRotationBy(mBaseRotation);
-        checkAndDisplayMatrix("setBaseRotation");
+        checkAndDisplayMatrix("setBaseRotation(" + degrees + ")");
     }
 
     /**
@@ -336,19 +341,19 @@ public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnT
     @Override
     public void setPhotoViewRotation(float degrees) {
         mSuppMatrix.setRotate(degrees % 360);
-        checkAndDisplayMatrix("setPhotoViewRotation");
+        checkAndDisplayMatrix("setPhotoViewRotation(" + degrees + ")");
     }
 
     @Override
     public void setRotationTo(float degrees) {
         mSuppMatrix.setRotate(degrees % 360);
-        checkAndDisplayMatrix("setRotationTo");
+        checkAndDisplayMatrix("setRotationTo(" + degrees + ")");
     }
 
     @Override
     public void setRotationBy(float degrees) {
         mSuppMatrix.postRotate(degrees % 360);
-        checkAndDisplayMatrix("setRotationBy");
+        checkAndDisplayMatrix("setRotationBy(" + degrees + ")");
     }
 
     public ImageView getImageView() {
@@ -690,7 +695,7 @@ public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnT
             mScaleType = scaleType;
 
             // Finally update
-            update("setScaleType");
+            update("setScaleType(" + scaleType + ")");
         }
     }
 
@@ -997,6 +1002,12 @@ public class PhotoViewAttacher implements PhotoView.IPhotoViewAttacher, View.OnT
         if (null == imageView)
             return 0;
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
+    }
+
+    // for debug purposes
+    @Override
+    public String toString() {
+        return mDebugId;
     }
 
     /**

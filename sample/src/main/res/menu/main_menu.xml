@@ -42,10 +42,4 @@
     <item
         android:id="@+id/extract_visible_bitmap"
         android:title="@string/extract_visible_bitmap"/>
-    <item
-        android:id="@+id/logging_enabled"
-        android:checkable="true"
-        android:checked="true"
-        android:title="@string/logging_enabled"/>
-
 </menu>

@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.log.LogManager;
 
 public class RotationSampleActivity extends AppCompatActivity {
 
@@ -47,20 +46,21 @@ public class RotationSampleActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.rotate_menue, menu);
+        getMenuInflater().inflate(R.menu.common_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem debug = menu.findItem(R.id.logging_enabled);
-        debug.setChecked(LogManager.isDebugEnabled());
-
+        PhotoViewSampleApp.onPrepareOptionsMenu(menu);
         return super.onPrepareOptionsMenu(menu);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (PhotoViewSampleApp.onOptionsItemSelected(item)) return true;
+
         switch (item.getItemId()) {
             case R.id.menu_Rotate_10_Right:
                 photo.setRotationBy(10);
@@ -83,10 +83,6 @@ public class RotationSampleActivity extends AppCompatActivity {
             case R.id.menu_Reset_to_270:
                 photo.setRotationTo(270);
                 return true;
-            case R.id.logging_enabled: {
-                LogManager.setDebugEnabled(!LogManager.isDebugEnabled());
-                return true;
-            }
         }
 
         return super.onOptionsItemSelected(item);

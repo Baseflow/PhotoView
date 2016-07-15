@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.net.Uri;
 import android.opengl.GLES20;
 import android.os.Build;
 import android.util.DisplayMetrics;
@@ -15,8 +14,6 @@ import android.view.WindowManager;
 
 import java.io.File;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import uk.co.senab.photoview.log.LogManager;
 
 /**
@@ -24,15 +21,12 @@ import uk.co.senab.photoview.log.LogManager;
  * load a scaled down version.
  * see http://developer.android.com/training/displaying-bitmaps/index.html.
  *
- * Created by k3b on 14.09.2015.
- */
+ * Created by k3b on 14.09.2015
+ * for https://github.com/k3b/APhotoManager/ */
 public class HugeImageLoader {
     // public to allow crash-report to filter logcat for this
     public static final String LOG_TAG = "HugeImageLoader";
 
-    // let debug flag be dynamic, but still Proguard can be used to remove from
-    // release builds
-    // contoll logging via LogManager.setDebugEnabled(boolean enabled);
     // public to allow customer settings-activity to change this
     public static boolean DEBUG = false; //!!! Log.isLoggable(LOG_TAG, Log.DEBUG);
 
