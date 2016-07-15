@@ -22,7 +22,8 @@ import android.view.GestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
-
+/** public api that the display-element (i.e. android.view.View )
+ * and the image-processing (i.e. PhotoViewAttacher responsible for zoom, rotate, ...) have in common */
 public interface IPhotoView {
 
     float DEFAULT_MAX_SCALE = 3.0f;

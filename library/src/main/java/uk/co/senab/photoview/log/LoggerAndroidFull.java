@@ -18,53 +18,38 @@ package uk.co.senab.photoview.log;
 import android.util.Log;
 
 /**
- * Helper class to redirect {@link LogManager#logger} to android {@link Log}
- * for loglevel warnm, error.
- * Additionally info is logged if enabled via {@Ling LoggerDefault#setLogInfo(boolean)} .
+ * Helper class to redirect {@link LogManager#logger} to android {@link Log} for all log levels
  */
-public class LoggerDefault implements Logger {
-
-    /** true: loglevel info is also logged */
-    private static boolean logInfo = false;
-
-    /** true: loglevel info is also logged */
-    public static boolean isLogInfo() {
-        return logInfo;
-    }
-
-    /** true: loglevel info is also logged */
-    public static void setLogInfo(boolean logInfo) {
-        LoggerDefault.logInfo = logInfo;
-    }
+public class LoggerAndroidFull implements Logger {
 
     @Override
     public int v(String tag, String msg) {
-        return 0; // no logging at this level
+        return Log.v(tag, msg);
     }
 
     @Override
     public int v(String tag, String msg, Throwable tr) {
-        return 0; // no logging at this level
+        return Log.v(tag, msg, tr);
     }
 
     @Override
     public int d(String tag, String msg) {
-        return 0; // no logging at this level
+        return Log.d(tag, msg);
     }
 
     @Override
     public int d(String tag, String msg, Throwable tr) {
-        return 0; // no logging at this level
+        return Log.d(tag, msg, tr);
     }
 
     @Override
     public int i(String tag, String msg) {
-        return (!logInfo) ? 0 : Log.i(tag, msg);
+        return Log.i(tag, msg);
     }
 
     @Override
     public int i(String tag, String msg, Throwable tr) {
-        return (!logInfo) ? 0 : Log.i(tag, msg, tr);
+        return Log.i(tag, msg, tr);
     }
 
     @Override
@@ -86,4 +71,6 @@ public class LoggerDefault implements Logger {
     public int e(String tag, String msg, Throwable tr) {
         return Log.e(tag, msg, tr);
     }
+
+
 }

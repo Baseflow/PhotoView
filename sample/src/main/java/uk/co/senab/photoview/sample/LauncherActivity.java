@@ -22,13 +22,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import uk.co.senab.photoview.sample.k3b.ViewPagerActivityFromMediaDBEx;
+
 public class LauncherActivity extends AppCompatActivity {
 
-    public static final String[] options = {"Simple Sample", "ViewPager Sample", "Rotation Sample", "Picasso Sample"};
+    // Note: LauncherActivity.ItemAdapter.onBindViewHolder(..,option) corresponds to LauncherActivity.options[option]
+    public static final String[] options = {"Simple Sample", "ViewPager Sample (static)",
+            "ViewPager from media-db", "ViewPager from media-db enhanced PhotoView",
+            "Rotation Sample", "Picasso Sample"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +46,29 @@ public class LauncherActivity extends AppCompatActivity {
         recyclerView.setAdapter(new ItemAdapter());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.common_menu, menu);
 
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        PhotoViewSampleApp.onPrepareOptionsMenu(menu);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (PhotoViewSampleApp.onOptionsItemSelected(item)) return true;
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Note: LauncherActivity.ItemAdapter.onBindViewHolder(..,option) corresponds to LauncherActivity.options[option]
     private static class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,9 +92,15 @@ public class LauncherActivity extends AppCompatActivity {
                             c = ViewPagerActivity.class;
                             break;
                         case 2:
-                            c = RotationSampleActivity.class;
+                            c = ViewPagerActivityFromMediaDB.class;
                             break;
                         case 3:
+                            c = ViewPagerActivityFromMediaDBEx.class;
+                            break;
+                        case 4:
+                            c = RotationSampleActivity.class;
+                            break;
+                        case 5:
                             c = PicassoSampleActivity.class;
                             break;
                     }

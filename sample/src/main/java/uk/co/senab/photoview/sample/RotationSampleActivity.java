@@ -45,38 +45,42 @@ public class RotationSampleActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, 0, Menu.NONE, "Rotate 10° Right");
-        menu.add(Menu.NONE, 1, Menu.NONE, "Rotate 10° Left");
-        menu.add(Menu.NONE, 2, Menu.NONE, "Toggle automatic rotation");
-        menu.add(Menu.NONE, 3, Menu.NONE, "Reset to 0");
-        menu.add(Menu.NONE, 4, Menu.NONE, "Reset to 90");
-        menu.add(Menu.NONE, 5, Menu.NONE, "Reset to 180");
-        menu.add(Menu.NONE, 6, Menu.NONE, "Reset to 270");
+        getMenuInflater().inflate(R.menu.rotate_menue, menu);
+        getMenuInflater().inflate(R.menu.common_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        PhotoViewSampleApp.onPrepareOptionsMenu(menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (PhotoViewSampleApp.onOptionsItemSelected(item)) return true;
+
         switch (item.getItemId()) {
-            case 0:
+            case R.id.menu_Rotate_10_Right:
                 photo.setRotationBy(10);
                 return true;
-            case 1:
+            case R.id.menu_Rotate_10_Left:
                 photo.setRotationBy(-10);
                 return true;
-            case 2:
+            case R.id.menu_Toggle_automatic_rotation:
                 toggleRotation();
                 return true;
-            case 3:
+            case R.id.menu_Reset_to_0:
                 photo.setRotationTo(0);
                 return true;
-            case 4:
+            case R.id.menu_Reset_to_90:
                 photo.setRotationTo(90);
                 return true;
-            case 5:
+            case R.id.menu_Reset_to_180:
                 photo.setRotationTo(180);
                 return true;
-            case 6:
+            case R.id.menu_Reset_to_270:
                 photo.setRotationTo(270);
                 return true;
         }

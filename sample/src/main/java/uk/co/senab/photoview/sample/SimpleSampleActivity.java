@@ -44,6 +44,7 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
 public class SimpleSampleActivity extends AppCompatActivity {
+    public static final String LOG_TAG = "SimpleSampleActivity";
 
     static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %% ID: %d";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
@@ -78,12 +79,6 @@ public class SimpleSampleActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
 
@@ -92,16 +87,28 @@ public class SimpleSampleActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.common_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
         assert null != zoomToggle;
         zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
+
+        PhotoViewSampleApp.onPrepareOptionsMenu(menu);
 
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (PhotoViewSampleApp.onOptionsItemSelected(item)) return true;
+
         switch (item.getItemId()) {
             case R.id.menu_zoom_toggle:
                 mAttacher.setZoomable(!mAttacher.canZoom());
@@ -154,6 +161,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
                     mAttacher.setDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.menu_matrix_capture:
+                mCurrentDisplayMatrix = new Matrix();
                 mAttacher.getDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.extract_visible_bitmap:
@@ -168,10 +176,11 @@ public class SimpleSampleActivity extends AppCompatActivity {
                     share.setType("image/png");
                     share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tmpFile));
                     startActivity(share);
-                    Toast.makeText(this, String.format("Extracted into: %s", tmpFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+                    showToast(String.format("Extracted into: %s", tmpFile.getAbsolutePath()));
+
                 } catch (Throwable t) {
                     t.printStackTrace();
-                    Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
+                    showToast("Error occured while extracting bitmap");
                 }
                 return true;
         }
@@ -195,13 +204,14 @@ public class SimpleSampleActivity extends AppCompatActivity {
         }
     }
 
-    private void showToast(CharSequence text) {
+    private void showToast(String text) {
         if (null != mCurrentToast) {
             mCurrentToast.cancel();
         }
 
         mCurrentToast = Toast.makeText(SimpleSampleActivity.this, text, Toast.LENGTH_SHORT);
         mCurrentToast.show();
+        Log.d(LOG_TAG, text);
     }
 
     private class MatrixChangeListener implements OnMatrixChangedListener {
@@ -217,7 +227,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (BuildConfig.DEBUG) {
-                Log.d("PhotoView", String.format(FLING_LOG_STRING, velocityX, velocityY));
+                Log.d(LOG_TAG, String.format(FLING_LOG_STRING, velocityX, velocityY));
             }
             return true;
         }

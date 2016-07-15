@@ -25,6 +25,7 @@ import android.view.ViewGroup.LayoutParams;
 
 import uk.co.senab.photoview.PhotoView;
 
+/** simple activity demonstrating swipable ViewPager with static content */
 public class ViewPagerActivity extends AppCompatActivity {
 
 	@Override
