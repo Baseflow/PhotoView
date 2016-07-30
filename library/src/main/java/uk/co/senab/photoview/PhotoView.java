@@ -124,6 +124,11 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
+    public Matrix getImageMatrix() {
+        return mAttacher.getImageMatrix();
+    }
+
+    @Override
     public void setAllowParentInterceptOnEdge(boolean allow) {
         mAttacher.setAllowParentInterceptOnEdge(allow);
     }
@@ -168,6 +173,13 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
+        if (null != mAttacher) {
+            mAttacher.update();
+        }
+    }
+
+    @Override
+    protected boolean setFrame(int l, int t, int r, int b) {
         if (null != mAttacher) {
             mAttacher.update();
         }
