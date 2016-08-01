@@ -720,6 +720,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    public Matrix getImageMatrix() {
+        return mDrawMatrix;
+    }
+
     /**
      * Helper method that simply checks the Matrix, and then displays the result
      */
