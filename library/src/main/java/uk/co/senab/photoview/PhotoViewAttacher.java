@@ -315,15 +315,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         checkAndDisplayMatrix();
     }
 
-    /**
-     * @deprecated use {@link #setRotationTo(float)}
-     */
-    @Override
-    public void setPhotoViewRotation(float degrees) {
-        mSuppMatrix.setRotate(degrees % 360);
-        checkAndDisplayMatrix();
-    }
-
     @Override
     public void setRotationTo(float degrees) {
         mSuppMatrix.setRotate(degrees % 360);
@@ -692,7 +683,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Like {@link #getDisplayMatrix()}, but allows the user to provide a matrix to copy the values into to reduce object allocation
+     * Get the display matrix
      * @param matrix target matrix to copy to
      */
     @Override
