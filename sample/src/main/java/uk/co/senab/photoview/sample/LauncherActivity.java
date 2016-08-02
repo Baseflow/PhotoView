@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 public class LauncherActivity extends AppCompatActivity {
 
-    public static final String[] options = {"Simple Sample", "ViewPager Sample", "Rotation Sample", "Picasso Sample"};
+    public static final String[] options = {"Simple Sample", "ViewPager Sample", "Rotation Sample", "Picasso Sample", "Activity Transition Sample"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +47,14 @@ public class LauncherActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ItemViewHolder holder, final int position) {
+        public void onBindViewHolder(final ItemViewHolder holder, int position) {
             holder.bind(options[position]);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Class c;
 
-                    switch (position) {
+                    switch (holder.getAdapterPosition()) {
                         default:
                         case 0:
                             c = SimpleSampleActivity.class;
@@ -67,6 +67,9 @@ public class LauncherActivity extends AppCompatActivity {
                             break;
                         case 3:
                             c = PicassoSampleActivity.class;
+                            break;
+                        case 4:
+                            c = ActivityTransitionActivity.class;
                             break;
                     }
 

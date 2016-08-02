@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    buildToolsVersion '24.0.1'
 
     defaultConfig {
         applicationId "uk.co.senab.photoview.sample"
         minSdkVersion 8
         targetSdkVersion 24
-        versionCode 126
-        versionName "1.2.6"
+        versionCode 100
+        versionName "1.0"
     }
     lintOptions {
         abortOnError false
