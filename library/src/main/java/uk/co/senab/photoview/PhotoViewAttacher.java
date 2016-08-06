@@ -86,7 +86,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * @return true if the ImageView exists, and it's Drawable exists
+     * @return true if the ImageView exists, and its Drawable exists
      */
     private static boolean hasDrawable(ImageView imageView) {
         return null != imageView && null != imageView.getDrawable();
@@ -111,11 +111,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     /**
-     * Set's the ImageView's ScaleType to Matrix.
+     * Sets the ImageView's ScaleType to Matrix.
      */
     private static void setImageViewScaleTypeMatrix(ImageView imageView) {
         /**
-         * PhotoView sets it's own ScaleType to Matrix, then diverts all calls
+         * PhotoView sets its own ScaleType to Matrix, then diverts all calls
          * setScaleType to this.setScaleType automatically.
          */
         if (null != imageView && !(imageView instanceof IPhotoView)) {
