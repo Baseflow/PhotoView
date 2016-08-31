@@ -478,6 +478,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
+    @Override
+    public void onScaleEnd(float scaleFactor, float focusX, float focusY) {
+        if (null != mScaleChangeListener) {
+            mScaleChangeListener.onScaleEnd(scaleFactor, focusX, focusY);
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
@@ -991,6 +998,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * @param focusY      focal point Y position
          */
         void onScaleChange(float scaleFactor, float focusX, float focusY);
+
+        /**
+         * Callback for when the scale gesture has ended
+         *
+         * @param scaleFactor the scale factor (<1 for zoom out, >1 for zoom in)
+         * @param focusX      focal point X position
+         * @param focusY      focal point Y position
+         */
+        void onScaleEnd(float scaleFactor, float focusX, float focusY);
     }
 
     /**
