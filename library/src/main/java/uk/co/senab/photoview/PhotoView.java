@@ -121,8 +121,12 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public void setAllowParentInterceptOnEdge(boolean allow) {
-        mAttacher.setAllowParentInterceptOnEdge(allow);
+    public void setAllowParentInterceptOnHorizontalEdge(boolean allow) {
+        mAttacher.setAllowParentInterceptOnHorizontalEdge(allow);
+    }
+
+    @Override public void setAllowParentInterceptOnVerticalEdge(boolean allow) {
+        mAttacher.setAllowParentInterceptOnVerticalEdge(allow);
     }
 
     @Override

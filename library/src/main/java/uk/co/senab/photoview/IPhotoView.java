@@ -100,7 +100,15 @@ public interface IPhotoView {
      *
      * @param allow whether to allow intercepting by parent element or not
      */
-    void setAllowParentInterceptOnEdge(boolean allow);
+    void setAllowParentInterceptOnHorizontalEdge(boolean allow);
+
+    /**
+     * Whether to allow the ImageView's parent to intercept the touch event when the photo is scroll
+     * to it's vertical edge.
+     *
+     * @param allow whether to allow intercepting by parent element or not
+     */
+    void setAllowParentInterceptOnVerticalEdge(boolean allow);
 
     /**
      * Sets the minimum scale level. What this value represents depends on the current {@link

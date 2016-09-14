@@ -60,10 +60,10 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
 
-    static final int EDGE_NONE = -1;
-    static final int EDGE_LEFT = 0;
-    static final int EDGE_RIGHT = 1;
-    static final int EDGE_BOTH = 2;
+    static final short EDGE_LEFT =   0b1000;
+    static final short EDGE_TOP =    0b0100;
+    static final short EDGE_RIGHT =  0b0010;
+    static final short EDGE_BOTTOM = 0b0001;
 
     static int SINGLE_TOUCH = 1;
 
@@ -71,7 +71,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private float mMidScale = DEFAULT_MID_SCALE;
     private float mMaxScale = DEFAULT_MAX_SCALE;
 
-    private boolean mAllowParentInterceptOnEdge = true;
+    private short mParentInterceptHorizontalMask = EDGE_LEFT ^ EDGE_RIGHT;
+    private short mParentInterceptVerticalMask = EDGE_TOP ^ EDGE_BOTTOM;
     private boolean mBlockParentIntercept = false;
 
     private static void checkZoomLevels(float minZoom, float midZoom,
@@ -148,7 +149,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
-    private int mScrollEdge = EDGE_BOTH;
+    private short mScrollEdge;
     private float mBaseRotation;
 
     private boolean mZoomEnabled;
@@ -394,10 +395,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * the edge, aka 'overscrolling', let the parent take over).
          */
         ViewParent parent = imageView.getParent();
-        if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
-            if (mScrollEdge == EDGE_BOTH
-                    || (mScrollEdge == EDGE_LEFT && dx >= 1f)
-                    || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
+        if (!mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
+            if ((mScrollEdge & mParentInterceptHorizontalMask) > 0 && Math.abs(dx) > 1f ||
+                    (mScrollEdge & mParentInterceptVerticalMask) > 0 && Math.abs(dy) > 1f) {
                 if (null != parent) {
                     parent.requestDisallowInterceptTouchEvent(false);
                 }
@@ -539,8 +539,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public void setAllowParentInterceptOnEdge(boolean allow) {
-        mAllowParentInterceptOnEdge = allow;
+    public void setAllowParentInterceptOnHorizontalEdge(boolean allow) {
+        mParentInterceptHorizontalMask = allow ? EDGE_LEFT ^ EDGE_RIGHT : (short) 0;
+    }
+
+    @Override
+    public void setAllowParentInterceptOnVerticalEdge(boolean allow) {
+        mParentInterceptVerticalMask = allow ? EDGE_TOP ^ EDGE_BOTTOM : (short) 0;
     }
 
     @Override
@@ -752,6 +757,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
         final float height = rect.height(), width = rect.width();
         float deltaX = 0, deltaY = 0;
+        mScrollEdge = 0;
 
         final int viewHeight = getImageViewHeight(imageView);
         if (height <= viewHeight) {
@@ -766,10 +772,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     deltaY = (viewHeight - height) / 2 - rect.top;
                     break;
             }
+            mScrollEdge ^= EDGE_TOP ^ EDGE_BOTTOM;
         } else if (rect.top > 0) {
             deltaY = -rect.top;
+            mScrollEdge ^= EDGE_TOP;
         } else if (rect.bottom < viewHeight) {
             deltaY = viewHeight - rect.bottom;
+            mScrollEdge ^= EDGE_BOTTOM;
         }
 
         final int viewWidth = getImageViewWidth(imageView);
@@ -785,15 +794,13 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     deltaX = (viewWidth - width) / 2 - rect.left;
                     break;
             }
-            mScrollEdge = EDGE_BOTH;
+            mScrollEdge ^= EDGE_LEFT ^ EDGE_RIGHT;
         } else if (rect.left > 0) {
-            mScrollEdge = EDGE_LEFT;
+            mScrollEdge ^= EDGE_LEFT;
             deltaX = -rect.left;
         } else if (rect.right < viewWidth) {
             deltaX = viewWidth - rect.right;
-            mScrollEdge = EDGE_RIGHT;
-        } else {
-            mScrollEdge = EDGE_NONE;
+            mScrollEdge ^= EDGE_RIGHT;
         }
 
         // Finally actually translate the matrix
