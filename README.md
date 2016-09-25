@@ -23,7 +23,7 @@ allprojects {
 }
 ```
 
-Then, add the library to your project `build.gradle`
+Then, add the library to your module `build.gradle`
 ```gradle
 dependencies {
     compile 'com.github.chrisbanes:PhotoView:1.3.0'
