@@ -154,6 +154,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
                     mAttacher.setDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.menu_matrix_capture:
+                mCurrentDisplayMatrix = new Matrix();
                 mAttacher.getDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.extract_visible_bitmap:
