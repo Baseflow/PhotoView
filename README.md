@@ -1,7 +1,9 @@
+![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/art/header_graphic.png)
+
 # PhotoView
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
 
-![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/art/header_graphic.png)
+[![](https://jitpack.io/v/chrisbanes/PhotoView.svg)](https://jitpack.io/#chrisbanes/PhotoView)
 
 ## Features
 - Out of the box zooming, using multi-touch and double-tap.
@@ -26,7 +28,7 @@ allprojects {
 Then, add the library to your module `build.gradle`
 ```gradle
 dependencies {
-    compile 'com.github.chrisbanes:PhotoView:1.3.0'
+    compile 'com.github.chrisbanes:PhotoView:{latest.release.here}'
 }
 ```
 
@@ -98,7 +100,7 @@ Any Pull Request against **master** will be rejected
 
 ## License
 
-    Copyright 2011, 2012 Chris Banes
+    Copyright 2016 Chris Banes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
