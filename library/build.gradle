@@ -1,19 +1,19 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
-        minSdkVersion 4
-        targetSdkVersion 24
+        minSdkVersion 9
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
 }
 
 dependencies {
-    compile "com.android.support:support-v4:24.1.1"
+    compile "com.android.support:support-core-utils:25.0.0"
 }
 
 apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'
