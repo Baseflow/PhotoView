@@ -261,9 +261,23 @@ public interface IPhotoView {
     void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener);
 
     /**
+     * Returns a listener to be invoked when the Photo displayed by this View scale changes.
+     *
+     * @return PhotoViewAttacher.OnScaleChangeListener currently set, may be null
+     */
+    PhotoViewAttacher.OnScaleChangeListener getOnScaleChangeListener();
+
+    /**
      * Will report back about fling(single touch)
      *
      * @param onSingleFlingListener OnSingleFlingListener instance
      */
     void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener);
+
+    /**
+     * Returns a listener to be invoked when the View receives a single fling.
+     *
+     * @return PhotoViewAttacher.OnSingleFlingListener currently set, may be null
+     */
+    PhotoViewAttacher.OnSingleFlingListener getOnSingleFlingListener();
 }

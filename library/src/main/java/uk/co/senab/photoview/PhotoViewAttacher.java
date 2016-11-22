@@ -230,8 +230,18 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
+    public OnScaleChangeListener getOnScaleChangeListener() {
+        return mScaleChangeListener;
+    }
+
+    @Override
     public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
         this.mSingleFlingListener = onSingleFlingListener;
+    }
+
+    @Override
+    public OnSingleFlingListener getOnSingleFlingListener() {
+        return mSingleFlingListener;
     }
 
     @Override
