@@ -7,14 +7,8 @@ android:
   components:
     - platform-tools
     - tools
-
-    # The BuildTools version used by your project
-    - build-tools-25.0.0
-
-    # The SDK version used to compile your project
+    - build-tools-25.0.2
     - android-25
-
-    # Additional components
     - extra-android-m2repository
 
 before_script:
