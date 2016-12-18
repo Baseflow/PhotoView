@@ -1,4 +1,4 @@
-package uk.co.senab.photoview;
+package com.github.chrisbanes.photoview;
 
 import android.util.Log;
 

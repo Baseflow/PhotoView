@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 public class PicassoSampleActivity extends AppCompatActivity {
 

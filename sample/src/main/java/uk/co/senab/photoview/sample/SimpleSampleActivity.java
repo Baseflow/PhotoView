@@ -24,8 +24,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -35,13 +35,13 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.github.chrisbanes.photoview.PhotoViewAttacher.OnMatrixChangedListener;
+import com.github.chrisbanes.photoview.PhotoViewAttacher.OnPhotoTapListener;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
-import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
 public class SimpleSampleActivity extends AppCompatActivity {
 

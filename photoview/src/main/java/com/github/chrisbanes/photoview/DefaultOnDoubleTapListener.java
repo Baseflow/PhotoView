@@ -1,4 +1,4 @@
-package uk.co.senab.photoview;
+package com.github.chrisbanes.photoview;
 
 import android.graphics.RectF;
 import android.view.GestureDetector;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
 /**
  * Provided default implementation of GestureDetector.OnDoubleTapListener, to be overridden with custom behavior, if needed
  * <p>&nbsp;</p>
- * To be used via {@link uk.co.senab.photoview.PhotoViewAttacher#setOnDoubleTapListener(android.view.GestureDetector.OnDoubleTapListener)}
+ * To be used via {@link PhotoViewAttacher#setOnDoubleTapListener(android.view.GestureDetector.OnDoubleTapListener)}
  */
 public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapListener {
 
