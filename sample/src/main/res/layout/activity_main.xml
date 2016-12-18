@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tv_current_matrix"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:background="#60000000"

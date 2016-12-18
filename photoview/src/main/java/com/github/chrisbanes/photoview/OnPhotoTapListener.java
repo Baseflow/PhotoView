@@ -3,7 +3,7 @@ package com.github.chrisbanes.photoview;
 import android.view.View;
 
 /**
- * Interface definition for a callback to be invoked when the Photo is tapped with a single
+ * A callback to be invoked when the Photo is tapped with a single
  * tap.
  */
 public interface OnPhotoTapListener {

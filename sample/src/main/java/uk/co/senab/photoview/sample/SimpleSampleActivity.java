@@ -30,10 +30,10 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.OnMatrixChangedListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.OnSingleFlingListener;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 
 import java.util.Random;
 
@@ -77,7 +77,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
         assert null != zoomToggle;
-        zoomToggle.setTitle(mPhotoView.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
+        zoomToggle.setTitle(mPhotoView.isZoomEnabled() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -86,7 +86,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_zoom_toggle:
-                mPhotoView.setZoomable(!mPhotoView.canZoom());
+                mPhotoView.setZoomable(!mPhotoView.isZoomEnabled());
                 return true;
 
             case R.id.menu_scale_fit_center:

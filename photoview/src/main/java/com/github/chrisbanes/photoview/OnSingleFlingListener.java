@@ -3,7 +3,7 @@ package com.github.chrisbanes.photoview;
 import android.view.MotionEvent;
 
 /**
- * Interface definition for a callback to be invoked when the ImageView is fling with a single
+ * A callback to be invoked when the ImageView is flung with a single
  * touch
  */
 public interface OnSingleFlingListener {

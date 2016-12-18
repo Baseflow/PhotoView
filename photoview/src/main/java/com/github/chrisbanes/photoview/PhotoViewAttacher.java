@@ -82,7 +82,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
-    private int ZOOM_DURATION = DEFAULT_ZOOM_DURATION;
+    private int mZoomDuration = DEFAULT_ZOOM_DURATION;
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
     private float mMaxScale = DEFAULT_MAX_SCALE;
@@ -109,7 +109,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnOutsidePhotoTapListener mOutsidePhotoTapListener;
     private View.OnClickListener mOnClickListener;
     private OnLongClickListener mLongClickListener;
-    private OnScaleChangeListener mScaleChangeListener;
+    private OnScaleChangedListener mScaleChangeListener;
     private OnSingleFlingListener mSingleFlingListener;
 
     private FlingRunnable mCurrentFlingRunnable;
@@ -227,7 +227,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         this.mGestureDetector.setOnDoubleTapListener(newOnDoubleTapListener);
     }
 
-    public void setOnScaleChangeListener(OnScaleChangeListener onScaleChangeListener) {
+    public void setOnScaleChangeListener(OnScaleChangedListener onScaleChangeListener) {
         this.mScaleChangeListener = onScaleChangeListener;
     }
 
@@ -635,8 +635,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
      * @return RectF - Displayed Rectangle
      */
     private RectF getDisplayRect(Matrix matrix) {
-
-
         Drawable d = mImageView.getDrawable();
         if (null != d) {
             mDisplayRect.set(0, 0, d.getIntrinsicWidth(),
@@ -648,9 +646,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setZoomTransitionDuration(int milliseconds) {
-        if (milliseconds < 0)
-            milliseconds = DEFAULT_ZOOM_DURATION;
-        this.ZOOM_DURATION = milliseconds;
+        this.mZoomDuration = milliseconds;
     }
 
     /**
@@ -733,8 +729,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
             switch (mScaleType) {
                 case FIT_CENTER:
-                    mBaseMatrix
-                            .setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
                     break;
 
                 case FIT_START:
@@ -758,47 +753,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     private int getImageViewWidth(ImageView imageView) {
-        if (null == imageView)
-            return 0;
         return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
     }
 
     private int getImageViewHeight(ImageView imageView) {
-        if (null == imageView)
-            return 0;
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
-    }
-
-    /**
-     * Interface definition for a callback to be invoked when the internal Matrix has changed for
-     * this View.
-     *
-     * @author Chris Banes
-     */
-    public interface OnMatrixChangedListener {
-        /**
-         * Callback for when the Matrix displaying the Drawable has changed. This could be because
-         * the View's bounds have changed, or the user has zoomed.
-         *
-         * @param rect - Rectangle displaying the Drawable's new bounds.
-         */
-        void onMatrixChanged(RectF rect);
-    }
-
-    /**
-     * Interface definition for callback to be invoked when attached ImageView scale changes
-     *
-     * @author Marek Sebera
-     */
-    public interface OnScaleChangeListener {
-        /**
-         * Callback for when the scale changes
-         *
-         * @param scaleFactor the scale factor (less than 1 for zoom out, greater than 1 for zoom in)
-         * @param focusX      focal point X position
-         * @param focusY      focal point Y position
-         */
-        void onScaleChange(float scaleFactor, float focusX, float focusY);
     }
 
     private class AnimatedZoomRunnable implements Runnable {
@@ -832,7 +791,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
 
         private float interpolate() {
-            float t = 1f * (System.currentTimeMillis() - mStartTime) / ZOOM_DURATION;
+            float t = 1f * (System.currentTimeMillis() - mStartTime) / mZoomDuration;
             t = Math.min(1f, t);
             t = mInterpolator.getInterpolation(t);
             return t;

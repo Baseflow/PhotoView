@@ -34,8 +34,9 @@ class PhotoGestureDetector {
             public boolean onScale(ScaleGestureDetector detector) {
                 float scaleFactor = detector.getScaleFactor();
 
-                if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor))
+                if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor)) {
                     return false;
+                }
 
                 mListener.onScale(scaleFactor,
                         detector.getFocusX(), detector.getFocusY());

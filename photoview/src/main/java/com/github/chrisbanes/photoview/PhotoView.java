@@ -53,6 +53,8 @@ public class PhotoView extends ImageView {
 
     private void init() {
         mAttacher = new PhotoViewAttacher(this);
+        //TODO why do we need this?
+        setScaleType(ScaleType.MATRIX);
     }
 
     @Override
@@ -92,7 +94,6 @@ public class PhotoView extends ImageView {
     public void setImageResource(int resId) {
         super.setImageResource(resId);
         mAttacher.update();
-
     }
 
     @Override
@@ -168,7 +169,7 @@ public class PhotoView extends ImageView {
         mAttacher.setScaleLevels(minimumScale, mediumScale, maximumScale);
     }
 
-    public void setOnMatrixChangeListener(PhotoViewAttacher.OnMatrixChangedListener listener) {
+    public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
         mAttacher.setOnMatrixChangeListener(listener);
     }
 
@@ -204,8 +205,8 @@ public class PhotoView extends ImageView {
         mAttacher.setOnDoubleTapListener(newOnDoubleTapListener);
     }
 
-    public void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener) {
-        mAttacher.setOnScaleChangeListener(onScaleChangeListener);
+    public void setOnScaleChangeListener(OnScaleChangedListener onScaleChangedListener) {
+        mAttacher.setOnScaleChangeListener(onScaleChangedListener);
     }
 
     public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
