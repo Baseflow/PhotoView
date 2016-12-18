@@ -14,7 +14,6 @@ import android.view.MotionEvent;
  * <p/>
  * There's not much I can do in my code for now, but we can mask the result by
  * just catching the problem and ignoring it.
- * Created by John on 10/1/15.
  */
 public class HackyDrawerLayout extends DrawerLayout {
 
