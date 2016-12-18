@@ -1,8 +1,12 @@
 package com.github.chrisbanes.photoview;
 
+/**
+ * Callback when the user tapped outside of the photo
+ */
 public interface OnOutsidePhotoTapListener {
+
     /**
-     * Callback when the user tapped outside of the photo
+     * The outside of the photo has been tapped
      */
     void onOutsidePhotoTap();
 }

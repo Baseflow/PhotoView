@@ -52,35 +52,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private static final int EDGE_BOTH = 2;
     private static int SINGLE_TOUCH = 1;
 
-    private static void checkZoomLevels(float minZoom, float midZoom,
-                                        float maxZoom) {
-        if (minZoom >= midZoom) {
-            throw new IllegalArgumentException(
-                    "Minimum zoom has to be less than Medium zoom. Call setMinimumZoom() with a more appropriate value");
-        } else if (midZoom >= maxZoom) {
-            throw new IllegalArgumentException(
-                    "Medium zoom has to be less than Maximum zoom. Call setMaximumZoom() with a more appropriate value");
-        }
-    }
-
-    /**
-     * @return true if the ImageView exists, and its Drawable exists
-     */
-    private static boolean hasDrawable(ImageView imageView) {
-        return null != imageView && null != imageView.getDrawable();
-    }
-
-    /**
-     * @return true if the ScaleType is supported.
-     */
-    private static boolean isSupportedScaleType(final ScaleType scaleType) {
-        if (scaleType == null) {
-            return false;
-        }
-
-        return true;
-    }
-
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     private int mZoomDuration = DEFAULT_ZOOM_DURATION;
     private float mMinScale = DEFAULT_MIN_SCALE;
@@ -303,8 +274,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             return; // Do not drag if we are already scaling
         }
 
-        Stick.log(String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
-
         mSuppMatrix.postTranslate(dx, dy);
         checkAndDisplayMatrix();
 
@@ -336,7 +305,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     @Override
     public void onFling(float startX, float startY, float velocityX,
                         float velocityY) {
-        Stick.log("onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX + " Vy: " + velocityY);
         mCurrentFlingRunnable = new FlingRunnable(mImageView.getContext());
         mCurrentFlingRunnable.fling(getImageViewWidth(mImageView),
                 getImageViewHeight(mImageView), (int) velocityX, (int) velocityY);
@@ -351,8 +319,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     @Override
     public void onScale(float scaleFactor, float focusX, float focusY) {
-        Stick.log(String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
-
         if ((getScale() < mMaxScale || scaleFactor < 1f) && (getScale() > mMinScale || scaleFactor > 1f)) {
             if (null != mScaleChangeListener) {
                 mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
@@ -366,16 +332,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
 
-        if (mZoomEnabled && hasDrawable((ImageView) v)) {
+        if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
             ViewParent parent = v.getParent();
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     // First, disable the Parent from intercepting the touch
                     // event
-                    if (null != parent) {
+                    if (parent != null) {
                         parent.requestDisallowInterceptTouchEvent(true);
-                    } else {
-                        Stick.log("onTouch getParent() returned null");
                     }
 
                     // If we're flinging, and the user presses down, cancel
@@ -426,22 +390,22 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setMinimumScale(float minimumScale) {
-        checkZoomLevels(minimumScale, mMidScale, mMaxScale);
+        Util.checkZoomLevels(minimumScale, mMidScale, mMaxScale);
         mMinScale = minimumScale;
     }
 
     public void setMediumScale(float mediumScale) {
-        checkZoomLevels(mMinScale, mediumScale, mMaxScale);
+        Util.checkZoomLevels(mMinScale, mediumScale, mMaxScale);
         mMidScale = mediumScale;
     }
 
     public void setMaximumScale(float maximumScale) {
-        checkZoomLevels(mMinScale, mMidScale, maximumScale);
+        Util.checkZoomLevels(mMinScale, mMidScale, maximumScale);
         mMaxScale = maximumScale;
     }
 
     public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
-        checkZoomLevels(minimumScale, mediumScale, maximumScale);
+        Util.checkZoomLevels(minimumScale, mediumScale, maximumScale);
         mMinScale = minimumScale;
         mMidScale = mediumScale;
         mMaxScale = maximumScale;
@@ -482,8 +446,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                          boolean animate) {
         // Check to see if the scale is within bounds
         if (scale < mMinScale || scale > mMaxScale) {
-            Stick.log("Scale must be within the range of minScale and maxScale");
-            return;
+            throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
         }
 
         if (animate) {
@@ -505,10 +468,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setScaleType(ScaleType scaleType) {
-        if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
+        if (Util.isSupportedScaleType(scaleType) && scaleType != mScaleType) {
             mScaleType = scaleType;
-
-            // Finally update
             update();
         }
     }
@@ -808,7 +769,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
 
         public void cancelFling() {
-            Stick.log("Cancel Fling");
             mScroller.forceFinished(true);
         }
 
@@ -840,9 +800,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mCurrentX = startX;
             mCurrentY = startY;
 
-            Stick.log("fling. StartX:" + startX + " StartY:" + startY
-                    + " MaxX:" + maxX + " MaxY:" + maxY);
-
             // If we actually can move, fling the scroller
             if (startX != maxX || startY != maxY) {
                 mScroller.fling(startX, startY, velocityX, velocityY, minX,
@@ -860,10 +817,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
                 final int newX = mScroller.getCurrX();
                 final int newY = mScroller.getCurrY();
-
-                Stick.log("fling run(). CurrentX:" + mCurrentX + " CurrentY:"
-                        + mCurrentY + " NewX:" + newX + " NewY:"
-                        + newY);
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
                 setImageViewMatrix(getDrawMatrix());

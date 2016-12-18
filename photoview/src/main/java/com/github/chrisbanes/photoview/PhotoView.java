@@ -53,8 +53,9 @@ public class PhotoView extends ImageView {
 
     private void init() {
         mAttacher = new PhotoViewAttacher(this);
-        //TODO why do we need this?
-        setScaleType(ScaleType.MATRIX);
+        //We always pose as a Matrix scale type, though we can change to another scale type
+        //via the attacher
+        super.setScaleType(ScaleType.MATRIX);
     }
 
     @Override
@@ -79,27 +80,34 @@ public class PhotoView extends ImageView {
 
     @Override
     public void setScaleType(ScaleType scaleType) {
-        super.setScaleType(scaleType);
-        mAttacher.setScaleType(scaleType);
+        if (mAttacher != null) {
+            mAttacher.setScaleType(scaleType);
+        }
     }
 
     @Override
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         // setImageBitmap calls through to this method
-        mAttacher.update();
+        if (mAttacher != null) {
+            mAttacher.update();
+        }
     }
 
     @Override
     public void setImageResource(int resId) {
         super.setImageResource(resId);
-        mAttacher.update();
+        if (mAttacher != null) {
+            mAttacher.update();
+        }
     }
 
     @Override
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
-        mAttacher.update();
+        if (mAttacher != null) {
+            mAttacher.update();
+        }
     }
 
     @Override
