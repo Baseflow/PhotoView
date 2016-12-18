@@ -1,5 +1,3 @@
-![PhotoView](https://raw.github.com/chrisbanes/PhotoView/master/art/header_graphic.png)
-
 # PhotoView
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
 
