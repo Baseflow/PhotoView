@@ -17,7 +17,6 @@ package com.github.chrisbanes.photoview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -26,6 +25,9 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.widget.ImageView;
 
+/**
+ * A zoomable {@link ImageView}
+ */
 public class PhotoView extends ImageView {
 
     private PhotoViewAttacher mAttacher;
@@ -49,9 +51,8 @@ public class PhotoView extends ImageView {
         init();
     }
 
-    protected void init() {
+    private void init() {
         mAttacher = new PhotoViewAttacher(this);
-        setScaleType(ScaleType.MATRIX);
     }
 
     @Override
@@ -70,6 +71,11 @@ public class PhotoView extends ImageView {
     }
 
     @Override
+    public void setOnClickListener(OnClickListener l) {
+        mAttacher.setOnClickListener(l);
+    }
+
+    @Override
     public void setScaleType(ScaleType scaleType) {
         super.setScaleType(scaleType);
         mAttacher.setScaleType(scaleType);
@@ -80,7 +86,6 @@ public class PhotoView extends ImageView {
         super.setImageDrawable(drawable);
         // setImageBitmap calls through to this method
         mAttacher.update();
-
     }
 
     @Override
@@ -111,8 +116,8 @@ public class PhotoView extends ImageView {
         mAttacher.setRotationBy(rotationDegree);
     }
 
-    public boolean canZoom() {
-        return mAttacher.canZoom();
+    public boolean isZoomEnabled() {
+        return mAttacher.isZoomEnabled();
     }
 
     public RectF getDisplayRect() {
@@ -167,12 +172,12 @@ public class PhotoView extends ImageView {
         mAttacher.setOnMatrixChangeListener(listener);
     }
 
-    public void setOnPhotoTapListener(PhotoViewAttacher.OnPhotoTapListener listener) {
+    public void setOnPhotoTapListener(OnPhotoTapListener listener) {
         mAttacher.setOnPhotoTapListener(listener);
     }
 
-    public void setOnViewTapListener(PhotoViewAttacher.OnViewTapListener listener) {
-        mAttacher.setOnViewTapListener(listener);
+    public void setOnOutsidePhotoTapListener(OnOutsidePhotoTapListener listener) {
+        mAttacher.setOnOutsidePhotoTapListener(listener);
     }
 
     public void setScale(float scale) {
@@ -191,10 +196,6 @@ public class PhotoView extends ImageView {
         mAttacher.setZoomable(zoomable);
     }
 
-    public Bitmap getVisibleRectangleBitmap() {
-        return mAttacher.getVisibleRectangleBitmap();
-    }
-
     public void setZoomTransitionDuration(int milliseconds) {
         mAttacher.setZoomTransitionDuration(milliseconds);
     }
@@ -207,7 +208,7 @@ public class PhotoView extends ImageView {
         mAttacher.setOnScaleChangeListener(onScaleChangeListener);
     }
 
-    public void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener) {
+    public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
         mAttacher.setOnSingleFlingListener(onSingleFlingListener);
     }
 }

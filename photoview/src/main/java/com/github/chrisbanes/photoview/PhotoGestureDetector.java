@@ -6,7 +6,7 @@ import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-class TheGestureDetector {
+class PhotoGestureDetector {
 
     private static final int INVALID_POINTER_ID = -1;
 
@@ -21,7 +21,7 @@ class TheGestureDetector {
     private int mActivePointerId = INVALID_POINTER_ID;
     private int mActivePointerIndex = 0;
 
-    public TheGestureDetector(Context context, OnGestureListener onGestureListener) {
+    public PhotoGestureDetector(Context context, OnGestureListener onGestureListener) {
         mListener = onGestureListener;
         final ViewConfiguration configuration = ViewConfiguration
                 .get(context);

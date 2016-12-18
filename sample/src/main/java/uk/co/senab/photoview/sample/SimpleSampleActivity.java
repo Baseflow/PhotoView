@@ -15,14 +15,10 @@
  *******************************************************************************/
 package uk.co.senab.photoview.sample;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,17 +26,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.OnSingleFlingListener;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import com.github.chrisbanes.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Random;
 
 public class SimpleSampleActivity extends AppCompatActivity {
@@ -49,9 +43,8 @@ public class SimpleSampleActivity extends AppCompatActivity {
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
     static final String FLING_LOG_STRING = "Fling velocityX: %.2f, velocityY: %.2f";
 
+    private PhotoView mPhotoView;
     private TextView mCurrMatrixTv;
-
-    private PhotoViewAttacher mAttacher;
 
     private Toast mCurrentToast;
 
@@ -62,19 +55,16 @@ public class SimpleSampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView mImageView = (ImageView) findViewById(R.id.iv_photo);
+        mPhotoView = (PhotoView) findViewById(R.id.iv_photo);
         mCurrMatrixTv = (TextView) findViewById(R.id.tv_current_matrix);
 
         Drawable bitmap = ContextCompat.getDrawable(this, R.drawable.wallpaper);
-        mImageView.setImageDrawable(bitmap);
-
-        // The MAGIC happens here!
-        mAttacher = new PhotoViewAttacher(mImageView);
+        mPhotoView.setImageDrawable(bitmap);
 
         // Lets attach some listeners, not required though!
-        mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
-        mAttacher.setOnPhotoTapListener(new PhotoTapListener());
-        mAttacher.setOnSingleFlingListener(new SingleFlingListener());
+        mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
+        mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
+        mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
     }
 
     @Override
@@ -84,18 +74,10 @@ public class SimpleSampleActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        // Need to call clean-up
-        mAttacher.cleanup();
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
         assert null != zoomToggle;
-        zoomToggle.setTitle(mAttacher.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
+        zoomToggle.setTitle(mPhotoView.canZoom() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -104,45 +86,45 @@ public class SimpleSampleActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_zoom_toggle:
-                mAttacher.setZoomable(!mAttacher.canZoom());
+                mPhotoView.setZoomable(!mPhotoView.canZoom());
                 return true;
 
             case R.id.menu_scale_fit_center:
-                mAttacher.setScaleType(ScaleType.FIT_CENTER);
+                mPhotoView.setScaleType(ScaleType.FIT_CENTER);
                 return true;
 
             case R.id.menu_scale_fit_start:
-                mAttacher.setScaleType(ScaleType.FIT_START);
+                mPhotoView.setScaleType(ScaleType.FIT_START);
                 return true;
 
             case R.id.menu_scale_fit_end:
-                mAttacher.setScaleType(ScaleType.FIT_END);
+                mPhotoView.setScaleType(ScaleType.FIT_END);
                 return true;
 
             case R.id.menu_scale_fit_xy:
-                mAttacher.setScaleType(ScaleType.FIT_XY);
+                mPhotoView.setScaleType(ScaleType.FIT_XY);
                 return true;
 
             case R.id.menu_scale_scale_center:
-                mAttacher.setScaleType(ScaleType.CENTER);
+                mPhotoView.setScaleType(ScaleType.CENTER);
                 return true;
 
             case R.id.menu_scale_scale_center_crop:
-                mAttacher.setScaleType(ScaleType.CENTER_CROP);
+                mPhotoView.setScaleType(ScaleType.CENTER_CROP);
                 return true;
 
             case R.id.menu_scale_scale_center_inside:
-                mAttacher.setScaleType(ScaleType.CENTER_INSIDE);
+                mPhotoView.setScaleType(ScaleType.CENTER_INSIDE);
                 return true;
 
             case R.id.menu_scale_random_animate:
             case R.id.menu_scale_random:
                 Random r = new Random();
 
-                float minScale = mAttacher.getMinimumScale();
-                float maxScale = mAttacher.getMaximumScale();
+                float minScale = mPhotoView.getMinimumScale();
+                float maxScale = mPhotoView.getMaximumScale();
                 float randomScale = minScale + (r.nextFloat() * (maxScale - minScale));
-                mAttacher.setScale(randomScale, item.getItemId() == R.id.menu_scale_random_animate);
+                mPhotoView.setScale(randomScale, item.getItemId() == R.id.menu_scale_random_animate);
 
                 showToast(String.format(SCALE_TOAST_STRING, randomScale));
 
@@ -151,29 +133,11 @@ public class SimpleSampleActivity extends AppCompatActivity {
                 if (mCurrentDisplayMatrix == null)
                     showToast("You need to capture display matrix first");
                 else
-                    mAttacher.setDisplayMatrix(mCurrentDisplayMatrix);
+                    mPhotoView.setDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.menu_matrix_capture:
                 mCurrentDisplayMatrix = new Matrix();
-                mAttacher.getDisplayMatrix(mCurrentDisplayMatrix);
-                return true;
-            case R.id.extract_visible_bitmap:
-                try {
-                    Bitmap bmp = mAttacher.getVisibleRectangleBitmap();
-                    File tmpFile = File.createTempFile("photoview", ".png",
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
-                    FileOutputStream out = new FileOutputStream(tmpFile);
-                    bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    out.close();
-                    Intent share = new Intent(Intent.ACTION_SEND);
-                    share.setType("image/png");
-                    share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tmpFile));
-                    startActivity(share);
-                    Toast.makeText(this, String.format("Extracted into: %s", tmpFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
-                }
+                mPhotoView.getDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
         }
 
@@ -188,11 +152,6 @@ public class SimpleSampleActivity extends AppCompatActivity {
             float yPercentage = y * 100f;
 
             showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage, view == null ? 0 : view.getId()));
-        }
-
-        @Override
-        public void onOutsidePhotoTap() {
-            showToast("You have a tap event on the place where out of the photo.");
         }
     }
 
@@ -213,7 +172,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
         }
     }
 
-    private class SingleFlingListener implements PhotoViewAttacher.OnSingleFlingListener {
+    private class SingleFlingListener implements OnSingleFlingListener {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
