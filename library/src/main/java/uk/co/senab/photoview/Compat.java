@@ -16,13 +16,12 @@
 package uk.co.senab.photoview;
 
 import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class Compat {
+class Compat {
 
     private static final int SIXTY_FPS_INTERVAL = 1000 / 60;
 
@@ -40,21 +39,6 @@ public class Compat {
     }
 
     public static int getPointerIndex(int action) {
-        if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB)
-            return getPointerIndexHoneyComb(action);
-        else
-            return getPointerIndexEclair(action);
-    }
-
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.ECLAIR)
-    private static int getPointerIndexEclair(int action) {
-        return (action & MotionEvent.ACTION_POINTER_ID_MASK) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private static int getPointerIndexHoneyComb(int action) {
         return (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
     }
-
 }

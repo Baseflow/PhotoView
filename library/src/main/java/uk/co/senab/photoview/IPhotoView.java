@@ -22,7 +22,6 @@ import android.view.GestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
-
 public interface IPhotoView {
 
     float DEFAULT_MAX_SCALE = 3.0f;
