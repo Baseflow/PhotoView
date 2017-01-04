@@ -42,41 +42,50 @@ public class RotationSampleActivity extends AppCompatActivity {
         super.onPause();
         handler.removeCallbacksAndMessages(null);
     }
+    
+    private enum MenuItem {
+        RotateRightTo10(0), RotateLeftTo10(1), RotateAutomatic(2), ResetTo0(3), ResetTo90(4), ResetTo180(5), ResetTo270(6);
+        private final int value;
+        public int value() { return value; }
+        MenuItem(int value) {
+            this.value = value;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, 0, Menu.NONE, "Rotate 10° Right");
-        menu.add(Menu.NONE, 1, Menu.NONE, "Rotate 10° Left");
-        menu.add(Menu.NONE, 2, Menu.NONE, "Toggle automatic rotation");
-        menu.add(Menu.NONE, 3, Menu.NONE, "Reset to 0");
-        menu.add(Menu.NONE, 4, Menu.NONE, "Reset to 90");
-        menu.add(Menu.NONE, 5, Menu.NONE, "Reset to 180");
-        menu.add(Menu.NONE, 6, Menu.NONE, "Reset to 270");
+        menu.add(Menu.NONE, MenuItem.RotateRightTo10.value(), Menu.NONE, "Rotate 10° Right");
+        menu.add(Menu.NONE, MenuItem.RotateLeftTo10.value(), Menu.NONE, "Rotate 10° Left");
+        menu.add(Menu.NONE, MenuItem.RotateAutomatic.value(), Menu.NONE, "Toggle automatic rotation");
+        menu.add(Menu.NONE, MenuItem.ResetTo0.value(), Menu.NONE, "Reset to 0");
+        menu.add(Menu.NONE, MenuItem.ResetTo90.value(), Menu.NONE, "Reset to 90");
+        menu.add(Menu.NONE, MenuItem.ResetTo180.value(), Menu.NONE, "Reset to 180");
+        menu.add(Menu.NONE, MenuItem.ResetTo270.value(), Menu.NONE, "Reset to 270");
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case 0:
+            case MenuItem.RotateRightTo10.value():
                 photo.setRotationBy(10);
                 return true;
-            case 1:
+            case MenuItem.RotateLeftTo10.value():
                 photo.setRotationBy(-10);
                 return true;
-            case 2:
+            case MenuItem.RotateAutomatic.value():
                 toggleRotation();
                 return true;
-            case 3:
+            case MenuItem.ResetTo0.value():
                 photo.setRotationTo(0);
                 return true;
-            case 4:
+            case MenuItem.ResetTo90.value():
                 photo.setRotationTo(90);
                 return true;
-            case 5:
+            case MenuItem.ResetTo180.value():
                 photo.setRotationTo(180);
                 return true;
-            case 6:
+            case MenuItem.ResetTo270.value():
                 photo.setRotationTo(270);
                 return true;
         }
