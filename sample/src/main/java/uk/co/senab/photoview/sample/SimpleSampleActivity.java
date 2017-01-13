@@ -158,26 +158,30 @@ public class SimpleSampleActivity extends AppCompatActivity {
                 mAttacher.getDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.extract_visible_bitmap:
-                try {
-                    Bitmap bmp = mAttacher.getVisibleRectangleBitmap();
-                    File tmpFile = File.createTempFile("photoview", ".png",
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
-                    FileOutputStream out = new FileOutputStream(tmpFile);
-                    bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    out.close();
-                    Intent share = new Intent(Intent.ACTION_SEND);
-                    share.setType("image/png");
-                    share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tmpFile));
-                    startActivity(share);
-                    Toast.makeText(this, String.format("Extracted into: %s", tmpFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
-                }
+                extractVisibleBitmap();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void extractVisibleBitmap() {
+        try {
+            Bitmap bmp = mAttacher.getVisibleRectangleBitmap();
+            File tmpFile = File.createTempFile("photoview", ".png",
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+            FileOutputStream out = new FileOutputStream(tmpFile);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("image/png");
+            share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tmpFile));
+            startActivity(share);
+            Toast.makeText(this, String.format("Extracted into: %s", tmpFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class PhotoTapListener implements OnPhotoTapListener {
