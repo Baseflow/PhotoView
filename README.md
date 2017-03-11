@@ -3,14 +3,7 @@ PhotoView aims to help produce an easily usable implementation of a zooming Andr
 
 [![](https://jitpack.io/v/chrisbanes/PhotoView.svg)](https://jitpack.io/#chrisbanes/PhotoView)
 
-## Features
-- Out of the box zooming, using multi-touch and double-tap.
-- Scrolling, with smooth scrolling fling.
-- Works perfectly when used in a scrolling parent (such as ViewPager).
-- Allows the application to be notified when the displayed Matrix has changed. Useful for when you need to update your UI based on the current zoom/scroll position.
-- Allows the application to be notified when the user taps on the Photo.
-
-# Gradle Dependency
+## Dependency
 
 Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
 
@@ -30,38 +23,25 @@ dependencies {
 }
 ```
 
-## Sample Application
-The sample application (the source is in the repository) has been published onto Google Play for easy access:
+## Features
+- Out of the box zooming, using multi-touch and double-tap.
+- Scrolling, with smooth scrolling fling.
+- Works perfectly when used in a scrolling parent (such as ViewPager).
+- Allows the application to be notified when the displayed Matrix has changed. Useful for when you need to update your UI based on the current zoom/scroll position.
+- Allows the application to be notified when the user taps on the Photo.
 
-[![Get it on Google Play](https://raw.github.com/chrisbanes/PhotoView/master/art/google-play-badge-small.png)](http://play.google.com/store/apps/details?id=uk.co.senab.photoview.sample)
-
-## Sample Usage
+## Usage
 There is a [sample](https://github.com/chrisbanes/PhotoView/tree/master/sample) provided which shows how to use the library in a more advanced way, but for completeness here is all that is required to get PhotoView working:
-
-```java
-ImageView mImageView;
-PhotoViewAttacher mAttacher;
-
-@Override
-public void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_main);
-
-	// Any implementation of ImageView can be used!
-	mImageView = (ImageView) findViewById(R.id.iv_photo);
-
-	// Set the Drawable displayed
-	Drawable bitmap = getResources().getDrawable(R.drawable.wallpaper);
-	mImageView.setImageDrawable(bitmap);
-
-	// Attach a PhotoViewAttacher, which takes care of all of the zooming functionality.
-	// (not needed unless you are going to change the drawable later)
-	mAttacher = new PhotoViewAttacher(mImageView);
-}
-
-// If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
-mAttacher.update();
+```xml
+<com.github.chrisbanes.photoview.PhotoView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/photo_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
 ```
+That't it!
+
+More advanced usage can be seen in the samples.
 
 ## Issues With ViewGroups
 There are some ViewGroups (ones that utilize onInterceptTouchEvent) that throw exceptions when a PhotoView is placed within them, most notably [ViewPager](http://developer.android.com/reference/android/support/v4/view/ViewPager.html) and [DrawerLayout](https://developer.android.com/reference/android/support/v4/widget/DrawerLayout.html). This is a framework issue that has not been resolved. In order to prevent this exception (which typically occurs when you zoom out), take a look at [HackyDrawerLayout](https://github.com/chrisbanes/PhotoView/blob/master/sample/src/main/java/uk/co/senab/photoview/sample/HackyDrawerLayout.java) and you can see the solution is to simply catch the exception. Any ViewGroup which uses onInterceptTouchEvent will also need to be extended and exceptions caught. Use the [HackyDrawerLayout](https://github.com/chrisbanes/PhotoView/blob/master/sample/src/main/java/uk/co/senab/photoview/sample/HackyDrawerLayout.java) as a template of how to do so. The basic implementation is:
@@ -98,7 +78,7 @@ Any Pull Request against **master** will be rejected
 
 ## License
 
-    Copyright 2016 Chris Banes
+    Copyright 2017 Chris Banes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

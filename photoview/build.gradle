@@ -13,7 +13,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-core-utils:25.1.0"
+    compile "com.android.support:support-core-utils:25.2.0"
 }
 
 apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'

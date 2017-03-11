@@ -3,11 +3,8 @@ package uk.co.senab.photoview.sample;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-
 import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.squareup.picasso.Picasso;
 
 public class PicassoSampleActivity extends AppCompatActivity {
 
@@ -16,21 +13,10 @@ public class PicassoSampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple);
 
-        PhotoView photoView = (PhotoView) findViewById(R.id.iv_photo);
-
-        final PhotoViewAttacher attacher = new PhotoViewAttacher(photoView);
+        final PhotoView photoView = (PhotoView) findViewById(R.id.iv_photo);
 
         Picasso.with(this)
                 .load("http://pbs.twimg.com/media/Bist9mvIYAAeAyQ.jpg")
-                .into(photoView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        attacher.update();
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
+                .into(photoView);
     }
 }

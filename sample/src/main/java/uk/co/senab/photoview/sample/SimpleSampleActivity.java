@@ -25,7 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
+import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -147,7 +147,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     private class PhotoTapListener implements OnPhotoTapListener {
 
         @Override
-        public void onPhotoTap(View view, float x, float y) {
+        public void onPhotoTap(ImageView view, float x, float y) {
             float xPercentage = x * 100f;
             float yPercentage = y * 100f;
 
