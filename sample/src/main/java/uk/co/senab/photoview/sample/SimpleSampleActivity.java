@@ -15,7 +15,9 @@
  *******************************************************************************/
 package uk.co.senab.photoview.sample;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -23,9 +25,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -48,6 +52,8 @@ public class SimpleSampleActivity extends AppCompatActivity {
     static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %% ID: %d";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
     static final String FLING_LOG_STRING = "Fling velocityX: %.2f, velocityY: %.2f";
+
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 100;
 
     private TextView mCurrMatrixTv;
 
@@ -158,26 +164,45 @@ public class SimpleSampleActivity extends AppCompatActivity {
                 mAttacher.getDisplayMatrix(mCurrentDisplayMatrix);
                 return true;
             case R.id.extract_visible_bitmap:
-                try {
-                    Bitmap bmp = mAttacher.getVisibleRectangleBitmap();
-                    File tmpFile = File.createTempFile("photoview", ".png",
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
-                    FileOutputStream out = new FileOutputStream(tmpFile);
-                    bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    out.close();
-                    Intent share = new Intent(Intent.ACTION_SEND);
-                    share.setType("image/png");
-                    share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tmpFile));
-                    startActivity(share);
-                    Toast.makeText(this, String.format("Extracted into: %s", tmpFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
-                }
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    extractVisibleBitmap();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void extractVisibleBitmap() {
+        try {
+            Bitmap bmp = mAttacher.getVisibleRectangleBitmap();
+            File tmpFile = File.createTempFile("photoview", ".png",
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+            FileOutputStream out = new FileOutputStream(tmpFile);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("image/png");
+            share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tmpFile));
+            startActivity(share);
+            Toast.makeText(this, String.format("Extracted into: %s", tmpFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            Toast.makeText(this, "Error occured while extracting bitmap", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class PhotoTapListener implements OnPhotoTapListener {
