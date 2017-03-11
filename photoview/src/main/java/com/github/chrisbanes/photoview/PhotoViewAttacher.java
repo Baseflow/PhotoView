@@ -65,7 +65,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
-    private PhotoGestureDetector mScaleDragDetector;
+    private FroyoGestureDetector mScaleDragDetector;
 
     // These are set so we don't keep allocating them on the heap
     private final Matrix mBaseMatrix = new Matrix();
@@ -102,7 +102,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mBaseRotation = 0.0f;
 
         // Create Gesture Detectors...
-        mScaleDragDetector = new PhotoGestureDetector(imageView.getContext(), this);
+        mScaleDragDetector = new FroyoGestureDetector(imageView.getContext(), this);
 
         mGestureDetector = new GestureDetector(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
 
