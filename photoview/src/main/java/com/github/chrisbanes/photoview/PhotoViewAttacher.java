@@ -511,99 +511,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         return mDrawMatrix;
     }
 
-    private void cancelFling() {
-        if (mCurrentFlingRunnable != null) {
-            mCurrentFlingRunnable.cancelFling();
-            mCurrentFlingRunnable = null;
-        }
-    }
-
     public Matrix getImageMatrix() {
         return mDrawMatrix;
-    }
-
-    /**
-     * Helper method that simply checks the Matrix, and then displays the result
-     */
-    private void checkAndDisplayMatrix() {
-        if (checkMatrixBounds()) {
-            setImageViewMatrix(getDrawMatrix());
-        }
-    }
-
-    private boolean checkMatrixBounds() {
-
-        final RectF rect = getDisplayRect(getDrawMatrix());
-        if (rect == null) {
-            return false;
-        }
-
-        final float height = rect.height(), width = rect.width();
-        float deltaX = 0, deltaY = 0;
-
-        final int viewHeight = getImageViewHeight(mImageView);
-        if (height <= viewHeight) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaY = -rect.top;
-                    break;
-                case FIT_END:
-                    deltaY = viewHeight - height - rect.top;
-                    break;
-                default:
-                    deltaY = (viewHeight - height) / 2 - rect.top;
-                    break;
-            }
-        } else if (rect.top > 0) {
-            deltaY = -rect.top;
-        } else if (rect.bottom < viewHeight) {
-            deltaY = viewHeight - rect.bottom;
-        }
-
-        final int viewWidth = getImageViewWidth(mImageView);
-        if (width <= viewWidth) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaX = -rect.left;
-                    break;
-                case FIT_END:
-                    deltaX = viewWidth - width - rect.left;
-                    break;
-                default:
-                    deltaX = (viewWidth - width) / 2 - rect.left;
-                    break;
-            }
-            mScrollEdge = EDGE_BOTH;
-        } else if (rect.left > 0) {
-            mScrollEdge = EDGE_LEFT;
-            deltaX = -rect.left;
-        } else if (rect.right < viewWidth) {
-            deltaX = viewWidth - rect.right;
-            mScrollEdge = EDGE_RIGHT;
-        } else {
-            mScrollEdge = EDGE_NONE;
-        }
-
-        // Finally actually translate the matrix
-        mSuppMatrix.postTranslate(deltaX, deltaY);
-        return true;
-    }
-
-    /**
-     * Helper method that maps the supplied Matrix to the current Drawable
-     *
-     * @param matrix - Matrix to map Drawable against
-     * @return RectF - Displayed Rectangle
-     */
-    private RectF getDisplayRect(Matrix matrix) {
-        Drawable d = mImageView.getDrawable();
-        if (d != null) {
-            mDisplayRect.set(0, 0, d.getIntrinsicWidth(),
-                    d.getIntrinsicHeight());
-            matrix.mapRect(mDisplayRect);
-            return mDisplayRect;
-        }
-        return null;
     }
 
     public void setZoomTransitionDuration(int milliseconds) {
@@ -613,9 +522,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     /**
      * Helper method that 'unpacks' a Matrix and returns the required value
      *
-     * @param matrix     - Matrix to unpack
-     * @param whichValue - Which value from Matrix.M* to return
-     * @return float - returned value
+     * @param matrix     Matrix to unpack
+     * @param whichValue Which value from Matrix.M* to return
+     * @return returned value
      */
     private float getValue(Matrix matrix, int whichValue) {
         matrix.getValues(mMatrixValues);
@@ -623,7 +532,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     /**
-     * Resets the Matrix back to FIT_CENTER, and then displays it.s
+     * Resets the Matrix back to FIT_CENTER, and then displays its contents
      */
     private void resetMatrix() {
         mSuppMatrix.reset();
@@ -642,6 +551,32 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 mMatrixChangeListener.onMatrixChanged(displayRect);
             }
         }
+    }
+
+    /**
+     * Helper method that simply checks the Matrix, and then displays the result
+     */
+    private void checkAndDisplayMatrix() {
+        if (checkMatrixBounds()) {
+            setImageViewMatrix(getDrawMatrix());
+        }
+    }
+
+    /**
+     * Helper method that maps the supplied Matrix to the current Drawable
+     *
+     * @param matrix - Matrix to map Drawable against
+     * @return RectF - Displayed Rectangle
+     */
+    private RectF getDisplayRect(Matrix matrix) {
+        Drawable d = mImageView.getDrawable();
+        if (d != null) {
+            mDisplayRect.set(0, 0, d.getIntrinsicWidth(),
+                    d.getIntrinsicHeight());
+            matrix.mapRect(mDisplayRect);
+            return mDisplayRect;
+        }
+        return null;
     }
 
     /**
@@ -713,12 +648,77 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         resetMatrix();
     }
 
+    private boolean checkMatrixBounds() {
+
+        final RectF rect = getDisplayRect(getDrawMatrix());
+        if (rect == null) {
+            return false;
+        }
+
+        final float height = rect.height(), width = rect.width();
+        float deltaX = 0, deltaY = 0;
+
+        final int viewHeight = getImageViewHeight(mImageView);
+        if (height <= viewHeight) {
+            switch (mScaleType) {
+                case FIT_START:
+                    deltaY = -rect.top;
+                    break;
+                case FIT_END:
+                    deltaY = viewHeight - height - rect.top;
+                    break;
+                default:
+                    deltaY = (viewHeight - height) / 2 - rect.top;
+                    break;
+            }
+        } else if (rect.top > 0) {
+            deltaY = -rect.top;
+        } else if (rect.bottom < viewHeight) {
+            deltaY = viewHeight - rect.bottom;
+        }
+
+        final int viewWidth = getImageViewWidth(mImageView);
+        if (width <= viewWidth) {
+            switch (mScaleType) {
+                case FIT_START:
+                    deltaX = -rect.left;
+                    break;
+                case FIT_END:
+                    deltaX = viewWidth - width - rect.left;
+                    break;
+                default:
+                    deltaX = (viewWidth - width) / 2 - rect.left;
+                    break;
+            }
+            mScrollEdge = EDGE_BOTH;
+        } else if (rect.left > 0) {
+            mScrollEdge = EDGE_LEFT;
+            deltaX = -rect.left;
+        } else if (rect.right < viewWidth) {
+            deltaX = viewWidth - rect.right;
+            mScrollEdge = EDGE_RIGHT;
+        } else {
+            mScrollEdge = EDGE_NONE;
+        }
+
+        // Finally actually translate the matrix
+        mSuppMatrix.postTranslate(deltaX, deltaY);
+        return true;
+    }
+
     private int getImageViewWidth(ImageView imageView) {
         return imageView.getWidth() - imageView.getPaddingLeft() - imageView.getPaddingRight();
     }
 
     private int getImageViewHeight(ImageView imageView) {
         return imageView.getHeight() - imageView.getPaddingTop() - imageView.getPaddingBottom();
+    }
+
+    private void cancelFling() {
+        if (mCurrentFlingRunnable != null) {
+            mCurrentFlingRunnable.cancelFling();
+            mCurrentFlingRunnable = null;
+        }
     }
 
     private class AnimatedZoomRunnable implements Runnable {
