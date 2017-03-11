@@ -79,7 +79,7 @@ class PhotoGestureDetector {
             case MotionEvent.ACTION_DOWN: {
                 mActivePointerId = ev.getPointerId(0);
                 mVelocityTracker = VelocityTracker.obtain();
-                if (null != mVelocityTracker) {
+                if (mVelocityTracker != null) {
                     mVelocityTracker.addMovement(ev);
                 }
 
@@ -105,7 +105,7 @@ class PhotoGestureDetector {
                     mLastTouchX = x;
                     mLastTouchY = y;
 
-                    if (null != mVelocityTracker) {
+                    if (mVelocityTracker != null) {
                         mVelocityTracker.addMovement(ev);
                     }
                 }
@@ -115,7 +115,7 @@ class PhotoGestureDetector {
             case MotionEvent.ACTION_CANCEL: {
                 mActivePointerId = INVALID_POINTER_ID;
                 // Recycle Velocity Tracker
-                if (null != mVelocityTracker) {
+                if (mVelocityTracker != null) {
                     mVelocityTracker.recycle();
                     mVelocityTracker = null;
                 }
@@ -125,7 +125,7 @@ class PhotoGestureDetector {
             case MotionEvent.ACTION_UP: {
                 mActivePointerId = INVALID_POINTER_ID;
                 if (mIsDragging) {
-                    if (null != mVelocityTracker) {
+                    if (mVelocityTracker != null) {
                         mLastTouchX = ev.getX();
                         mLastTouchY = ev.getY();
 
@@ -146,7 +146,7 @@ class PhotoGestureDetector {
                 }
 
                 // Recycle Velocity Tracker
-                if (null != mVelocityTracker) {
+                if (mVelocityTracker != null) {
                     mVelocityTracker.recycle();
                     mVelocityTracker = null;
                 }

@@ -77,9 +77,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem zoomToggle = menu.findItem(R.id.menu_zoom_toggle);
-        assert null != zoomToggle;
         zoomToggle.setTitle(mPhotoView.isZoomEnabled() ? R.string.menu_zoom_disable : R.string.menu_zoom_enable);
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -157,7 +155,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     }
 
     private void showToast(CharSequence text) {
-        if (null != mCurrentToast) {
+        if (mCurrentToast != null) {
             mCurrentToast.cancel();
         }
 
