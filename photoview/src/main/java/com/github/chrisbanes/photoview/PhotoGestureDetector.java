@@ -21,7 +21,7 @@ class PhotoGestureDetector {
     private int mActivePointerId = INVALID_POINTER_ID;
     private int mActivePointerIndex = 0;
 
-    public PhotoGestureDetector(Context context, OnGestureListener onGestureListener) {
+    PhotoGestureDetector(Context context, OnGestureListener onGestureListener) {
         mListener = onGestureListener;
         final ViewConfiguration configuration = ViewConfiguration
                 .get(context);
@@ -56,15 +56,15 @@ class PhotoGestureDetector {
         mDetector = new ScaleGestureDetector(context, mScaleListener);
     }
 
-    public boolean isScaling() {
+    boolean isScaling() {
         return mDetector.isInProgress();
     }
 
-    public boolean isDragging() {
+    boolean isDragging() {
         return mDetector.isInProgress();
     }
 
-    public boolean onTouchEvent(MotionEvent ev) {
+    boolean onTouchEvent(MotionEvent ev) {
         try {
             mDetector.onTouchEvent(ev);
             return processTouchEvent(ev);

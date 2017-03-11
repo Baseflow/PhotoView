@@ -39,7 +39,7 @@ There is a [sample](https://github.com/chrisbanes/PhotoView/tree/master/sample) 
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
 ```
-That't it!
+That's it!
 
 More advanced usage can be seen in the samples.
 

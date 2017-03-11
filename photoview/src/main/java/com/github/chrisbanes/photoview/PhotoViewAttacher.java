@@ -277,7 +277,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mSuppMatrix.postTranslate(dx, dy);
         checkAndDisplayMatrix();
 
-        /**
+        /*
          * Here we decide whether to let the ImageView's parent to start taking
          * over the touch event.
          *
