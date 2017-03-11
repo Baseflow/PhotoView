@@ -101,51 +101,19 @@ class CustomGestureDetector {
     public boolean onTouchEvent(MotionEvent ev) {
         try {
             mDetector.onTouchEvent(ev);
-            return processTouchEventEclair(ev);
+            return processTouchEvent(ev);
         } catch (IllegalArgumentException e) {
             // Fix for support lib bug, happening when onDestroy is called
             return true;
         }
     }
 
-    private boolean processTouchEventEclair(MotionEvent ev) {
+    private boolean processTouchEvent(MotionEvent ev) {
         final int action = ev.getAction();
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 mActivePointerId = ev.getPointerId(0);
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                mActivePointerId = INVALID_POINTER_ID;
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                final int pointerIndex = Util.getPointerIndex(ev.getAction());
-                final int pointerId = ev.getPointerId(pointerIndex);
-                if (pointerId == mActivePointerId) {
-                    // This was our active pointer going up. Choose a new
-                    // active pointer and adjust accordingly.
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-                    mActivePointerId = ev.getPointerId(newPointerIndex);
-                    mLastTouchX = ev.getX(newPointerIndex);
-                    mLastTouchY = ev.getY(newPointerIndex);
-                }
-                break;
-        }
 
-        mActivePointerIndex = ev
-                .findPointerIndex(mActivePointerId != INVALID_POINTER_ID ? mActivePointerId
-                        : 0);
-        try {
-            return processTouchEventCupcake(ev);
-        } catch (IllegalArgumentException e) {
-            // Fix for support lib bug, happening when onDestroy is called
-            return true;
-        }
-    }
-
-    private boolean processTouchEventCupcake(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
                 mVelocityTracker = VelocityTracker.obtain();
                 if (null != mVelocityTracker) {
                     mVelocityTracker.addMovement(ev);
@@ -155,9 +123,7 @@ class CustomGestureDetector {
                 mLastTouchY = getActiveY(ev);
                 mIsDragging = false;
                 break;
-            }
-
-            case MotionEvent.ACTION_MOVE: {
+            case MotionEvent.ACTION_MOVE:
                 final float x = getActiveX(ev);
                 final float y = getActiveY(ev);
                 final float dx = x - mLastTouchX, dy = y - mLastTouchY;
@@ -178,18 +144,16 @@ class CustomGestureDetector {
                     }
                 }
                 break;
-            }
-
-            case MotionEvent.ACTION_CANCEL: {
+            case MotionEvent.ACTION_CANCEL:
+                mActivePointerId = INVALID_POINTER_ID;
                 // Recycle Velocity Tracker
                 if (null != mVelocityTracker) {
                     mVelocityTracker.recycle();
                     mVelocityTracker = null;
                 }
                 break;
-            }
-
-            case MotionEvent.ACTION_UP: {
+            case MotionEvent.ACTION_UP:
+                mActivePointerId = INVALID_POINTER_ID;
                 if (mIsDragging) {
                     if (null != mVelocityTracker) {
                         mLastTouchX = getActiveX(ev);
@@ -217,9 +181,23 @@ class CustomGestureDetector {
                     mVelocityTracker = null;
                 }
                 break;
-            }
+            case MotionEvent.ACTION_POINTER_UP:
+                final int pointerIndex = Util.getPointerIndex(ev.getAction());
+                final int pointerId = ev.getPointerId(pointerIndex);
+                if (pointerId == mActivePointerId) {
+                    // This was our active pointer going up. Choose a new
+                    // active pointer and adjust accordingly.
+                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                    mActivePointerId = ev.getPointerId(newPointerIndex);
+                    mLastTouchX = ev.getX(newPointerIndex);
+                    mLastTouchY = ev.getY(newPointerIndex);
+                }
+                break;
         }
 
+        mActivePointerIndex = ev
+                .findPointerIndex(mActivePointerId != INVALID_POINTER_ID ? mActivePointerId
+                        : 0);
         return true;
     }
 }
