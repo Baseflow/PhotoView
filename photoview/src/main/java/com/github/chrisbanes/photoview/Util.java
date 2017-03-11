@@ -31,7 +31,7 @@ class Util {
         return true;
     }
 
-    public static int getPointerIndex(int action) {
+    static int getPointerIndex(int action) {
         return (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
     }
 }

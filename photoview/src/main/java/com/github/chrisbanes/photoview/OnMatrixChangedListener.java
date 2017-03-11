@@ -5,8 +5,6 @@ import android.graphics.RectF;
 /**
  * Interface definition for a callback to be invoked when the internal Matrix has changed for
  * this View.
- *
- * @author Chris Banes
  */
 public interface OnMatrixChangedListener {
 

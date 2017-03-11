@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2011, 2012 Chris Banes.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package com.github.chrisbanes.photoview;
 
 import android.content.Context;
@@ -6,37 +21,40 @@ import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-class PhotoGestureDetector {
+/**
+ * Does a whole lot of gesture detecting.
+ */
+class CustomGestureDetector {
 
     private static final int INVALID_POINTER_ID = -1;
 
+    private int mActivePointerId = INVALID_POINTER_ID;
+    private int mActivePointerIndex = 0;
     private final ScaleGestureDetector mDetector;
-    private OnGestureListener mListener;
+
+    private VelocityTracker mVelocityTracker;
+    private boolean mIsDragging;
     private float mLastTouchX;
     private float mLastTouchY;
     private final float mTouchSlop;
     private final float mMinimumVelocity;
-    private VelocityTracker mVelocityTracker;
-    private boolean mIsDragging;
-    private int mActivePointerId = INVALID_POINTER_ID;
-    private int mActivePointerIndex = 0;
+    private OnGestureListener mListener;
 
-    PhotoGestureDetector(Context context, OnGestureListener onGestureListener) {
-        mListener = onGestureListener;
+    CustomGestureDetector(Context context, OnGestureListener listener) {
         final ViewConfiguration configuration = ViewConfiguration
                 .get(context);
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mTouchSlop = configuration.getScaledTouchSlop();
 
+        mListener = listener;
         ScaleGestureDetector.OnScaleGestureListener mScaleListener = new ScaleGestureDetector.OnScaleGestureListener() {
 
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 float scaleFactor = detector.getScaleFactor();
 
-                if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor)) {
+                if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor))
                     return false;
-                }
 
                 mListener.onScale(scaleFactor,
                         detector.getFocusX(), detector.getFocusY());
@@ -56,42 +74,92 @@ class PhotoGestureDetector {
         mDetector = new ScaleGestureDetector(context, mScaleListener);
     }
 
-    boolean isScaling() {
+    private float getActiveX(MotionEvent ev) {
+        try {
+            return ev.getX(mActivePointerIndex);
+        } catch (Exception e) {
+            return ev.getX();
+        }
+    }
+
+    private float getActiveY(MotionEvent ev) {
+        try {
+            return ev.getY(mActivePointerIndex);
+        } catch (Exception e) {
+            return ev.getY();
+        }
+    }
+
+    public boolean isScaling() {
         return mDetector.isInProgress();
     }
 
-    boolean isDragging() {
-        return mDetector.isInProgress();
+    public boolean isDragging() {
+        return mIsDragging;
     }
 
-    boolean onTouchEvent(MotionEvent ev) {
+    public boolean onTouchEvent(MotionEvent ev) {
         try {
             mDetector.onTouchEvent(ev);
-            return processTouchEvent(ev);
+            return processTouchEventEclair(ev);
         } catch (IllegalArgumentException e) {
             // Fix for support lib bug, happening when onDestroy is called
             return true;
         }
     }
 
-    private boolean processTouchEvent(MotionEvent ev) {
-        switch (ev.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN: {
+    private boolean processTouchEventEclair(MotionEvent ev) {
+        final int action = ev.getAction();
+        switch (action & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
                 mActivePointerId = ev.getPointerId(0);
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                mActivePointerId = INVALID_POINTER_ID;
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                final int pointerIndex = Util.getPointerIndex(ev.getAction());
+                final int pointerId = ev.getPointerId(pointerIndex);
+                if (pointerId == mActivePointerId) {
+                    // This was our active pointer going up. Choose a new
+                    // active pointer and adjust accordingly.
+                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                    mActivePointerId = ev.getPointerId(newPointerIndex);
+                    mLastTouchX = ev.getX(newPointerIndex);
+                    mLastTouchY = ev.getY(newPointerIndex);
+                }
+                break;
+        }
+
+        mActivePointerIndex = ev
+                .findPointerIndex(mActivePointerId != INVALID_POINTER_ID ? mActivePointerId
+                        : 0);
+        try {
+            return processTouchEventCupcake(ev);
+        } catch (IllegalArgumentException e) {
+            // Fix for support lib bug, happening when onDestroy is called
+            return true;
+        }
+    }
+
+    private boolean processTouchEventCupcake(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
                 mVelocityTracker = VelocityTracker.obtain();
-                if (mVelocityTracker != null) {
+                if (null != mVelocityTracker) {
                     mVelocityTracker.addMovement(ev);
                 }
 
-                mLastTouchX = ev.getX(mActivePointerIndex);
-                mLastTouchY = ev.getY(mActivePointerIndex);
+                mLastTouchX = getActiveX(ev);
+                mLastTouchY = getActiveY(ev);
                 mIsDragging = false;
                 break;
             }
 
             case MotionEvent.ACTION_MOVE: {
-                final float x = ev.getX(mActivePointerIndex);
-                final float y = ev.getY(mActivePointerIndex);
+                final float x = getActiveX(ev);
+                final float y = getActiveY(ev);
                 final float dx = x - mLastTouchX, dy = y - mLastTouchY;
 
                 if (!mIsDragging) {
@@ -105,7 +173,7 @@ class PhotoGestureDetector {
                     mLastTouchX = x;
                     mLastTouchY = y;
 
-                    if (mVelocityTracker != null) {
+                    if (null != mVelocityTracker) {
                         mVelocityTracker.addMovement(ev);
                     }
                 }
@@ -113,9 +181,8 @@ class PhotoGestureDetector {
             }
 
             case MotionEvent.ACTION_CANCEL: {
-                mActivePointerId = INVALID_POINTER_ID;
                 // Recycle Velocity Tracker
-                if (mVelocityTracker != null) {
+                if (null != mVelocityTracker) {
                     mVelocityTracker.recycle();
                     mVelocityTracker = null;
                 }
@@ -123,11 +190,10 @@ class PhotoGestureDetector {
             }
 
             case MotionEvent.ACTION_UP: {
-                mActivePointerId = INVALID_POINTER_ID;
                 if (mIsDragging) {
-                    if (mVelocityTracker != null) {
-                        mLastTouchX = ev.getX();
-                        mLastTouchY = ev.getY();
+                    if (null != mVelocityTracker) {
+                        mLastTouchX = getActiveX(ev);
+                        mLastTouchY = getActiveY(ev);
 
                         // Compute velocity within the last 1000ms
                         mVelocityTracker.addMovement(ev);
@@ -146,31 +212,13 @@ class PhotoGestureDetector {
                 }
 
                 // Recycle Velocity Tracker
-                if (mVelocityTracker != null) {
+                if (null != mVelocityTracker) {
                     mVelocityTracker.recycle();
                     mVelocityTracker = null;
                 }
                 break;
             }
-
-            case MotionEvent.ACTION_POINTER_UP:
-                // Ignore deprecation, ACTION_POINTER_ID_MASK and
-                // ACTION_POINTER_ID_SHIFT has same value and are deprecated
-                // You can have either deprecation or lint target api warning
-                final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-                final int pointerId = ev.getPointerId(pointerIndex);
-                if (pointerId == mActivePointerId) {
-                    // This was our active pointer going up. Choose a new
-                    // active pointer and adjust accordingly.
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-                    mActivePointerId = ev.getPointerId(newPointerIndex);
-                    mLastTouchX = ev.getX(newPointerIndex);
-                    mLastTouchY = ev.getY(newPointerIndex);
-                }
-                break;
         }
-        mActivePointerIndex = ev.findPointerIndex(
-                mActivePointerId != INVALID_POINTER_ID ? mActivePointerId : 0);
 
         return true;
     }

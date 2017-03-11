@@ -65,7 +65,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     // Gesture Detectors
     private GestureDetector mGestureDetector;
-    private FroyoGestureDetector mScaleDragDetector;
+    private CustomGestureDetector mScaleDragDetector;
 
     // These are set so we don't keep allocating them on the heap
     private final Matrix mBaseMatrix = new Matrix();
@@ -102,36 +102,36 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mBaseRotation = 0.0f;
 
         // Create Gesture Detectors...
-        mScaleDragDetector = new FroyoGestureDetector(imageView.getContext(), this);
+        mScaleDragDetector = new CustomGestureDetector(imageView.getContext(), this);
 
         mGestureDetector = new GestureDetector(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
 
-                    // forward long click listener
-                    @Override
-                    public void onLongPress(MotionEvent e) {
-                        if (mLongClickListener != null) {
-                            mLongClickListener.onLongClick(mImageView);
-                        }
-                    }
+            // forward long click listener
+            @Override
+            public void onLongPress(MotionEvent e) {
+                if (mLongClickListener != null) {
+                    mLongClickListener.onLongClick(mImageView);
+                }
+            }
 
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2,
-                                           float velocityX, float velocityY) {
-                        if (mSingleFlingListener != null) {
-                            if (getScale() > DEFAULT_MIN_SCALE) {
-                                return false;
-                            }
-
-                            if (MotionEventCompat.getPointerCount(e1) > SINGLE_TOUCH
-                                    || MotionEventCompat.getPointerCount(e2) > SINGLE_TOUCH) {
-                                return false;
-                            }
-
-                            return mSingleFlingListener.onFling(e1, e2, velocityX, velocityY);
-                        }
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2,
+                                   float velocityX, float velocityY) {
+                if (mSingleFlingListener != null) {
+                    if (getScale() > DEFAULT_MIN_SCALE) {
                         return false;
                     }
-                });
+
+                    if (MotionEventCompat.getPointerCount(e1) > SINGLE_TOUCH
+                            || MotionEventCompat.getPointerCount(e2) > SINGLE_TOUCH) {
+                        return false;
+                    }
+
+                    return mSingleFlingListener.onFling(e1, e2, velocityX, velocityY);
+                }
+                return false;
+            }
+        });
 
         mGestureDetector.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
             @Override
@@ -139,26 +139,26 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 if (mOnClickListener != null) {
                     mOnClickListener.onClick(mImageView);
                 }
-                if (mPhotoTapListener != null) {
-                    final RectF displayRect = getDisplayRect();
+                final RectF displayRect = getDisplayRect();
 
-                    if (displayRect != null) {
-                        final float x = e.getX(), y = e.getY();
+                if (displayRect != null) {
+                    final float x = e.getX(), y = e.getY();
 
-                        // Check to see if the user tapped on the photo
-                        if (displayRect.contains(x, y)) {
+                    // Check to see if the user tapped on the photo
+                    if (displayRect.contains(x, y)) {
 
-                            float xResult = (x - displayRect.left)
-                                    / displayRect.width();
-                            float yResult = (y - displayRect.top)
-                                    / displayRect.height();
+                        float xResult = (x - displayRect.left)
+                                / displayRect.width();
+                        float yResult = (y - displayRect.top)
+                                / displayRect.height();
 
+                        if (mPhotoTapListener != null) {
                             mPhotoTapListener.onPhotoTap(mImageView, xResult, yResult);
-                            return true;
-                        } else {
-                            if (mOutsidePhotoTapListener != null) {
-                                mOutsidePhotoTapListener.onOutsidePhotoTap();
-                            }
+                        }
+                        return true;
+                    } else {
+                        if (mOutsidePhotoTapListener != null) {
+                            mOutsidePhotoTapListener.onOutsidePhotoTap(mImageView);
                         }
                     }
                 }
