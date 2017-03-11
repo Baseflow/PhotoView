@@ -1,4 +1,4 @@
-package uk.co.senab.photoview.sample;
+package com.github.chrisbanes.photoview.sample;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

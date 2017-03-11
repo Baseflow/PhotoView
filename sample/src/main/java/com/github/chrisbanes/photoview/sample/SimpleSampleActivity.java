@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package uk.co.senab.photoview.sample;
+package com.github.chrisbanes.photoview.sample;
 
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -36,6 +36,7 @@ import com.github.chrisbanes.photoview.OnSingleFlingListener;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.Random;
+
 
 public class SimpleSampleActivity extends AppCompatActivity {
 
@@ -176,9 +177,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (BuildConfig.DEBUG) {
-                Log.d("PhotoView", String.format(FLING_LOG_STRING, velocityX, velocityY));
-            }
+            Log.d("PhotoView", String.format(FLING_LOG_STRING, velocityX, velocityY));
             return true;
         }
     }

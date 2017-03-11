@@ -1,4 +1,4 @@
-package uk.co.senab.photoview.sample;
+package com.github.chrisbanes.photoview.sample;
 
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;

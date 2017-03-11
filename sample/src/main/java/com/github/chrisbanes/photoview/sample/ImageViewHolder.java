@@ -1,4 +1,4 @@
-package uk.co.senab.photoview.sample;
+package com.github.chrisbanes.photoview.sample;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
