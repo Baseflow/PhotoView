@@ -34,7 +34,6 @@ dependencies {
 There is a [sample](https://github.com/chrisbanes/PhotoView/tree/master/sample) provided which shows how to use the library in a more advanced way, but for completeness here is all that is required to get PhotoView working:
 ```xml
 <com.github.chrisbanes.photoview.PhotoView
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/photo_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
@@ -73,10 +72,10 @@ This library aims to keep the zooming implementation simple. If you are looking 
 
 ## Pull Requests / Contribution
 Development happens in **develop** branch of this repository, and Pull Requests should be filled against that branch.
-Any Pull Request against **master** will be rejected
+Any Pull Request against **master** will be rejected.
 
-
-## License
+License
+--------
 
     Copyright 2017 Chris Banes
 
