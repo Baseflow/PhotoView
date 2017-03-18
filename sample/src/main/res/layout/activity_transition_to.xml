@@ -1,8 +1,7 @@
-<uk.co.senab.photoview.PhotoView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.github.chrisbanes.photoview.PhotoView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/iv_photo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:transitionName="@string/transition_test"
-    android:src="@drawable/wallpaper"/>
+    android:src="@drawable/wallpaper"
+    android:transitionName="@string/transition_test" />

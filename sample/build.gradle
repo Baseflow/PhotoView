@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "uk.co.senab.photoview.sample"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 25
         versionCode 100
         versionName "1.0"
@@ -17,8 +17,8 @@ android {
 }
 
 dependencies {
-    compile project(':library')
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile project(':photoview')
 }
