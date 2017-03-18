@@ -123,7 +123,9 @@ public class PhotoView extends ImageView {
     @Override
     protected boolean setFrame(int l, int t, int r, int b) {
         boolean changed = super.setFrame(l, t, r, b);
-        attacher.update();
+        if (changed) {
+            attacher.update();
+        }
         return changed;
     }
 
