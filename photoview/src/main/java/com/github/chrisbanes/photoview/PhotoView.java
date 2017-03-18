@@ -26,7 +26,8 @@ import android.view.GestureDetector;
 import android.widget.ImageView;
 
 /**
- * A zoomable {@link ImageView}
+ * A zoomable {@link ImageView}. See {@link PhotoViewAttacher} for most of the details on how the zooming
+ * is accomplished
  */
 public class PhotoView extends ImageView {
 
@@ -62,6 +63,7 @@ public class PhotoView extends ImageView {
      * Get the current {@link PhotoViewAttacher} for this view. Be wary of holding on to references
      * to this attacher, as it has a reference to this view, which, if a reference is held in the
      * wrong place, can cause memory leaks.
+     *
      * @return the attacher.
      */
     public PhotoViewAttacher getAttacher() {
