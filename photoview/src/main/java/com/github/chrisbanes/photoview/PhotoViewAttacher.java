@@ -206,6 +206,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         this.mSingleFlingListener = onSingleFlingListener;
     }
 
+    @Deprecated
     public boolean isZoomEnabled() {
         return mZoomEnabled;
     }
@@ -472,6 +473,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mScaleType = scaleType;
             update();
         }
+    }
+
+    public boolean isZoomable() {
+        return mZoomEnabled;
     }
 
     public void setZoomable(boolean zoomable) {

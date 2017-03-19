@@ -1,8 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.github.chrisbanes.photoview.sample">
+    package="com.github.chrisbanes.photoview.sample">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,23 +12,25 @@
 
         <activity android:name=".LauncherActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".SimpleSampleActivity"/>
+        <activity android:name=".SimpleSampleActivity" />
 
-        <activity android:name=".ViewPagerActivity"/>
+        <activity android:name=".ViewPagerActivity" />
 
-        <activity android:name=".RotationSampleActivity"/>
+        <activity android:name=".RotationSampleActivity" />
 
-        <activity android:name=".PicassoSampleActivity"/>
+        <activity android:name=".PicassoSampleActivity" />
 
-        <activity android:name=".ActivityTransitionActivity"/>
+        <activity android:name=".ActivityTransitionActivity" />
 
-        <activity android:name=".ActivityTransitionToActivity"/>
+        <activity android:name=".ActivityTransitionToActivity" />
+
+        <activity android:name=".ImmersiveActivity" />
     </application>
 
 </manifest>

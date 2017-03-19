@@ -92,34 +92,26 @@ public class PhotoView extends ImageView {
 
     @Override
     public void setScaleType(ScaleType scaleType) {
-        if (attacher != null) {
-            attacher.setScaleType(scaleType);
-        }
+        attacher.setScaleType(scaleType);
     }
 
     @Override
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         // setImageBitmap calls through to this method
-        if (attacher != null) {
-            attacher.update();
-        }
+        attacher.update();
     }
 
     @Override
     public void setImageResource(int resId) {
         super.setImageResource(resId);
-        if (attacher != null) {
-            attacher.update();
-        }
+        attacher.update();
     }
 
     @Override
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
-        if (attacher != null) {
-            attacher.update();
-        }
+        attacher.update();
     }
 
     @Override
@@ -139,8 +131,17 @@ public class PhotoView extends ImageView {
         attacher.setRotationBy(rotationDegree);
     }
 
+    @Deprecated
     public boolean isZoomEnabled() {
         return attacher.isZoomEnabled();
+    }
+
+    public boolean isZoomable() {
+        return attacher.isZoomable();
+    }
+
+    public void setZoomable(boolean zoomable) {
+        attacher.setZoomable(zoomable);
     }
 
     public RectF getDisplayRect() {
@@ -215,16 +216,12 @@ public class PhotoView extends ImageView {
         attacher.setScale(scale, focalX, focalY, animate);
     }
 
-    public void setZoomable(boolean zoomable) {
-        attacher.setZoomable(zoomable);
-    }
-
     public void setZoomTransitionDuration(int milliseconds) {
         attacher.setZoomTransitionDuration(milliseconds);
     }
 
-    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener) {
-        attacher.setOnDoubleTapListener(newOnDoubleTapListener);
+    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener onDoubleTapListener) {
+        attacher.setOnDoubleTapListener(onDoubleTapListener);
     }
 
     public void setOnScaleChangeListener(OnScaleChangedListener onScaleChangedListener) {
