@@ -142,8 +142,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 }
                 final RectF displayRect = getDisplayRect();
 
+                final float x = e.getX(), y = e.getY();
+
+                if (mViewTapListener != null) {
+                    mViewTapListener.onViewTap(mImageView, x, y);
+                }
+
                 if (displayRect != null) {
-                    final float x = e.getX(), y = e.getY();
 
                     // Check to see if the user tapped on the photo
                     if (displayRect.contains(x, y)) {
