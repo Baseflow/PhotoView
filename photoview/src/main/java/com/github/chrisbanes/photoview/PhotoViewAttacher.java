@@ -78,6 +78,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnMatrixChangedListener mMatrixChangeListener;
     private OnPhotoTapListener mPhotoTapListener;
     private OnOutsidePhotoTapListener mOutsidePhotoTapListener;
+    private OnViewTapListener mViewTapListener;
     private View.OnClickListener mOnClickListener;
     private OnLongClickListener mLongClickListener;
     private OnScaleChangedListener mScaleChangeListener;
@@ -430,6 +431,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnOutsidePhotoTapListener(OnOutsidePhotoTapListener mOutsidePhotoTapListener) {
         this.mOutsidePhotoTapListener = mOutsidePhotoTapListener;
+    }
+
+    public void setOnViewTapListener(OnViewTapListener listener) {
+        mViewTapListener = listener;
     }
 
     public void setScale(float scale) {
