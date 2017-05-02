@@ -10,9 +10,8 @@ Add this in your root `build.gradle` file (**not** your module `build.gradle` fi
 ```gradle
 allprojects {
 	repositories {
-		...
-		maven { url "https://jitpack.io" }
-	}
+        maven { url "https://jitpack.io" }
+    }
 }
 ```
 
@@ -71,10 +70,6 @@ Due to the complex nature of Fresco, this library does not currently support Fre
 
 ## Subsampling Support
 This library aims to keep the zooming implementation simple. If you are looking for an implementation that supports subsampling, check out [this project](https://github.com/davemorrissey/subsampling-scale-image-view)
-
-## Pull Requests / Contribution
-Development happens in **develop** branch of this repository, and Pull Requests should be filled against that branch.
-Any Pull Request against **master** will be rejected.
 
 License
 --------
