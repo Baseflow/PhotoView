@@ -78,6 +78,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnMatrixChangedListener mMatrixChangeListener;
     private OnPhotoTapListener mPhotoTapListener;
     private OnOutsidePhotoTapListener mOutsidePhotoTapListener;
+    private OnViewTapListener mViewTapListener;
     private View.OnClickListener mOnClickListener;
     private OnLongClickListener mLongClickListener;
     private OnScaleChangedListener mScaleChangeListener;
@@ -141,8 +142,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 }
                 final RectF displayRect = getDisplayRect();
 
+                final float x = e.getX(), y = e.getY();
+
+                if (mViewTapListener != null) {
+                    mViewTapListener.onViewTap(mImageView, x, y);
+                }
+
                 if (displayRect != null) {
-                    final float x = e.getX(), y = e.getY();
 
                     // Check to see if the user tapped on the photo
                     if (displayRect.contains(x, y)) {
@@ -430,6 +436,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnOutsidePhotoTapListener(OnOutsidePhotoTapListener mOutsidePhotoTapListener) {
         this.mOutsidePhotoTapListener = mOutsidePhotoTapListener;
+    }
+
+    public void setOnViewTapListener(OnViewTapListener listener) {
+        mViewTapListener = listener;
     }
 
     public void setScale(float scale) {
