@@ -156,6 +156,11 @@ public class PhotoView extends ImageView {
         return attacher.setDisplayMatrix(finalRectangle);
     }
 
+
+
+
+
+
     public float getMinimumScale() {
         return attacher.getMinimumScale();
     }
@@ -171,6 +176,8 @@ public class PhotoView extends ImageView {
     public float getScale() {
         return attacher.getScale();
     }
+
+
 
     public void setAllowParentInterceptOnEdge(boolean allow) {
         attacher.setAllowParentInterceptOnEdge(allow);
@@ -192,6 +199,25 @@ public class PhotoView extends ImageView {
         attacher.setScaleLevels(minimumScale, mediumScale, maximumScale);
     }
 
+    public void setScale(float scale) {
+        attacher.setScale(scale);
+    }
+
+    public void setScale(float scale, boolean animate) {
+        attacher.setScale(scale, animate);
+    }
+
+    public void setScale(float scale, float focalX, float focalY, boolean animate) {
+        attacher.setScale(scale, focalX, focalY, animate);
+    }
+
+
+
+
+
+
+
+
     public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
         attacher.setOnMatrixChangeListener(listener);
     }
@@ -208,17 +234,7 @@ public class PhotoView extends ImageView {
         attacher.setOnViewTapListener(listener);
     }
 
-    public void setScale(float scale) {
-        attacher.setScale(scale);
-    }
 
-    public void setScale(float scale, boolean animate) {
-        attacher.setScale(scale, animate);
-    }
-
-    public void setScale(float scale, float focalX, float focalY, boolean animate) {
-        attacher.setScale(scale, focalX, focalY, animate);
-    }
 
     public void setZoomTransitionDuration(int milliseconds) {
         attacher.setZoomTransitionDuration(milliseconds);

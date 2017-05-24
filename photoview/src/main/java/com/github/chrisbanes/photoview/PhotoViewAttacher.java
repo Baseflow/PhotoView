@@ -42,7 +42,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         View.OnLayoutChangeListener {
 
     private static float DEFAULT_MAX_SCALE = 3.0f;
-    private static float DEFAULT_MID_SCALE = 1.75f;
+    private static float DEFAULT_MID_SCALE = 2.0f;
     private static float DEFAULT_MIN_SCALE = 1.0f;
     private static int DEFAULT_ZOOM_DURATION = 200;
 
@@ -105,7 +105,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         // Create Gesture Detectors...
         mScaleDragDetector = new CustomGestureDetector(imageView.getContext(), this);
 
-        mGestureDetector = new GestureDetector(imageView.getContext(), new GestureDetector.SimpleOnGestureListener() {
+        mGestureDetector = new GestureDetector(imageView.getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
 
             // forward long click listener
             @Override
@@ -178,13 +179,23 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float x = ev.getX();
                     float y = ev.getY();
 
+//                    if (scale < getMediumScale()) {
+//                        setScale(getMediumScale(), x, y, true);
+//                    } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
+//                        setScale(getMaximumScale(), x, y, true);
+//                    } else {
+//                        setScale(getMinimumScale(), x, y, true);
+//                    }
+
+
                     if (scale < getMediumScale()) {
                         setScale(getMediumScale(), x, y, true);
-                    } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
-                        setScale(getMaximumScale(), x, y, true);
-                    } else {
+                    }
+                    else {
                         setScale(getMinimumScale(), x, y, true);
                     }
+
+
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // Can sometimes happen when getX() and getY() is called
                 }
@@ -268,12 +279,16 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public float getScale() {
-        return (float) Math.sqrt((float) Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X), 2) + (float) Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y), 2));
+        return (float) Math.sqrt((float) Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X), 2) +
+                (float) Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y), 2));
     }
 
     public ScaleType getScaleType() {
         return mScaleType;
     }
+
+
+
 
     @Override
     public void onDrag(float dx, float dy) {
@@ -293,18 +308,31 @@ public class PhotoViewAttacher implements View.OnTouchListener,
          * on, and the direction of the scroll (i.e. if we're pulling against
          * the edge, aka 'overscrolling', let the parent take over).
          */
+//        ViewParent parent = mImageView.getParent();
+//        if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
+//            if (mScrollEdge == EDGE_BOTH
+//                    || (mScrollEdge == EDGE_LEFT && dx >= 1f)
+//                    || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
+//                if (parent != null) {
+//                    parent.requestDisallowInterceptTouchEvent(false);
+//                }
+//            }
+//        } else {
+//            if (parent != null) {
+//                parent.requestDisallowInterceptTouchEvent(true);
+//            }
+//        }
+
+
         ViewParent parent = mImageView.getParent();
-        if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
-            if (mScrollEdge == EDGE_BOTH
-                    || (mScrollEdge == EDGE_LEFT && dx >= 1f)
-                    || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
-                if (parent != null) {
-                    parent.requestDisallowInterceptTouchEvent(false);
-                }
-            }
-        } else {
+        if(getScale() > getMinimumScale()){
             if (parent != null) {
                 parent.requestDisallowInterceptTouchEvent(true);
+            }
+        }
+        else{
+            if (parent != null){
+                parent.requestDisallowInterceptTouchEvent(false);
             }
         }
     }
@@ -319,7 +347,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft,
+                               int oldTop, int oldRight, int oldBottom) {
         // Update our base matrix, as the bounds have changed
         updateBaseMatrix(mImageView.getDrawable());
     }
@@ -370,17 +399,17 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
 
             // Try the Scale/Drag detector
-            if (mScaleDragDetector != null) {
-                boolean wasScaling = mScaleDragDetector.isScaling();
-                boolean wasDragging = mScaleDragDetector.isDragging();
-
-                handled = mScaleDragDetector.onTouchEvent(ev);
-
-                boolean didntScale = !wasScaling && !mScaleDragDetector.isScaling();
-                boolean didntDrag = !wasDragging && !mScaleDragDetector.isDragging();
-
-                mBlockParentIntercept = didntScale && didntDrag;
-            }
+//            if (mScaleDragDetector != null) {
+//                boolean wasScaling = mScaleDragDetector.isScaling();
+//                boolean wasDragging = mScaleDragDetector.isDragging();
+//
+//                handled = mScaleDragDetector.onTouchEvent(ev);
+//
+//                boolean didntScale = !wasScaling && !mScaleDragDetector.isScaling();
+//                boolean didntDrag = !wasDragging && !mScaleDragDetector.isDragging();
+//
+//                mBlockParentIntercept = didntScale && didntDrag;
+//            }
 
             // Check to see if the user double tapped
             if (mGestureDetector != null && mGestureDetector.onTouchEvent(ev)) {
@@ -773,6 +802,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             return t;
         }
     }
+
+
 
     private class FlingRunnable implements Runnable {
 
