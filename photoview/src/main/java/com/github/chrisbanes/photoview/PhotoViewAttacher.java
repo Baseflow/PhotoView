@@ -83,6 +83,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnLongClickListener mLongClickListener;
     private OnScaleChangedListener mScaleChangeListener;
     private OnSingleFlingListener mSingleFlingListener;
+    private OnDragListener mOnDragListener;
 
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
@@ -281,6 +282,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             return; // Do not drag if we are already scaling
         }
 
+        if (mOnDragListener != null) {
+            mOnDragListener.onDrag(dx, dy);
+        }
         mSuppMatrix.postTranslate(dx, dy);
         checkAndDisplayMatrix();
 
