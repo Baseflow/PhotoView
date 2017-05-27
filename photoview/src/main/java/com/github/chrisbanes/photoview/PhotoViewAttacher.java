@@ -83,7 +83,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnLongClickListener mLongClickListener;
     private OnScaleChangedListener mScaleChangeListener;
     private OnSingleFlingListener mSingleFlingListener;
-    private OnDragListener mOnDragListener;
+    private OnViewDragListener mOnDragListener;
 
     private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
@@ -444,6 +444,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnViewTapListener(OnViewTapListener listener) {
         mViewTapListener = listener;
+    }
+
+    public void setOnViewDragListener(OnViewDragListener listener) {
+        mOnDragListener = listener;
     }
 
     public void setScale(float scale) {
