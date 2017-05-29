@@ -208,6 +208,10 @@ public class PhotoView extends ImageView {
         attacher.setOnViewTapListener(listener);
     }
 
+    public void setOnViewDragListener(OnViewDragListener listener) {
+        attacher.setOnViewDragListener(listener);
+    }
+
     public void setScale(float scale) {
         attacher.setScale(scale);
     }
