@@ -290,8 +290,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
 
         mSuppMatrix.set(finalMatrix);
-        setImageViewMatrix(getDrawMatrix());
-        checkMatrixBounds();
+        checkAndDisplayMatrix();
 
         return true;
     }
