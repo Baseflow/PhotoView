@@ -371,6 +371,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                                     rect.centerX(), rect.centerY()));
                             handled = true;
                         }
+                    } else if (getScale() > mMaxScale) {
+                        RectF rect = getDisplayRect();
+                        if (rect != null) {
+                            v.post(new AnimatedZoomRunnable(getScale(), mMaxScale,
+                                    rect.centerX(), rect.centerY()));
+                            handled = true;
+                        }
                     }
                     break;
             }
