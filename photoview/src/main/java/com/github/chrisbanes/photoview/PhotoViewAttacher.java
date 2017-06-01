@@ -851,7 +851,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 final int newY = mScroller.getCurrY();
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
-                setImageViewMatrix(getDrawMatrix());
+                checkAndDisplayMatrix();
 
                 mCurrentX = newX;
                 mCurrentY = newY;
