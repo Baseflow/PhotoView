@@ -166,6 +166,14 @@ public class PhotoView extends ImageView {
         return attacher.setDisplayMatrix(finalRectangle);
     }
 
+    public void getSuppMatrix(Matrix matrix) {
+        attacher.getSuppMatrix(matrix);
+    }
+
+    public boolean setSuppMatrix(Matrix matrix) {
+        return attacher.setDisplayMatrix(matrix);
+    }
+
     public float getMinimumScale() {
         return attacher.getMinimumScale();
     }
