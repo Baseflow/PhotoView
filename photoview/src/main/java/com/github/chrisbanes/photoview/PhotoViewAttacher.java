@@ -325,7 +325,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         // Update our base matrix, as the bounds have changed
-        updateBaseMatrix(mImageView.getDrawable());
+        if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+            updateBaseMatrix(mImageView.getDrawable());
+        }
     }
 
     @Override
