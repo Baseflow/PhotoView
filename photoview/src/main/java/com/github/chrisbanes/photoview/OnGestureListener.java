@@ -15,7 +15,7 @@
  *******************************************************************************/
 package com.github.chrisbanes.photoview;
 
-interface OnGestureListener {
+public interface OnGestureListener {
 
     void onDrag(float dx, float dy);
 
