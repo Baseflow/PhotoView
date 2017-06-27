@@ -1,4 +1,4 @@
-package com.github.chrisbanes.photoview;
+package com.github.chrisbanes.photoview.listener;
 
 /**
  * Interface definition for a callback to be invoked when the photo is experiencing a drag event

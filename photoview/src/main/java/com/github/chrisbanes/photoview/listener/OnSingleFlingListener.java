@@ -1,4 +1,4 @@
-package com.github.chrisbanes.photoview;
+package com.github.chrisbanes.photoview.listener;
 
 import android.view.MotionEvent;
 

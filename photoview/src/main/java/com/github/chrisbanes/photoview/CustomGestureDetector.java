@@ -21,6 +21,8 @@ import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
+import com.github.chrisbanes.photoview.listener.OnGestureListener;
+
 /**
  * Does a whole lot of gesture detecting.
  */

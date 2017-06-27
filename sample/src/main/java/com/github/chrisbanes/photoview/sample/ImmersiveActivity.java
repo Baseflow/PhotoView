@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.listener.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 

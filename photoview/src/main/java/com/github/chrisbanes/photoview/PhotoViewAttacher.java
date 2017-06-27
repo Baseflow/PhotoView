@@ -32,6 +32,15 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
+import com.github.chrisbanes.photoview.listener.OnGestureListener;
+import com.github.chrisbanes.photoview.listener.OnMatrixChangedListener;
+import com.github.chrisbanes.photoview.listener.OnOutsidePhotoTapListener;
+import com.github.chrisbanes.photoview.listener.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.listener.OnScaleChangedListener;
+import com.github.chrisbanes.photoview.listener.OnSingleFlingListener;
+import com.github.chrisbanes.photoview.listener.OnViewDragListener;
+import com.github.chrisbanes.photoview.listener.OnViewTapListener;
+
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
  * It is made public in case you need to subclass something other than {@link ImageView} and still
