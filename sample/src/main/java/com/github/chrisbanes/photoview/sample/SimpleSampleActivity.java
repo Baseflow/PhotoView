@@ -30,9 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.chrisbanes.photoview.OnMatrixChangedListener;
-import com.github.chrisbanes.photoview.OnPhotoTapListener;
-import com.github.chrisbanes.photoview.OnSingleFlingListener;
+import com.github.chrisbanes.photoview.listener.OnMatrixChangedListener;
+import com.github.chrisbanes.photoview.listener.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.listener.OnSingleFlingListener;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.Random;

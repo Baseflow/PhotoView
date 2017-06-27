@@ -25,6 +25,14 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.widget.ImageView;
 
+import com.github.chrisbanes.photoview.listener.OnMatrixChangedListener;
+import com.github.chrisbanes.photoview.listener.OnOutsidePhotoTapListener;
+import com.github.chrisbanes.photoview.listener.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.listener.OnScaleChangedListener;
+import com.github.chrisbanes.photoview.listener.OnSingleFlingListener;
+import com.github.chrisbanes.photoview.listener.OnViewDragListener;
+import com.github.chrisbanes.photoview.listener.OnViewTapListener;
+
 /**
  * A zoomable {@link ImageView}. See {@link PhotoViewAttacher} for most of the details on how the zooming
  * is accomplished

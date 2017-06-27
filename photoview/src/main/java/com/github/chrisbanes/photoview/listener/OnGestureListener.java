@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.github.chrisbanes.photoview;
+package com.github.chrisbanes.photoview.listener;
 
-interface OnGestureListener {
+public interface OnGestureListener {
 
     void onDrag(float dx, float dy);
 
