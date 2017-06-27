@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.OverScroller;
 
+import com.github.chrisbanes.photoview.gesture.CustomGestureDetector;
 import com.github.chrisbanes.photoview.listener.OnGestureListener;
 import com.github.chrisbanes.photoview.listener.OnMatrixChangedListener;
 import com.github.chrisbanes.photoview.listener.OnOutsidePhotoTapListener;
