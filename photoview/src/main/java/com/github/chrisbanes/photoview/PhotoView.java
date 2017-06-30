@@ -32,6 +32,7 @@ import android.widget.ImageView;
 public class PhotoView extends ImageView {
 
     private PhotoViewAttacher attacher;
+    private ScaleType pendingScaleType;
 
     public PhotoView(Context context) {
         this(context, null);
@@ -57,6 +58,11 @@ public class PhotoView extends ImageView {
         //We always pose as a Matrix scale type, though we can change to another scale type
         //via the attacher
         super.setScaleType(ScaleType.MATRIX);
+        //apply the previously applied scale type
+        if (pendingScaleType != null) {
+            setScaleType(pendingScaleType);
+            pendingScaleType = null;
+        }
     }
 
     /**
@@ -92,7 +98,11 @@ public class PhotoView extends ImageView {
 
     @Override
     public void setScaleType(ScaleType scaleType) {
-        attacher.setScaleType(scaleType);
+        if (attacher == null) {
+            pendingScaleType = scaleType;
+        } else {
+            attacher.setScaleType(scaleType);
+        }
     }
 
     @Override
