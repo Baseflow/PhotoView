@@ -290,8 +290,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         }
 
         mSuppMatrix.set(finalMatrix);
-        setImageViewMatrix(getDrawMatrix());
-        checkMatrixBounds();
+        checkAndDisplayMatrix();
 
         return true;
     }
@@ -368,6 +367,13 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         RectF rect = getDisplayRect();
                         if (rect != null) {
                             v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
+                                    rect.centerX(), rect.centerY()));
+                            handled = true;
+                        }
+                    } else if (getScale() > mMaxScale) {
+                        RectF rect = getDisplayRect();
+                        if (rect != null) {
+                            v.post(new AnimatedZoomRunnable(getScale(), mMaxScale,
                                     rect.centerX(), rect.centerY()));
                             handled = true;
                         }
@@ -844,7 +850,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 final int newY = mScroller.getCurrY();
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
-                setImageViewMatrix(getDrawMatrix());
+                checkAndDisplayMatrix();
 
                 mCurrentX = newX;
                 mCurrentY = newY;
