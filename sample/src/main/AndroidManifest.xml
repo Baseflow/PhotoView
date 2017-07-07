@@ -22,7 +22,8 @@
 
         <activity android:name=".ViewPagerActivity" />
 
-        <activity android:name=".RotationSampleActivity" />
+        <activity android:name=".RotationSampleActivity"
+                  android:theme="@style/AppTheme.WithActionBar"/>
 
         <activity android:name=".PicassoSampleActivity" />
 
