@@ -18,7 +18,7 @@ package com.github.chrisbanes.photoview.sample;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -32,56 +32,46 @@ public class RotationSampleActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        photo = new PhotoView(this);
+        setContentView(R.layout.activity_rotation_sample);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.rotation);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_rotate_10_right:
+                        photo.setRotationBy(10);
+                        return true;
+                    case R.id.action_rotate_10_left:
+                        photo.setRotationBy(-10);
+                        return true;
+                    case R.id.action_toggle_automatic_rotation:
+                        toggleRotation();
+                        return true;
+                    case R.id.action_reset_to_0:
+                        photo.setRotationTo(0);
+                        return true;
+                    case R.id.action_reset_to_90:
+                        photo.setRotationTo(90);
+                        return true;
+                    case R.id.action_reset_to_180:
+                        photo.setRotationTo(180);
+                        return true;
+                    case R.id.action_reset_to_270:
+                        photo.setRotationTo(270);
+                        return true;
+                }
+                return false;
+            }
+        });
+        photo = findViewById(R.id.iv_photo);
         photo.setImageResource(R.drawable.wallpaper);
-        setContentView(photo);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         handler.removeCallbacksAndMessages(null);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, 0, Menu.NONE, "Rotate 10° Right");
-        menu.add(Menu.NONE, 1, Menu.NONE, "Rotate 10° Left");
-        menu.add(Menu.NONE, 2, Menu.NONE, "Toggle automatic rotation");
-        menu.add(Menu.NONE, 3, Menu.NONE, "Reset to 0");
-        menu.add(Menu.NONE, 4, Menu.NONE, "Reset to 90");
-        menu.add(Menu.NONE, 5, Menu.NONE, "Reset to 180");
-        menu.add(Menu.NONE, 6, Menu.NONE, "Reset to 270");
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case 0:
-                photo.setRotationBy(10);
-                return true;
-            case 1:
-                photo.setRotationBy(-10);
-                return true;
-            case 2:
-                toggleRotation();
-                return true;
-            case 3:
-                photo.setRotationTo(0);
-                return true;
-            case 4:
-                photo.setRotationTo(90);
-                return true;
-            case 5:
-                photo.setRotationTo(180);
-                return true;
-            case 6:
-                photo.setRotationTo(270);
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void toggleRotation() {
@@ -102,5 +92,4 @@ public class RotationSampleActivity extends AppCompatActivity {
             }
         }, 15);
     }
-
 }

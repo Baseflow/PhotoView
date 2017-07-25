@@ -54,9 +54,9 @@ public class SimpleSampleActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_simple_sample);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Simple Sample");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -129,8 +129,8 @@ public class SimpleSampleActivity extends AppCompatActivity {
                 return false;
             }
         });
-        mPhotoView = (PhotoView) findViewById(R.id.iv_photo);
-        mCurrMatrixTv = (TextView) findViewById(R.id.tv_current_matrix);
+        mPhotoView = findViewById(R.id.iv_photo);
+        mCurrMatrixTv = findViewById(R.id.tv_current_matrix);
 
         Drawable bitmap = ContextCompat.getDrawable(this, R.drawable.wallpaper);
         mPhotoView.setImageDrawable(bitmap);

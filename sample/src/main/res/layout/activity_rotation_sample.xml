@@ -1,4 +1,4 @@
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -20,15 +20,6 @@
         android:id="@+id/iv_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"/>
+        android:src="@drawable/wallpaper"/>
 
-    <TextView
-        android:id="@+id/tv_current_matrix"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:background="#60000000"
-        android:gravity="center"
-        android:textColor="@android:color/white"/>
-
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

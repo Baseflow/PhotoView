@@ -42,9 +42,9 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
+        RecyclerView recyclerView = findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ItemAdapter());
     }
@@ -110,7 +110,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         public ItemViewHolder(View view) {
             super(view);
-            mTextTitle = (TextView) view.findViewById(R.id.title);
+            mTextTitle = view.findViewById(R.id.title);
         }
 
         private void bind(String title) {

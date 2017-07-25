@@ -32,7 +32,7 @@ public class ActivityTransitionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transition);
 
-        RecyclerView list = (RecyclerView) findViewById(R.id.list);
+        RecyclerView list = findViewById(R.id.list);
         list.setLayoutManager(new GridLayoutManager(this, 2));
         ImageAdapter imageAdapter = new ImageAdapter(new ImageAdapter.Listener() {
             @Override

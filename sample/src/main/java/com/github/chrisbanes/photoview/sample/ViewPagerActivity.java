@@ -31,7 +31,7 @@ public class ViewPagerActivity extends AppCompatActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-		ViewPager viewPager = (HackyViewPager) findViewById(R.id.view_pager);
+		ViewPager viewPager = findViewById(R.id.view_pager);
 
 		viewPager.setAdapter(new SamplePagerAdapter());
 	}

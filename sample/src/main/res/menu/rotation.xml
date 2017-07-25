@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_rotate_10_right"
+        android:title="Rotate 10° Right"/>
+
+    <item
+        android:id="@+id/action_rotate_10_left"
+        android:title="Rotate 10° Left"/>
+
+    <item
+        android:id="@+id/action_toggle_automatic_rotation"
+        android:title="Toggle Automatic Rotation"/>
+
+    <item
+        android:id="@+id/action_reset_to_0"
+        android:title="Reset to 0"/>
+
+    <item
+        android:id="@+id/action_reset_to_90"
+        android:title="Reset to 90"/>
+
+    <item
+        android:id="@+id/action_reset_to_180"
+        android:title="Reset to 180"/>
+
+    <item
+        android:id="@+id/action_reset_to_270"
+        android:title="Reset to 270"/>
+</menu>
