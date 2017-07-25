@@ -14,7 +14,7 @@ install:
   - ps: |
       Write-Output "" > ~\.android\repositories.cfg
       Write-Host "Installing Android packages:"
-      $pkgs = '"platform-tools"', '"extras;android;m2repository"', '"extras;google;m2repository"', '"build-tools;26.0.0"', '"platforms;android-26"'
+      $pkgs = '"platform-tools"', '"extras;android;m2repository"', '"extras;google;m2repository"', '"build-tools;26.0.1"', '"platforms;android-26"'
       foreach ($pkg in $pkgs) {
         Write-Host "Installing ${pkg}:"
         echo "y" | & $env:ANDROID_HOME\tools\bin\sdkmanager.bat ${pkg}

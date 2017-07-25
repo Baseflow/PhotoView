@@ -16,3 +16,9 @@ allprojects {
         google()
     }
 }
+
+ext {
+    sdkVersion = 26
+    buildToolsVersion = '26.0.1'
+    supportLibVersion = '26.0.0'
+}
