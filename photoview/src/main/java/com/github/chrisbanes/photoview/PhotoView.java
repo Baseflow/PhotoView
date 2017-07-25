@@ -109,19 +109,25 @@ public class PhotoView extends ImageView {
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         // setImageBitmap calls through to this method
-        attacher.update();
+        if (attacher != null) {
+            attacher.update();
+        }
     }
 
     @Override
     public void setImageResource(int resId) {
         super.setImageResource(resId);
-        attacher.update();
+        if (attacher != null) {
+            attacher.update();
+        }
     }
 
     @Override
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
-        attacher.update();
+        if (attacher != null) {
+            attacher.update();
+        }
     }
 
     @Override
