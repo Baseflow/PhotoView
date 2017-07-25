@@ -10,4 +10,9 @@
         <!-- enable window content transitions -->
         <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
     </style>
+
+    <style name="AppTheme.WithActionBar">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
 </resources>
