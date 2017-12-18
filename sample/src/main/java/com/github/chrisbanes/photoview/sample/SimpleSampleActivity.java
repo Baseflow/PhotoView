@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.OnMatrixChangedListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.OnScaleChangedListener;
 import com.github.chrisbanes.photoview.OnSingleFlingListener;
 import com.github.chrisbanes.photoview.PhotoView;
 
@@ -139,6 +140,25 @@ public class SimpleSampleActivity extends AppCompatActivity {
         mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
         mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
         mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
+        mPhotoView.setOnScaleChangeListener(new PhotoScaleListener());
+    }
+
+    private class PhotoScaleListener implements OnScaleChangedListener {
+
+        @Override
+        public void onScaleChange(float scaleFactor, float focusX, float focusY) {
+
+        }
+
+        @Override
+        public void onScaleBegin() {
+            showToast("Scale begin");
+        }
+
+        @Override
+        public void onScaleEnd() {
+            showToast("Scale end");
+        }
     }
 
     private class PhotoTapListener implements OnPhotoTapListener {

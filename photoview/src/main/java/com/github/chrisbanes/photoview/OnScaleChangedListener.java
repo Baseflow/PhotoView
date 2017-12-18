@@ -14,4 +14,14 @@ public interface OnScaleChangedListener {
      * @param focusY      focal point Y position
      */
     void onScaleChange(float scaleFactor, float focusX, float focusY);
+
+    /**
+     * Callback for when the scale begins
+     */
+    void onScaleBegin();
+
+    /**
+     * Callback for when the scale ends
+     */
+    void onScaleEnd();
 }

@@ -147,6 +147,20 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 checkAndDisplayMatrix();
             }
         }
+
+        @Override
+        public void onScaleBegin() {
+            if (mScaleChangeListener != null) {
+                mScaleChangeListener.onScaleBegin();
+            }
+        }
+
+        @Override
+        public void onScaleEnd() {
+            if (mScaleChangeListener != null) {
+                mScaleChangeListener.onScaleEnd();
+            }
+        }
     };
 
     public PhotoViewAttacher(ImageView imageView) {
@@ -235,6 +249,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float scale = getScale();
                     float x = ev.getX();
                     float y = ev.getY();
+
 
                     if (scale < getMediumScale()) {
                         setScale(getMediumScale(), x, y, true);
@@ -476,7 +491,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
         }
 
+
         if (animate) {
+            onGestureListener.onScaleBegin();
             mImageView.post(new AnimatedZoomRunnable(getScale(), scale,
                     focalX, focalY));
         } else {
@@ -779,6 +796,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             // We haven't hit our target scale yet, so post ourselves again
             if (t < 1f) {
                 Compat.postOnAnimation(mImageView, this);
+            } else {
+                onGestureListener.onScaleEnd();
             }
         }
 
