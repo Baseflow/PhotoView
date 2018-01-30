@@ -76,6 +76,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     // Listeners
     private OnMatrixChangedListener mMatrixChangeListener;
     private OnPhotoTapListener mPhotoTapListener;
+    private OnPhotoDragListener mPhotoDragListener;
     private OnOutsidePhotoTapListener mOutsidePhotoTapListener;
     private OnViewTapListener mViewTapListener;
     private View.OnClickListener mOnClickListener;
@@ -125,6 +126,27 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             } else {
                 if (parent != null) {
                     parent.requestDisallowInterceptTouchEvent(true);
+                }
+            }
+        }
+
+        @Override
+        public void onDragAbsolute(float x, float y, DragPhase phase) {
+            if (mPhotoDragListener!=null){
+                final RectF displayRect = getDisplayRect();
+
+                if (displayRect != null) {
+
+                    // Check to see if the user tapped on the photo
+                    if (displayRect.contains(x, y)) {
+
+                        float xResult = (x - displayRect.left)
+                                / displayRect.width();
+                        float yResult = (y - displayRect.top)
+                                / displayRect.height();
+
+                        mPhotoDragListener.onPhotoDrag(mImageView,xResult,yResult,phase);
+                    }
                 }
             }
         }
@@ -444,6 +466,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnPhotoTapListener(OnPhotoTapListener listener) {
         mPhotoTapListener = listener;
+    }
+
+    public void setOnPhotoDragListener(OnPhotoDragListener listener) {
+        mPhotoDragListener = listener;
     }
 
     public void setOnOutsidePhotoTapListener(OnOutsidePhotoTapListener mOutsidePhotoTapListener) {

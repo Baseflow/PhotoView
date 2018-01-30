@@ -16,6 +16,7 @@
 package com.github.chrisbanes.photoview;
 
 import android.content.Context;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
@@ -36,6 +37,7 @@ class CustomGestureDetector {
     private boolean mIsDragging;
     private float mLastTouchX;
     private float mLastTouchY;
+    private Pair<Float,Float> mFirstTouch = null;
     private final float mTouchSlop;
     private final float mMinimumVelocity;
     private OnGestureListener mListener;
@@ -121,6 +123,7 @@ class CustomGestureDetector {
 
                 mLastTouchX = getActiveX(ev);
                 mLastTouchY = getActiveY(ev);
+                mFirstTouch = new Pair<>(mLastTouchX,mLastTouchY);
                 mIsDragging = false;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -136,8 +139,13 @@ class CustomGestureDetector {
 
                 if (mIsDragging) {
                     mListener.onDrag(dx, dy);
+                    if (mFirstTouch!=null){
+                        mListener.onDragAbsolute(mFirstTouch.first,mFirstTouch.second, DragPhase.FIRST);
+                        mFirstTouch = null;
+                    }
                     mLastTouchX = x;
                     mLastTouchY = y;
+                    mListener.onDragAbsolute(mLastTouchX, mLastTouchY, DragPhase.CONTINUED);
 
                     if (null != mVelocityTracker) {
                         mVelocityTracker.addMovement(ev);
@@ -154,10 +162,10 @@ class CustomGestureDetector {
                 break;
             case MotionEvent.ACTION_UP:
                 mActivePointerId = INVALID_POINTER_ID;
+                mLastTouchX = getActiveX(ev);
+                mLastTouchY = getActiveY(ev);
                 if (mIsDragging) {
                     if (null != mVelocityTracker) {
-                        mLastTouchX = getActiveX(ev);
-                        mLastTouchY = getActiveY(ev);
 
                         // Compute velocity within the last 1000ms
                         mVelocityTracker.addMovement(ev);
@@ -171,6 +179,11 @@ class CustomGestureDetector {
                         if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
                             mListener.onFling(mLastTouchX, mLastTouchY, -vX,
                                     -vY);
+                            // When it's a fling, then it's not a drag
+                            mListener.onDragAbsolute(mLastTouchX,mLastTouchY, DragPhase.CANCELED);
+                        } else {
+                            // Else it's the last point in a drag gesture
+                            mListener.onDragAbsolute(mLastTouchX,mLastTouchY, DragPhase.LAST);
                         }
                     }
                 }
