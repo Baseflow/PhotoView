@@ -30,7 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.DragPhase;
 import com.github.chrisbanes.photoview.OnMatrixChangedListener;
+import com.github.chrisbanes.photoview.OnPhotoDragListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.OnSingleFlingListener;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -43,6 +45,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %% ID: %d";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
     static final String FLING_LOG_STRING = "Fling velocityX: %.2f, velocityY: %.2f";
+    static final String PHOTO_DRAG_TOAST_STRING = "Photo Drag! %s X: %.2f %% Y:%.2f %% ID: %d";
 
     private PhotoView mPhotoView;
     private TextView mCurrMatrixTv;
@@ -138,6 +141,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
         // Lets attach some listeners, not required though!
         mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
         mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
+        mPhotoView.setOnPhotoDragListener(new PhotoDragListener());
         mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
     }
 
@@ -149,6 +153,27 @@ public class SimpleSampleActivity extends AppCompatActivity {
             float yPercentage = y * 100f;
 
             showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage, view == null ? 0 : view.getId()));
+        }
+    }
+
+    private class PhotoDragListener implements OnPhotoDragListener {
+
+        @Override
+        public void onPhotoDrag(ImageView view, float x, float y, DragPhase phase) {
+            float xPercentage = x * 100f;
+            float yPercentage = y * 100f;
+
+            String message = String.format(PHOTO_DRAG_TOAST_STRING,
+                    phase.name(),
+                    xPercentage,
+                    yPercentage,
+                    view == null ? 0 : view.getId());
+            Log.i("JLSTUFF", message);
+            switch (phase) {
+                case FIRST:
+                case LAST:
+                    showToast(message);
+            }
         }
     }
 

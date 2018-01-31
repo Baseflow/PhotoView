@@ -224,6 +224,10 @@ public class PhotoView extends ImageView {
         attacher.setOnPhotoTapListener(listener);
     }
 
+    public void setOnPhotoDragListener(OnPhotoDragListener listener) {
+        attacher.setOnPhotoDragListener(listener);
+    }
+
     public void setOnOutsidePhotoTapListener(OnOutsidePhotoTapListener listener) {
         attacher.setOnOutsidePhotoTapListener(listener);
     }
