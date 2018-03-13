@@ -24,4 +24,8 @@ interface OnGestureListener {
 
     void onScale(float scaleFactor, float focusX, float focusY);
 
+    void onScaleBegin();
+
+    void onScaleEnd();
+
 }
