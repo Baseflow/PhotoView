@@ -250,7 +250,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float x = ev.getX();
                     float y = ev.getY();
 
-
                     if (scale < getMediumScale()) {
                         setScale(getMediumScale(), x, y, true);
                     } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
@@ -490,8 +489,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if (scale < mMinScale || scale > mMaxScale) {
             throw new IllegalArgumentException("Scale must be within the range of minScale and maxScale");
         }
-
-
+        
         if (animate) {
             onGestureListener.onScaleBegin();
             mImageView.post(new AnimatedZoomRunnable(getScale(), scale,
