@@ -17,7 +17,6 @@ package com.github.chrisbanes.photoview;
 
 import android.content.Context;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
@@ -30,7 +29,7 @@ class CustomGestureDetector {
 
     private int mActivePointerId = INVALID_POINTER_ID;
     private int mActivePointerIndex = 0;
-    private final ScaleGestureDetector mDetector;
+    private final SensitiveScaleGestureDetector mDetector;
 
     private VelocityTracker mVelocityTracker;
     private boolean mIsDragging;
@@ -47,14 +46,15 @@ class CustomGestureDetector {
         mTouchSlop = configuration.getScaledTouchSlop();
 
         mListener = listener;
-        ScaleGestureDetector.OnScaleGestureListener mScaleListener = new ScaleGestureDetector.OnScaleGestureListener() {
+        SensitiveScaleGestureDetector.OnScaleGestureListener mScaleListener = new SensitiveScaleGestureDetector.OnScaleGestureListener() {
 
             @Override
-            public boolean onScale(ScaleGestureDetector detector) {
+            public boolean onScale(SensitiveScaleGestureDetector detector) {
                 float scaleFactor = detector.getScaleFactor();
 
-                if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor))
+                if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor)) {
                     return false;
+                }
 
                 mListener.onScale(scaleFactor,
                         detector.getFocusX(), detector.getFocusY());
@@ -62,16 +62,15 @@ class CustomGestureDetector {
             }
 
             @Override
-            public boolean onScaleBegin(ScaleGestureDetector detector) {
+            public boolean onScaleBegin(SensitiveScaleGestureDetector detector) {
                 return true;
             }
 
             @Override
-            public void onScaleEnd(ScaleGestureDetector detector) {
-                // NO-OP
+            public void onScaleEnd(SensitiveScaleGestureDetector detector) {
             }
         };
-        mDetector = new ScaleGestureDetector(context, mScaleListener);
+        mDetector = new SensitiveScaleGestureDetector(context, mScaleListener);
     }
 
     private float getActiveX(MotionEvent ev) {
