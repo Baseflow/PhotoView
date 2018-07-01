@@ -20,7 +20,6 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.MotionEventCompat;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -104,15 +103,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mSuppMatrix.postTranslate(dx, dy);
             checkAndDisplayMatrix();
 
-        /*
-         * Here we decide whether to let the ImageView's parent to start taking
-         * over the touch event.
-         *
-         * First we check whether this function is enabled. We never want the
-         * parent to take over if we're scaling. We then check the edge we're
-         * on, and the direction of the scroll (i.e. if we're pulling against
-         * the edge, aka 'overscrolling', let the parent take over).
-         */
+            /*
+             * Here we decide whether to let the ImageView's parent to start taking
+             * over the touch event.
+             *
+             * First we check whether this function is enabled. We never want the
+             * parent to take over if we're scaling. We then check the edge we're
+             * on, and the direction of the scroll (i.e. if we're pulling against
+             * the edge, aka 'overscrolling', let the parent take over).
+             */
             ViewParent parent = mImageView.getParent();
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
                 if (mScrollEdge == EDGE_BOTH
@@ -181,8 +180,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         return false;
                     }
 
-                    if (MotionEventCompat.getPointerCount(e1) > SINGLE_TOUCH
-                            || MotionEventCompat.getPointerCount(e2) > SINGLE_TOUCH) {
+                    if (e1.getPointerCount() > SINGLE_TOUCH
+                            || e1.getPointerCount() > SINGLE_TOUCH) {
                         return false;
                     }
 

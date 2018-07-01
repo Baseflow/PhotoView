@@ -13,8 +13,4 @@ android {
     }
 }
 
-dependencies {
-    implementation "com.android.support:support-core-utils:$supportLibVersion"
-}
-
 apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'
