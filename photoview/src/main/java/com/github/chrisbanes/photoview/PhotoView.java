@@ -22,6 +22,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.FloatProperty;
+import android.util.Property;
 import android.view.GestureDetector;
 import android.widget.ImageView;
 
@@ -263,4 +265,20 @@ public class PhotoView extends ImageView {
     public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
         attacher.setOnSingleFlingListener(onSingleFlingListener);
     }
+	
+	/**
+     * A Property wrapper around the <code>scale</code> functionality handled by the
+     * {@link PhotoView#setScale(float)} and {@link PhotoView#getScale()} methods.
+     */
+    public static final Property<PhotoView, Float> SCALE = new FloatProperty<PhotoView>("scale") {
+        @Override
+        public void setValue(PhotoView object, float value) {
+            object.setScale(value);
+        }
+
+        @Override
+        public Float get(PhotoView object) {
+            return object.getScale();
+        }
+    };
 }
