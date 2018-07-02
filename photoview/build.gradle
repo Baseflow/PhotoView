@@ -3,7 +3,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion rootProject.ext.sdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         minSdkVersion 14
@@ -11,6 +10,10 @@ android {
         versionCode 1
         versionName "1.0"
     }
+}
+
+dependencies {
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
 }
 
 apply from: 'https://raw.githubusercontent.com/Commit451/gradle-android-javadocs/1.0.0/gradle-android-javadocs.gradle'
