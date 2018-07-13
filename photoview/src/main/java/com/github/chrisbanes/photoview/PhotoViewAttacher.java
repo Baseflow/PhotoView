@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
@@ -35,7 +35,7 @@ import android.widget.OverScroller;
 
 /**
  * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
- * It is made public in case you need to subclass something other than {@link ImageView} and still
+ * It is made public in case you need to subclass something other than AppCompatImageView and still
  * gain the functionality that {@link PhotoView} offers
  */
 public class PhotoViewAttacher implements View.OnTouchListener,
@@ -106,15 +106,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mSuppMatrix.postTranslate(dx, dy);
             checkAndDisplayMatrix();
 
-        /*
-         * Here we decide whether to let the ImageView's parent to start taking
-         * over the touch event.
-         *
-         * First we check whether this function is enabled. We never want the
-         * parent to take over if we're scaling. We then check the edge we're
-         * on, and the direction of the scroll (i.e. if we're pulling against
-         * the edge, aka 'overscrolling', let the parent take over).
-         */
+            /*
+             * Here we decide whether to let the ImageView's parent to start taking
+             * over the touch event.
+             *
+             * First we check whether this function is enabled. We never want the
+             * parent to take over if we're scaling. We then check the edge we're
+             * on, and the direction of the scroll (i.e. if we're pulling against
+             * the edge, aka 'overscrolling', let the parent take over).
+             */
             ViewParent parent = mImageView.getParent();
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
                 if (mScrollEdge == EDGE_BOTH
@@ -183,8 +183,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         return false;
                     }
 
-                    if (MotionEventCompat.getPointerCount(e1) > SINGLE_TOUCH
-                            || MotionEventCompat.getPointerCount(e2) > SINGLE_TOUCH) {
+                    if (e1.getPointerCount() > SINGLE_TOUCH
+                            || e1.getPointerCount() > SINGLE_TOUCH) {
                         return false;
                     }
 
