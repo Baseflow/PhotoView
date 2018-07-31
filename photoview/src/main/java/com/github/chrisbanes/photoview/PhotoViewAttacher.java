@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
@@ -20,6 +20,8 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.support.v4.view.MotionEventCompat;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -88,6 +90,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
+    private boolean mTouchUpFired = false;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
@@ -231,17 +234,30 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             @Override
             public boolean onDoubleTap(MotionEvent ev) {
                 try {
-                    float scale = getScale();
-                    float x = ev.getX();
-                    float y = ev.getY();
+                    final float scale = getScale();
+                    final float x = ev.getX();
+                    final float y = ev.getY();
 
-                    if (scale < getMediumScale()) {
-                        setScale(getMediumScale(), x, y, true);
-                    } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
-                        setScale(getMaximumScale(), x, y, true);
-                    } else {
-                        setScale(getMinimumScale(), x, y, true);
-                    }
+                    // If after 50ms touchUp fires, gesture is completed double tap
+                    // Else gesture is single-finger-zoom, do nothing
+                    mTouchUpFired = false;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mTouchUpFired) {
+                                // Double Tap Finished
+                                if (scale < getMediumScale()) {
+                                    setScale(getMediumScale(), x, y, true);
+                                } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
+                                    setScale(getMaximumScale(), x, y, true);
+                                } else {
+                                    setScale(getMinimumScale(), x, y, true);
+                                }
+                            }
+                        }
+                    }, 50);
+
+
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // Can sometimes happen when getX() and getY() is called
                 }
@@ -362,6 +378,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 case MotionEvent.ACTION_UP:
                     // If the user has zoomed less than min scale, zoom back
                     // to min scale
+                    mTouchUpFired = true;
                     if (getScale() < mMinScale) {
                         RectF rect = getDisplayRect();
                         if (rect != null) {
