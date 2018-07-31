@@ -181,7 +181,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     }
 
                     if (e1.getPointerCount() > SINGLE_TOUCH
-                            || e1.getPointerCount() > SINGLE_TOUCH) {
+                            || e2.getPointerCount() > SINGLE_TOUCH) {
                         return false;
                     }
 
