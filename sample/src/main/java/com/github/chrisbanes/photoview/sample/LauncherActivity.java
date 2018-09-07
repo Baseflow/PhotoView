@@ -27,6 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 public class LauncherActivity extends AppCompatActivity {
 
     public static final String[] options = {
@@ -35,13 +37,17 @@ public class LauncherActivity extends AppCompatActivity {
             "Rotation Sample",
             "Picasso Sample",
             "Activity Transition Sample",
-            "Immersive Sample"
+            "Immersive Sample",
+            "Fresco Sample"
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+
+        Fresco.initialize(getApplicationContext());
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         RecyclerView recyclerView = findViewById(R.id.list);
@@ -78,6 +84,8 @@ public class LauncherActivity extends AppCompatActivity {
                             break;
                         case 5:
                             clazz = ImmersiveActivity.class;
+                        case 6:
+                            clazz = FrescoSampleActivity.class;
                     }
 
                     Context context = holder.itemView.getContext();
