@@ -31,6 +31,9 @@
         <activity android:name=".ActivityTransitionToActivity" />
 
         <activity android:name=".ImmersiveActivity" />
+
+        <activity android:name=".FrescoSampleActivity" />
+
     </application>
 
 </manifest>
