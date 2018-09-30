@@ -16,9 +16,12 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
-    implementation "com.android.support:design:$supportLibVersion"
-    implementation "com.android.support:recyclerview-v7:$supportLibVersion"
+    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.0.0"
+
+    implementation "com.google.android.material:material:1.0.0"
+
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
     implementation project(':photoview')
 }

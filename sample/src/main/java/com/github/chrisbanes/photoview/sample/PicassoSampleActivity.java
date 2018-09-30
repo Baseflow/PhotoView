@@ -1,11 +1,11 @@
 package com.github.chrisbanes.photoview.sample;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 public class PicassoSampleActivity extends AppCompatActivity {
 
