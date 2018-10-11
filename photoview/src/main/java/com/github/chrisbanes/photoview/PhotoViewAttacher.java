@@ -88,6 +88,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
+    private boolean mSecondDoubleTapEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     private OnGestureListener onGestureListener = new OnGestureListener() {
@@ -222,7 +223,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     float y = ev.getY();
                     if (scale < getMediumScale()) {
                         setScale(getMediumScale(), x, y, true);
-                    } else if (scale >= getMediumScale() && scale < getMaximumScale()) {
+                    } else if (mSecondDoubleTapEnabled && scale >= getMediumScale() && scale < getMaximumScale()) {
                         setScale(getMaximumScale(), x, y, true);
                     } else {
                         setScale(getMinimumScale(), x, y, true);
@@ -479,6 +480,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setZoomable(boolean zoomable) {
         mZoomEnabled = zoomable;
+        update();
+    }
+
+    public void setSupportSecondDoubleTap(boolean enable) {
+        mSecondDoubleTapEnabled = enable;
         update();
     }
 
