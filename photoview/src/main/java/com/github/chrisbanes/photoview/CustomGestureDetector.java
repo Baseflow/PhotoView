@@ -55,6 +55,7 @@ class CustomGestureDetector {
 
                 if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor))
                     return false;
+             
                 if (scaleFactor >= 0) {
                     mListener.onScale(scaleFactor,
                             detector.getFocusX(), detector.getFocusY());
