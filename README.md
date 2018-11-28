@@ -1,7 +1,7 @@
 # PhotoView
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
 
-[![](https://jitpack.io/v/chrisbanes/PhotoView.svg)](https://jitpack.io/#chrisbanes/PhotoView) [![Build status](https://ci.appveyor.com/api/projects/status/bv0oc6hhf6d9dhur?svg=true)](https://ci.appveyor.com/project/Jawnnypoo/photoview)
+[![](https://jitpack.io/v/chrisbanes/PhotoView.svg)](https://jitpack.io/#chrisbanes/PhotoView)
 
 ## Dependency
 
@@ -74,7 +74,7 @@ This library aims to keep the zooming implementation simple. If you are looking 
 License
 --------
 
-    Copyright 2017 Chris Banes
+    Copyright 2018 Chris Banes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
