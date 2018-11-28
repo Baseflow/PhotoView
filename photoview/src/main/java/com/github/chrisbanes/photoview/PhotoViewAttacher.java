@@ -122,7 +122,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 if (mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH
                         || (mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 1f)
                         || (mHorizontalScrollEdge == HORIZONTAL_EDGE_RIGHT && dx <= -1f)
-                        || mVerticalScrollEdge == VERTICAL_EDGE_BOTH
                         || (mVerticalScrollEdge == VERTICAL_EDGE_TOP && dy >= 1f)
                         || (mVerticalScrollEdge == VERTICAL_EDGE_BOTTOM && dy <= -1f)) {
                     if (parent != null) {
