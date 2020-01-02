@@ -1,4 +1,6 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
+
+apply plugin: "kotlin-android"
 
 android {
     compileSdkVersion rootProject.ext.sdkVersion
@@ -10,18 +12,32 @@ android {
         versionCode 100
         versionName "1.0"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     lintOptions {
         abortOnError false
     }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.0.0"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
 
     implementation "com.google.android.material:material:1.0.0"
 
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation "com.squareup.picasso:picasso:2.5.2"
+    implementation("io.coil-kt:coil:0.9.1")
 
-    implementation project(':photoview')
+    implementation project(":photoview")
 }

@@ -35,6 +35,7 @@ public class LauncherActivity extends AppCompatActivity {
             "ViewPager Sample",
             "Rotation Sample",
             "Picasso Sample",
+            "Coil Sample",
             "Activity Transition Sample",
             "Immersive Sample"
     };
@@ -55,35 +56,35 @@ public class LauncherActivity extends AppCompatActivity {
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             final ItemViewHolder holder = ItemViewHolder.newInstance(parent);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Class clazz;
+            holder.itemView.setOnClickListener(v -> {
+                Class clazz;
 
-                    switch (holder.getAdapterPosition()) {
-                        default:
-                        case 0:
-                            clazz = SimpleSampleActivity.class;
-                            break;
-                        case 1:
-                            clazz = ViewPagerActivity.class;
-                            break;
-                        case 2:
-                            clazz = RotationSampleActivity.class;
-                            break;
-                        case 3:
-                            clazz = PicassoSampleActivity.class;
-                            break;
-                        case 4:
-                            clazz = ActivityTransitionActivity.class;
-                            break;
-                        case 5:
-                            clazz = ImmersiveActivity.class;
-                    }
-
-                    Context context = holder.itemView.getContext();
-                    context.startActivity(new Intent(context, clazz));
+                switch (holder.getAdapterPosition()) {
+                    default:
+                    case 0:
+                        clazz = SimpleSampleActivity.class;
+                        break;
+                    case 1:
+                        clazz = ViewPagerActivity.class;
+                        break;
+                    case 2:
+                        clazz = RotationSampleActivity.class;
+                        break;
+                    case 3:
+                        clazz = PicassoSampleActivity.class;
+                        break;
+                    case 4:
+                        clazz = CoilSampleActivity.class;
+                        break;
+                    case 5:
+                        clazz = ActivityTransitionActivity.class;
+                        break;
+                    case 6:
+                        clazz = ImmersiveActivity.class;
                 }
+
+                Context context = holder.itemView.getContext();
+                context.startActivity(new Intent(context, clazz));
             });
             return holder;
         }
