@@ -263,7 +263,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     }
 
     public void setParentScrollDirection(@ParentScrollDirection int scrollDirection) {
-
+        this.mParentScrollDirection = scrollDirection;
     }
 
     @Deprecated
