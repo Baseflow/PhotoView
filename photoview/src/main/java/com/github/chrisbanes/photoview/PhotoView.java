@@ -253,4 +253,8 @@ public class PhotoView extends AppCompatImageView {
     public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
         attacher.setOnSingleFlingListener(onSingleFlingListener);
     }
+
+    public void setParentScrollDirection(@ParentScrollDirection int scrollDirection) {
+        attacher.setParentScrollDirection(scrollDirection);
+    }
 }

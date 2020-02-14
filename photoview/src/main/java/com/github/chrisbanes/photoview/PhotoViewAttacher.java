@@ -90,6 +90,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private FlingRunnable mCurrentFlingRunnable;
     private int mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
     private int mVerticalScrollEdge = VERTICAL_EDGE_BOTH;
+    private int mParentScrollDirection = ParentScrollDirection.HORIZONTAL;
     private float mBaseRotation;
 
     private boolean mZoomEnabled = true;
@@ -118,10 +119,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
              */
             ViewParent parent = mImageView.getParent();
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
-                if (mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH
+                if ((mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH && mParentScrollDirection == ParentScrollDirection.HORIZONTAL)
                         || (mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 1f)
                         || (mHorizontalScrollEdge == HORIZONTAL_EDGE_RIGHT && dx <= -1f)
-                        || (mVerticalScrollEdge == VERTICAL_EDGE_BOTH)
+                        || (mVerticalScrollEdge == VERTICAL_EDGE_BOTH && mParentScrollDirection == ParentScrollDirection.VERTICAL)
                         || (mVerticalScrollEdge == VERTICAL_EDGE_TOP && dy >= 1f)
                         || (mVerticalScrollEdge == VERTICAL_EDGE_BOTTOM && dy <= -1f)) {
                     if (parent != null) {
@@ -259,6 +260,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
         this.mSingleFlingListener = onSingleFlingListener;
+    }
+
+    public void setParentScrollDirection(@ParentScrollDirection int scrollDirection) {
+
     }
 
     @Deprecated
