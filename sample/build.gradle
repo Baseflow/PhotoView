@@ -34,7 +34,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "androidx.recyclerview:recyclerview:1.1.0"
 
-    implementation "com.google.android.material:material:1.0.0"
+    implementation "com.google.android.material:material:1.1.0"
 
     implementation "com.squareup.picasso:picasso:2.5.2"
     implementation("io.coil-kt:coil:0.9.1")
