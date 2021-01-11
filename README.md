@@ -17,6 +17,7 @@ allprojects {
 buildscript {
     repositories {
         maven { url "https://www.jitpack.io" }
+    }	
 }
 ```
 
