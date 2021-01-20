@@ -18,7 +18,7 @@ allprojects {
 Then, add the library to your module `build.gradle`
 ```gradle
 dependencies {
-    implementation 'com.github.chrisbanes:PhotoView:latest.release.here'
+    implementation 'com.baseflow:photoview:latest.release.here'
 }
 ```
 
