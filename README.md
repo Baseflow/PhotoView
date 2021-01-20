@@ -3,6 +3,8 @@ PhotoView aims to help produce an easily usable implementation of a zooming Andr
 
 [![](https://jitpack.io/v/chrisbanes/PhotoView.svg)](https://jitpack.io/#chrisbanes/PhotoView)
 
+[![](https://user-images.githubusercontent.com/12352397/85141529-94648e80-b24f-11ea-9a14-a845fb43b181.gif)
+
 ## Dependency
 
 Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
