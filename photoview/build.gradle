@@ -5,7 +5,7 @@ android {
     compileSdkVersion rootProject.ext.sdkVersion
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.sdkVersion
         versionCode 1
         versionName "1.0"
@@ -33,7 +33,7 @@ afterEvaluate {
                 pom {
                     name = 'PhotoView'
                     description = 'A simple ImageView that support zooming, both by Multi-touch gestures and double-tap.'
-                    url = 'https://github.com/chrisbanes/PhotoView'
+                    url = 'https://github.com/Baseflow/PhotoView'
                     licenses {
                         license {
                             name = 'The Apache License, Version 2.0'
