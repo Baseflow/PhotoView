@@ -144,11 +144,17 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
         @Override
         public void onScale(float scaleFactor, float focusX, float focusY) {
+            onScale(scaleFactor, focusX, focusY, 0, 0);
+        }
+
+        @Override
+        public void onScale(float scaleFactor, float focusX, float focusY, float dx, float dy) {
             if (getScale() < mMaxScale || scaleFactor < 1f) {
                 if (mScaleChangeListener != null) {
                     mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
                 }
                 mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+                mSuppMatrix.postTranslate(dx, dy);
                 checkAndDisplayMatrix();
             }
         }

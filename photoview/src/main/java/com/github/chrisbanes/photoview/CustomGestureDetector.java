@@ -48,6 +48,7 @@ class CustomGestureDetector {
 
         mListener = listener;
         ScaleGestureDetector.OnScaleGestureListener mScaleListener = new ScaleGestureDetector.OnScaleGestureListener() {
+            private float lastFocusX, lastFocusY = 0;
 
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
@@ -58,13 +59,21 @@ class CustomGestureDetector {
              
                 if (scaleFactor >= 0) {
                     mListener.onScale(scaleFactor,
-                            detector.getFocusX(), detector.getFocusY());
+                            detector.getFocusX(),
+                            detector.getFocusY(),
+                            detector.getFocusX() - lastFocusX,
+                            detector.getFocusY() - lastFocusY
+                    );
+                    lastFocusX = detector.getFocusX();
+                    lastFocusY = detector.getFocusY();
                 }
                 return true;
             }
 
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
+                lastFocusX = detector.getFocusX();
+                lastFocusY = detector.getFocusY();
                 return true;
             }
 
