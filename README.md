@@ -9,9 +9,15 @@ Add this in your root `build.gradle` file (**not** your module `build.gradle` fi
 
 ```gradle
 allprojects {
-	repositories {
-        maven { url "https://jitpack.io" }
+    repositories {
+        maven { url "https://www.jitpack.io" }
     }
+}
+
+buildscript {
+    repositories {
+        maven { url "https://www.jitpack.io" }
+    }	
 }
 ```
 
