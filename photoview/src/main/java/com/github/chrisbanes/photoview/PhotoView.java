@@ -222,6 +222,10 @@ public class PhotoView extends AppCompatImageView {
         attacher.setOnViewTapListener(listener);
     }
 
+    public void setOnViewDoubleTapListener(OnViewDoubleTapListener listener) {
+        attacher.setOnViewDoubleTapListener(listener);
+    }
+
     public void setOnViewDragListener(OnViewDragListener listener) {
         attacher.setOnViewDragListener(listener);
     }

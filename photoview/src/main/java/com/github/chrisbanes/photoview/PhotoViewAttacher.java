@@ -81,6 +81,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnPhotoTapListener mPhotoTapListener;
     private OnOutsidePhotoTapListener mOutsidePhotoTapListener;
     private OnViewTapListener mViewTapListener;
+    private OnViewDoubleTapListener mViewDoubleTapListener;
     private View.OnClickListener mOnClickListener;
     private OnLongClickListener mLongClickListener;
     private OnScaleChangedListener mScaleChangeListener;
@@ -239,6 +240,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         setScale(getMaximumScale(), x, y, true);
                     } else {
                         setScale(getMinimumScale(), x, y, true);
+                    }
+                    if (mViewDoubleTapListener != null) {
+                        mViewDoubleTapListener.onViewDoubleTap(mImageView, x, y);
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // Can sometimes happen when getX() and getY() is called
@@ -438,6 +442,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnViewTapListener(OnViewTapListener listener) {
         mViewTapListener = listener;
+    }
+
+    public void setOnViewDoubleTapListener(OnViewDoubleTapListener listener) {
+        mViewDoubleTapListener = listener;
     }
 
     public void setOnViewDragListener(OnViewDragListener listener) {
