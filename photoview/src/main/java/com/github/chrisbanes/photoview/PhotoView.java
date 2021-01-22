@@ -150,6 +150,10 @@ public class PhotoView extends AppCompatImageView {
         attacher.setZoomable(zoomable);
     }
 
+    public void setSupportSecondDoubleTap(boolean enable) {
+        attacher.setSupportSecondDoubleTap(enable);
+    }
+
     public RectF getDisplayRect() {
         return attacher.getDisplayRect();
     }
