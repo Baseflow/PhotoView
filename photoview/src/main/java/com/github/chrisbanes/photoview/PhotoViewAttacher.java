@@ -95,6 +95,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private boolean mZoomEnabled = true;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
+
+    //For adding our own onTouchListener
+    private AdditionalOnTouchListener mAdditionalOnTouchListener;
+
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
         public void onDrag(float dx, float dy) {
@@ -326,6 +330,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         return mScaleType;
     }
 
+    public void setAdditionalOnTouchListener (AdditionalOnTouchListener listener) {
+        this.mAdditionalOnTouchListener = listener;
+    }
+
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int
         oldRight, int oldBottom) {
@@ -337,6 +345,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
+
+        if (mAdditionalOnTouchListener != null) {
+            if (mAdditionalOnTouchListener.onTouch(v, ev)) { //It consumed
+                return true;
+            } else {
+                //Continue
+            }
+        }
+
         boolean handled = false;
         if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
             switch (ev.getAction()) {
