@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 android {
     compileSdkVersion rootProject.ext.sdkVersion
@@ -16,22 +17,58 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.1.0"
 }
 
+def PUBLISH_GROUP_ID = 'com.baseflow'
+def PUBLISH_ARTIFACT_ID = 'photoview'
+def PUBLISH_VERSION = '2.3.0'
+
+ext["signing.keyId"] = ''
+ext["signing.password"] = ''
+ext["signing.secretKeyRingFile"] = ''
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+ext["sonatypeStagingProfileId"] = ''
+
+File localPropsFile = project.rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    Properties p = new Properties()
+    new FileInputStream(localPropsFile).withCloseable { is ->
+        p.load(is)
+    }
+    p.each { name, value ->
+        ext[name] = value
+    }
+} else {
+    ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
+    ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
+    ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
+    ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
+    ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
+    ext["sonatypeStagingProfileId"] = System.getenv('SONATYPE_STAGING_PROFILE_ID')
+}
+
+nexusStaging {
+    packageGroup = PUBLISH_GROUP_ID
+    stagingProfileId = sonatypeStagingProfileId
+    username = ossrhUsername
+    password = ossrhPassword
+}
+
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
                 from components.release
 
-                group = 'com.github.chrisbanes'
-                artifactId = 'PhotoView'
-                version = '2.3.0'
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
 
                 // Adds javadocs and sources as separate jars.
                 artifact androidJavadocsJar
                 artifact(sourceJar)
 
                 pom {
-                    name = 'PhotoView'
+                    name = PUBLISH_ARTIFACT_ID
                     description = 'A simple ImageView that support zooming, both by Multi-touch gestures and double-tap.'
                     url = 'https://github.com/Baseflow/PhotoView'
                     licenses {
@@ -47,14 +84,33 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        connection = 'scm:git@github.com/chrisbanes/PhotoView.git'
-                        developerConnection = 'scm:git@github.com/chrisbanes/PhotoView.git'
-                        url = 'https://github.com/chrisbanes/PhotoView'
+                        connection = 'scm:git@github.com/Baseflow/PhotoView.git'
+                        developerConnection = 'scm:git@github.com/Baseflow/PhotoView.git'
+                        url = 'https://github.com/Baseflow/PhotoView'
                     }
                 }
             }
         }
+
+        repositories {
+            maven {
+                name = "sonatype"
+
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
+                }
+            }
+        }
     }
+}
+
+signing {
+    sign publishing.publications
 }
 
 task androidJavadocs(type: Javadoc) {
