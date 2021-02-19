@@ -86,6 +86,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnScaleChangedListener mScaleChangeListener;
     private OnSingleFlingListener mSingleFlingListener;
     private OnViewDragListener mOnViewDragListener;
+    private OnSwipe mOnSwipe;
 
     private FlingRunnable mCurrentFlingRunnable;
     private int mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
@@ -371,6 +372,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                         }
                     }
                     break;
+            }
+            if(mOnSwipe != null) {
+                mOnSwipe.swipe(v, ev);
             }
             // Try the Scale/Drag detector
             if (mScaleDragDetector != null) {
@@ -723,6 +727,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             mCurrentFlingRunnable.cancelFling();
             mCurrentFlingRunnable = null;
         }
+    }
+
+    public void setOnSwipe(OnSwipe onSwipe) {
+        mOnSwipe = onSwipe;
     }
 
     private class AnimatedZoomRunnable implements Runnable {
