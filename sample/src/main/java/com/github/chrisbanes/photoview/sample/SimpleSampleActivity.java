@@ -15,6 +15,7 @@
  */
 package com.github.chrisbanes.photoview.sample;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.github.chrisbanes.photoview.OnMatrixChangedListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.OnSingleFlingListener;
+import com.github.chrisbanes.photoview.OnSwipe;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.Random;
@@ -43,6 +45,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %% ID: %d";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
     static final String FLING_LOG_STRING = "Fling velocityX: %.2f, velocityY: %.2f";
+    static final int SWIPE_MIN_DISTANCE = 1000;
 
     private PhotoView mPhotoView;
     private TextView mCurrMatrixTv;
@@ -139,6 +142,22 @@ public class SimpleSampleActivity extends AppCompatActivity {
         mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
         mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
         mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
+        mPhotoView.setOnSwipe(new OnSwipe(){
+            @Override
+            public void swipe(View v, MotionEvent ev) {
+                if(ev.getAction() == MotionEvent.ACTION_UP) {
+                    if(Math.abs(v.getTranslationY()) < SWIPE_MIN_DISTANCE) {
+                        ObjectAnimator.ofFloat(v, "translationY", v.getTranslationY(), 0f)
+                                .setDuration(100L)
+                                .start();
+                    } else {
+                        finish();
+                    }
+                } else {
+                    super.swipe(v, ev);
+                }
+            }
+        });
     }
 
     private class PhotoTapListener implements OnPhotoTapListener {
