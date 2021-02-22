@@ -24,6 +24,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewConfiguration;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -45,7 +46,6 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private static float DEFAULT_MIN_SWIPE_THRESHOLD = 1000.0f;
     private static int DEFAULT_ZOOM_DURATION = 200;
 
-    private static final float DOUBLE_TAP_THRESHOLD = 100.0f;
     private static final int HORIZONTAL_EDGE_NONE = -1;
     private static final int HORIZONTAL_EDGE_LEFT = 0;
     private static final int HORIZONTAL_EDGE_RIGHT = 1;
@@ -752,7 +752,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float delta = ev.getRawY() - (Float) v.getTag();
-                    if (Math.abs(delta) > DOUBLE_TAP_THRESHOLD) {
+                    if (Math.abs(delta) > ViewConfiguration.get(v.getContext()).getScaledTouchSlop()) {
                         v.setTranslationY(delta);
                         mOnSwipeCloseListener.onProgress(delta);
                     }
