@@ -24,6 +24,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewConfiguration;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -42,6 +43,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private static float DEFAULT_MAX_SCALE = 3.0f;
     private static float DEFAULT_MID_SCALE = 1.75f;
     private static float DEFAULT_MIN_SCALE = 1.0f;
+    private static float DEFAULT_MIN_SWIPE_THRESHOLD = 1000.0f;
     private static int DEFAULT_ZOOM_DURATION = 200;
 
     private static final int HORIZONTAL_EDGE_NONE = -1;
@@ -59,6 +61,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
     private float mMaxScale = DEFAULT_MAX_SCALE;
+    private float mSwipeMinThreshold = DEFAULT_MIN_SWIPE_THRESHOLD;
 
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
@@ -86,6 +89,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private OnScaleChangedListener mScaleChangeListener;
     private OnSingleFlingListener mSingleFlingListener;
     private OnViewDragListener mOnViewDragListener;
+    private OnSwipeCloseListener mOnSwipeCloseListener;
 
     private FlingRunnable mCurrentFlingRunnable;
     private int mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
@@ -385,6 +389,9 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             if (mGestureDetector != null && mGestureDetector.onTouchEvent(ev)) {
                 handled = true;
             }
+            if(mOnSwipeCloseListener != null) {
+                swipe(v, ev);
+            }
 
         }
         return handled;
@@ -407,6 +414,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     public void setMaximumScale(float maximumScale) {
         Util.checkZoomLevels(mMinScale, mMidScale, maximumScale);
         mMaxScale = maximumScale;
+    }
+
+    public float getMinSwipeThreshold() {
+        return mSwipeMinThreshold;
+    }
+
+    public void setMinSwipeThreshold(float minSwipeThreshold) {
+        mSwipeMinThreshold = minSwipeThreshold;
     }
 
     public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
@@ -442,6 +457,10 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public void setOnViewDragListener(OnViewDragListener listener) {
         mOnViewDragListener = listener;
+    }
+
+    public void setOnSwipeCloseListener(OnSwipeCloseListener listener) {
+        mOnSwipeCloseListener = listener;
     }
 
     public void setScale(float scale) {
@@ -722,6 +741,28 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if (mCurrentFlingRunnable != null) {
             mCurrentFlingRunnable.cancelFling();
             mCurrentFlingRunnable = null;
+        }
+    }
+
+    private void swipe(View v, MotionEvent ev) {
+        if(getScale() == mMinScale) {
+            switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.setTag(ev.getY());
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float delta = ev.getRawY() - (Float) v.getTag();
+                    v.setTranslationY(delta);
+                    mOnSwipeCloseListener.onProgress(delta);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (Math.abs(v.getTranslationY()) > mSwipeMinThreshold) {
+                        mOnSwipeCloseListener.onFinish();
+                    } else {
+                        mOnSwipeCloseListener.onCancel();
+                    }
+                    break;
+            }
         }
     }
 
