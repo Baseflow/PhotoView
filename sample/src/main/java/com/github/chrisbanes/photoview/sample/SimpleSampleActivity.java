@@ -15,7 +15,6 @@
  */
 package com.github.chrisbanes.photoview.sample;
 
-import android.animation.ObjectAnimator;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -31,7 +30,6 @@ import android.widget.Toast;
 import com.github.chrisbanes.photoview.OnMatrixChangedListener;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.OnSingleFlingListener;
-import com.github.chrisbanes.photoview.OnSwipeCloseListener;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.Random;
@@ -141,26 +139,6 @@ public class SimpleSampleActivity extends AppCompatActivity {
         mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
         mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
         mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
-        mPhotoView.setOnSwipeCloseListener(new OnSwipeCloseListener() {
-            @Override
-            public void onProgress(float delta) {
-                float threshold = mPhotoView.getMinSwipeThreshold();
-                mPhotoView.setAlpha((threshold - Math.abs(delta))/threshold);
-            }
-
-            @Override
-            public void onFinish() {
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-                ObjectAnimator.ofFloat(mPhotoView, "translationY", mPhotoView.getTranslationY(), 0f)
-                        .setDuration(100L)
-                        .start();
-                mPhotoView.setAlpha(1.0f);
-            }
-        });
     }
 
     private class PhotoTapListener implements OnPhotoTapListener {
