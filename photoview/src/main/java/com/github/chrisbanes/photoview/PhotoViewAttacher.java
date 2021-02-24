@@ -748,10 +748,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         if(getScale() == mMinScale) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    // Save Y coordinate position in order to drag the image
                     v.setTag(ev.getY());
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float delta = ev.getRawY() - (Float) v.getTag();
+                    // If the delta is TouchSlop or less, it will not move
                     if (Math.abs(delta) > ViewConfiguration.get(v.getContext()).getScaledTouchSlop()) {
                         v.setTranslationY(delta);
                         mOnSwipeCloseListener.onProgress(delta);
