@@ -753,8 +753,8 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float delta = ev.getRawY() - (Float) v.getTag();
-                    // If the delta is TouchSlop or less, it will not move
-                    if (Math.abs(delta) > ViewConfiguration.get(v.getContext()).getScaledDoubleTapSlop()) {
+                    // If the delta is MinimumFlingVelocity or less, it will not move
+                    if (Math.abs(delta) > ViewConfiguration.get(v.getContext()).getScaledMinimumFlingVelocity()) {
                         v.setTranslationY(delta);
                         mOnSwipeCloseListener.onProgress(delta);
                     }
