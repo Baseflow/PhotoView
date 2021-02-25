@@ -20,11 +20,11 @@ import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.view.ViewConfiguration;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -55,6 +55,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private static final int VERTICAL_EDGE_BOTTOM = 1;
     private static final int VERTICAL_EDGE_BOTH = 2;
     private static int SINGLE_TOUCH = 1;
+    private static final float SWIPE_THRESHOLD = 25;
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
     private int mZoomDuration = DEFAULT_ZOOM_DURATION;
@@ -754,7 +755,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                 case MotionEvent.ACTION_MOVE:
                     float delta = ev.getRawY() - (Float) v.getTag();
                     // If the delta is MinimumFlingVelocity or less, it will not move
-                    if (Math.abs(delta) > ViewConfiguration.get(v.getContext()).getScaledMinimumFlingVelocity()) {
+                    if (Math.abs(delta) > convertDp2Px(SWIPE_THRESHOLD, v.getContext())) {
                         v.setTranslationY(delta);
                         mOnSwipeCloseListener.onProgress(delta);
                     }
@@ -768,6 +769,11 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     break;
             }
         }
+    }
+
+    private float convertDp2Px(float dp, Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return dp * metrics.density;
     }
 
     private class AnimatedZoomRunnable implements Runnable {
