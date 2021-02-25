@@ -186,8 +186,8 @@ public class PhotoView extends AppCompatImageView {
         return attacher.getScale();
     }
 
-    public float getMinSwipeThreshold() {
-        return attacher.getMinSwipeThreshold();
+    public float getMinCloseThreshold() {
+        return attacher.getMinCloseThreshold();
     }
 
     public void setAllowParentInterceptOnEdge(boolean allow) {
@@ -246,8 +246,8 @@ public class PhotoView extends AppCompatImageView {
         attacher.setScale(scale, focalX, focalY, animate);
     }
 
-    public void setMinSwipeThreshold(float minSwipeThreshold) {
-        attacher.setMinSwipeThreshold(minSwipeThreshold);
+    public void setMinCloseThreshold(float minCloseThreshold) {
+        attacher.setMinCloseThreshold(minCloseThreshold);
     }
 
     public void setZoomTransitionDuration(int milliseconds) {

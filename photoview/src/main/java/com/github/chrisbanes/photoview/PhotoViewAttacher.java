@@ -43,7 +43,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private static float DEFAULT_MAX_SCALE = 3.0f;
     private static float DEFAULT_MID_SCALE = 1.75f;
     private static float DEFAULT_MIN_SCALE = 1.0f;
-    private static float DEFAULT_MIN_SWIPE_THRESHOLD = 1000.0f;
+    private static float DEFAULT_MIN_CLOSE_THRESHOLD = 1000.0f;
     private static int DEFAULT_ZOOM_DURATION = 200;
 
     private static final int HORIZONTAL_EDGE_NONE = -1;
@@ -61,7 +61,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
     private float mMaxScale = DEFAULT_MAX_SCALE;
-    private float mSwipeMinThreshold = DEFAULT_MIN_SWIPE_THRESHOLD;
+    private float mMinCloseThreshold = DEFAULT_MIN_CLOSE_THRESHOLD;
 
     private boolean mAllowParentInterceptOnEdge = true;
     private boolean mBlockParentIntercept = false;
@@ -416,12 +416,12 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         mMaxScale = maximumScale;
     }
 
-    public float getMinSwipeThreshold() {
-        return mSwipeMinThreshold;
+    public float getMinCloseThreshold() {
+        return mMinCloseThreshold;
     }
 
-    public void setMinSwipeThreshold(float minSwipeThreshold) {
-        mSwipeMinThreshold = minSwipeThreshold;
+    public void setMinCloseThreshold(float minCloseThreshold) {
+        mMinCloseThreshold = minCloseThreshold;
     }
 
     public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
@@ -760,7 +760,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (Math.abs(v.getTranslationY()) > mSwipeMinThreshold) {
+                    if (Math.abs(v.getTranslationY()) > mMinCloseThreshold) {
                         mOnSwipeCloseListener.onFinish();
                     } else {
                         mOnSwipeCloseListener.onCancel();

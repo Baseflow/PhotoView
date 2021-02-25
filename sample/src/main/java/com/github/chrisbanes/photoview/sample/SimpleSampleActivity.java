@@ -144,7 +144,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
         mPhotoView.setOnSwipeCloseListener(new OnSwipeCloseListener() {
             @Override
             public void onProgress(float delta) {
-                float threshold = mPhotoView.getMinSwipeThreshold();
+                float threshold = mPhotoView.getMinCloseThreshold();
                 mPhotoView.setAlpha((threshold - Math.abs(delta))/threshold);
             }
 
