@@ -4,14 +4,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-
-import com.github.chrisbanes.photoview.OnPhotoTapListener;
-import com.github.chrisbanes.photoview.PhotoView;
-import com.squareup.picasso.Picasso;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.github.chrisbanes.photoview.PhotoView;
+import com.squareup.picasso.Picasso;
 
 import static android.R.attr.uiOptions;
 
@@ -26,14 +24,11 @@ public class ImmersiveActivity extends AppCompatActivity {
         setContentView(R.layout.activity_immersive);
 
         PhotoView photoView = findViewById(R.id.photo_view);
-        Picasso.with(this)
+        Picasso.get()
                 .load("http://pbs.twimg.com/media/Bist9mvIYAAeAyQ.jpg")
                 .into(photoView);
-        photoView.setOnPhotoTapListener(new OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(ImageView view, float x, float y) {
-                //fullScreen();
-            }
+        photoView.setOnPhotoTapListener((view, x, y) -> {
+            //fullScreen();
         });
         fullScreen();
     }
@@ -43,8 +38,7 @@ public class ImmersiveActivity extends AppCompatActivity {
         // BEGIN_INCLUDE (get_current_ui_flags)
         // The UI options currently enabled are represented by a bitfield.
         // getSystemUiVisibility() gives us that bitfield.
-        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
+        int newUiOptions = getWindow().getDecorView().getSystemUiVisibility();
         // END_INCLUDE (get_current_ui_flags)
         // BEGIN_INCLUDE (toggle_ui_flags)
         boolean isImmersiveModeEnabled = isImmersiveModeEnabled();
