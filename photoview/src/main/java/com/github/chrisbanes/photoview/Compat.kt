@@ -13,27 +13,27 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package com.github.chrisbanes.photoview;
+package com.github.chrisbanes.photoview
 
-import android.annotation.TargetApi;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.view.View;
+import android.annotation.TargetApi
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import android.view.View
 
-class Compat {
+internal object Compat {
+    private const val SIXTY_FPS_INTERVAL = 1000 / 60
 
-    private static final int SIXTY_FPS_INTERVAL = 1000 / 60;
-
-    public static void postOnAnimation(View view, Runnable runnable) {
+    @JvmStatic
+    fun postOnAnimation(view: View, runnable: Runnable) {
         if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-            postOnAnimationJellyBean(view, runnable);
+            postOnAnimationJellyBean(view, runnable)
         } else {
-            view.postDelayed(runnable, SIXTY_FPS_INTERVAL);
+            view.postDelayed(runnable, SIXTY_FPS_INTERVAL.toLong())
         }
     }
 
     @TargetApi(16)
-    private static void postOnAnimationJellyBean(View view, Runnable runnable) {
-        view.postOnAnimation(runnable);
+    private fun postOnAnimationJellyBean(view: View, runnable: Runnable) {
+        view.postOnAnimation(runnable)
     }
 }
