@@ -2,7 +2,7 @@ package com.github.chrisbanes.photoview.sample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import coil.api.load
+import coil.load
 import com.github.chrisbanes.photoview.PhotoView
 
 class CoilSampleActivity : AppCompatActivity() {
