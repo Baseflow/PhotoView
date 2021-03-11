@@ -319,7 +319,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 
     public float getScale() {
         return (float) Math.sqrt((float) Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X), 2) + (float) Math.pow
-            (getValue(mSuppMatrix, Matrix.MSKEW_Y), 2));
+            (getValue(mSuppMatrix, Matrix.MSCALE_Y), 2));
     }
 
     public ScaleType getScaleType() {
