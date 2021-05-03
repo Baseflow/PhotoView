@@ -1,8 +1,9 @@
 package com.github.chrisbanes.photoview.sample;
 
 import android.content.Context;
-import android.support.v4.widget.DrawerLayout;
 import android.view.MotionEvent;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 
 /**
  * Hacky fix for Issue #4 and

@@ -1,7 +1,9 @@
 # PhotoView
 PhotoView aims to help produce an easily usable implementation of a zooming Android ImageView.
 
-[![](https://jitpack.io/v/chrisbanes/PhotoView.svg)](https://jitpack.io/#chrisbanes/PhotoView) [![Build status](https://ci.appveyor.com/api/projects/status/bv0oc6hhf6d9dhur?svg=true)](https://ci.appveyor.com/project/Jawnnypoo/photoview)
+[![](https://jitpack.io/v/chrisbanes/PhotoView.svg)](https://jitpack.io/#chrisbanes/PhotoView)
+
+[![](https://user-images.githubusercontent.com/12352397/85141529-94648e80-b24f-11ea-9a14-a845fb43b181.gif)
 
 ## Dependency
 
@@ -9,9 +11,15 @@ Add this in your root `build.gradle` file (**not** your module `build.gradle` fi
 
 ```gradle
 allprojects {
-	repositories {
-        maven { url "https://jitpack.io" }
+    repositories {
+        maven { url "https://www.jitpack.io" }
     }
+}
+
+buildscript {
+    repositories {
+        maven { url "https://www.jitpack.io" }
+    }	
 }
 ```
 
@@ -44,7 +52,7 @@ photoView.setImageResource(R.drawable.image);
 That's it!
 
 ## Issues With ViewGroups
-There are some ViewGroups (ones that utilize onInterceptTouchEvent) that throw exceptions when a PhotoView is placed within them, most notably [ViewPager](http://developer.android.com/reference/android/support/v4/view/ViewPager.html) and [DrawerLayout](https://developer.android.com/reference/android/support/v4/widget/DrawerLayout.html). This is a framework issue that has not been resolved. In order to prevent this exception (which typically occurs when you zoom out), take a look at [HackyDrawerLayout](https://github.com/chrisbanes/PhotoView/blob/master/sample/src/main/java/uk/co/senab/photoview/sample/HackyDrawerLayout.java) and you can see the solution is to simply catch the exception. Any ViewGroup which uses onInterceptTouchEvent will also need to be extended and exceptions caught. Use the [HackyDrawerLayout](https://github.com/chrisbanes/PhotoView/blob/master/sample/src/main/java/uk/co/senab/photoview/sample/HackyDrawerLayout.java) as a template of how to do so. The basic implementation is:
+There are some ViewGroups (ones that utilize onInterceptTouchEvent) that throw exceptions when a PhotoView is placed within them, most notably [ViewPager](http://developer.android.com/reference/android/support/v4/view/ViewPager.html) and [DrawerLayout](https://developer.android.com/reference/android/support/v4/widget/DrawerLayout.html). This is a framework issue that has not been resolved. In order to prevent this exception (which typically occurs when you zoom out), take a look at [HackyDrawerLayout](https://github.com/chrisbanes/PhotoView/blob/master/sample/src/main/java/com/github/chrisbanes/photoview/sample/HackyDrawerLayout.java) and you can see the solution is to simply catch the exception. Any ViewGroup which uses onInterceptTouchEvent will also need to be extended and exceptions caught. Use the [HackyDrawerLayout](https://github.com/chrisbanes/PhotoView/blob/master/sample/src/main/java/com/github/chrisbanes/photoview/sample/HackyDrawerLayout.java) as a template of how to do so. The basic implementation is:
 ```java
 public class HackyProblematicViewGroup extends ProblematicViewGroup {
 
@@ -74,7 +82,7 @@ This library aims to keep the zooming implementation simple. If you are looking 
 License
 --------
 
-    Copyright 2017 Chris Banes
+    Copyright 2018 Chris Banes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

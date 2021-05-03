@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.github.chrisbanes.photoview.sample">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,7 +9,8 @@
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity android:name=".LauncherActivity">
             <intent-filter>
@@ -25,6 +27,8 @@
         <activity android:name=".RotationSampleActivity" />
 
         <activity android:name=".PicassoSampleActivity" />
+
+        <activity android:name=".CoilSampleActivity" />
 
         <activity android:name=".ActivityTransitionActivity" />
 

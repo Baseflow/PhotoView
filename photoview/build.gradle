@@ -1,11 +1,11 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion rootProject.ext.sdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.sdkVersion
         versionCode 1
         versionName "1.0"
@@ -13,6 +13,5 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-core-utils:$supportLibVersion"
+    implementation "androidx.appcompat:appcompat:1.1.0"
 }
-
