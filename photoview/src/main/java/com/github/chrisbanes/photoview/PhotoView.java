@@ -150,6 +150,12 @@ public class PhotoView extends AppCompatImageView {
         attacher.setZoomable(zoomable);
     }
 
+    public void setZoomToMinimumOnRelease (boolean zoomToMinimumOnRelease){
+        attacher.setZoomToMinimumOnRelease(zoomToMinimumOnRelease);
+    }
+    public void setDoubleTapFunctionalityEnabled (boolean doubleTapFunctionalityEnabled){
+        attacher.setDoubleTapFunctionalityEnabled(doubleTapFunctionalityEnabled);
+    }
     public RectF getDisplayRect() {
         return attacher.getDisplayRect();
     }
