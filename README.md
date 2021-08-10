@@ -15,12 +15,6 @@ allprojects {
         maven { url "https://www.jitpack.io" }
     }
 }
-
-buildscript {
-    repositories {
-        maven { url "https://www.jitpack.io" }
-    }	
-}
 ```
 
 Then, add the library to your module `build.gradle`
