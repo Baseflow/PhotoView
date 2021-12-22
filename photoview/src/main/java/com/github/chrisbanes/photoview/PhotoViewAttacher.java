@@ -118,11 +118,15 @@ public class PhotoViewAttacher implements View.OnTouchListener,
              */
             ViewParent parent = mImageView.getParent();
             if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling() && !mBlockParentIntercept) {
+                float positiveDx = dx < 0 ? -dx : dx;
+                float positiveDy = dy < 0 ? -dy : dx;
+                boolean dragHorizontal = positiveDx > positiveDy * 0.65;
+                boolean dragVertical = positiveDy > positiveDx * 0.65;
                 if (mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH
-                        || (mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 1f)
-                        || (mHorizontalScrollEdge == HORIZONTAL_EDGE_RIGHT && dx <= -1f)
-                        || (mVerticalScrollEdge == VERTICAL_EDGE_TOP && dy >= 1f)
-                        || (mVerticalScrollEdge == VERTICAL_EDGE_BOTTOM && dy <= -1f)) {
+                        || (mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 1f && dragHorizontal)
+                        || (mHorizontalScrollEdge == HORIZONTAL_EDGE_RIGHT && dx <= -1f && dragHorizontal)
+                        || (mVerticalScrollEdge == VERTICAL_EDGE_TOP && dy >= 1f && dragVertical)
+                        || (mVerticalScrollEdge == VERTICAL_EDGE_BOTTOM && dy <= -1f && dragVertical)) {
                     if (parent != null) {
                         parent.requestDisallowInterceptTouchEvent(false);
                     }
