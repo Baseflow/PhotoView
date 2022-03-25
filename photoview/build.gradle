@@ -14,6 +14,7 @@ android {
 
 dependencies {
     implementation "androidx.appcompat:appcompat:1.1.0"
+    api "pl.droidsonroids.gif:android-gif-drawable:1.2.24"
 }
 
 afterEvaluate {
