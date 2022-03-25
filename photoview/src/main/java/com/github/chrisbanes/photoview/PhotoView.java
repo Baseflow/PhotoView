@@ -23,14 +23,14 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 
-import androidx.appcompat.widget.AppCompatImageView;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming
  * is accomplished
  */
 @SuppressWarnings("unused")
-public class PhotoView extends AppCompatImageView {
+public class PhotoView extends GifImageView {
 
     private PhotoViewAttacher attacher;
     private ScaleType pendingScaleType;
